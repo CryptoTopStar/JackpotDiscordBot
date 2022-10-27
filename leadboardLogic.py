@@ -1,9 +1,13 @@
 import csv
+from datetime import datetime
 
 DEFAULT_WEIGHT = 1
 INDIVIDUAL_WEIGHT = {}
 COMMUNITY_WEIGHT = {}
 XP_AWARDS = {1:40, 2:15, 3:200, 4:800, 5:700, -5:-700, 6:500, 7:1000, 8:400, 9:150, 10:600, 11:200, 12:400, 13:0, 14:1000, 15:2000, 16:3000, 17:3500, 18:3600, 19:4000, 20:5000, 21:0}
+
+##TIME = datetime.datetime.now().strftime("%m/%d/%y %H:%M")
+TIME = datetime.strptime("1/2/22 20:05", "%m/%d/%y %H:%M")
 
 ## DATA SCHEMA
 ## UNIQUE ID | TASK TYPE | XP OVERRIDE | TIME | COMMUNITY
@@ -49,7 +53,13 @@ def saveData(data, filename):
 rawData = readCSV("syntheticData.csv")
 roaster = {}
 
+## iterate through all data points
 for point in rawData[1:]:
+    taskTime = datetime.strptime(point[3], "%m/%d/%y %H:%M")
+    ## if taskTime is more than 48 hours before TIME, ignore
+    if (TIME - taskTime).days > 2:
+        continue
+    
     unqiueID = str(point[0]) + "===" + str(point[4])
     if unqiueID not in roaster:
         individual = User(point[0], point[4])
@@ -59,6 +69,7 @@ for point in rawData[1:]:
     
     updateCounter(individual, point)
 
+## calculate finalXP and organize data into a list of lists
 listXP = [["ID", "Community", "XP"]]
 for keys in roaster:
     weight = DEFAULT_WEIGHT

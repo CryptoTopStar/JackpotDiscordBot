@@ -41,7 +41,7 @@ checkLike(tweet_id, "somerandomID") ## returns False
 ## check the relationship between two users using the Twitter API 1.1
 mainUser = "@Google"
 follower = "@kusbiscuits" ## if this person is following the main user, return true
-def checkRelashionship(mainUser, follower):
+def checkRelationship(mainUser, follower):
     url = "https://api.twitter.com/1.1/friendships/show.json"
     headers = {"Authorization": "Bearer {}".format(bearer_token)}
     params = {"source_screen_name": mainUser[1:], "target_screen_name": follower[1:]}
@@ -54,10 +54,10 @@ def checkRelashionship(mainUser, follower):
 ## check to see if the last tweet of a user is a retweet 
 ## of a specific tweet 
 user = "@Shubham99925933"
-def checkRetweetOf(tweet_id, user):
+def checkRetweetOf(tweet_id, retweeter):
     url = "https://api.twitter.com/1.1/statuses/user_timeline.json"
     headers = {"Authorization": "Bearer {}".format(bearer_token)}
-    params = {"screen_name": user[1:], "count": 1}
+    params = {"screen_name": retweeter[1:], "count": 1}
     response = requests.request("GET", url, headers=headers, params=params)
     result = response.json()
     try:
@@ -67,4 +67,13 @@ def checkRetweetOf(tweet_id, user):
         return False
 
     return False
+
+## return the tweet id of the last tweet of a user
+def getLastTweetID(user):
+    url = "https://api.twitter.com/1.1/statuses/user_timeline.json"
+    headers = {"Authorization": "Bearer {}".format(bearer_token)}
+    params = {"screen_name": user[1:], "count": 1}
+    response = requests.request("GET", url, headers=headers, params=params)
+    result = response.json()
+    return int(result[0]["id"])
     

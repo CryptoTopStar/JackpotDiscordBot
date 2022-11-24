@@ -48,9 +48,9 @@ def reactionsMade(user):
 
 ## see if the user has been active in the last 24 hours
 def isActive(user):
-    url = "https://discord.com/api/v8/users/{}/messages/search".format(user.id)
+    url = "https://discord.com/api/v8/users/{}/messages/search".format(user)
     headers = {"Authorization": "Bot {}".format(bot_token)}
-    params = {"author_id": user.id}
+    params = {"author_id": user}
     response = requests.request("GET", url, headers=headers, params=params)
     result = response.json()
     for message in result["messages"]:

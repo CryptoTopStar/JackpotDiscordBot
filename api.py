@@ -4,6 +4,7 @@ from leadboardLogic import User, TwitterRaid, Mission, Server, globalLeaderboard
 import random
 import string
 import json
+import os
 
 ## SCHEMA:
 ##      - KEY: Community Server ID
@@ -91,6 +92,10 @@ def convertToDict(dictObj):
     return data
 
 def saveObject(obj, name):
+    ## if 'Cache/Objects/' + name + '.json' doesn't exist, create it
+    if not os.path.exists('Cache/Objects/' + name + '.json'):
+        open('Cache/Objects/' + name + '.json', 'w').close()
+        
     with open('Cache/Objects/' + name + '.json', 'w') as f:
         ## if the object is a dictionary, save it as a JSON
         if isinstance(obj, dict):

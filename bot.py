@@ -170,7 +170,7 @@ async def on_ready():
     
     ## give everyone the Jackpot Non Opt role if they dont have the Jackpot role already
     for member in guild.members:
-        if discord.utils.get(member.roles, name=JACKPOT_NON_OPT) == None and discord.utils.get(member.roles, name=JACKPOT_ROLE) == None and member.bot == False:
+        if discord.utils.get(member.roles, name=JACKPOT_NON_OPT) == None and discord.utils.get(member.roles, name=JACKPOT_ROLE) == None and discord.utils.get(member.roles, name=BOT_ROLE) == None:
             await member.add_roles(discord.utils.get(guild.roles, name=JACKPOT_NON_OPT))
     
     ## Make #opt-in, #guide avalible to everyone
@@ -233,6 +233,10 @@ async def on_ready():
             server = interaction.guild.id
             memberName = interaction.user.name
             profilePic = interaction.user.avatar
+            if profilePic == None or profilePic == "":
+                profilePic = "None"
+            else:
+                profilePic = interaction.user.avatar.url
             memIDNum = interaction.user.id
             memberID = interaction.user.name + "#" + interaction.user.discriminator
             print(server, memberID, memberName)
@@ -804,7 +808,7 @@ async def on_member_update(before, after):
     userName = after.name
     
     ## if the user does not have the Jackpot role or the Jackpot Non-Opt-In role, then assign the Jackpot Non-Opt-In role and not a bot
-    if not discord.utils.get(after.roles, name=JACKPOT_ROLE) and not discord.utils.get(after.roles, name=JACKPOT_NON_OPT) and not after.bot:
+    if not discord.utils.get(after.roles, name=JACKPOT_ROLE) and not discord.utils.get(after.roles, name=JACKPOT_NON_OPT) and discord.utils.get(after.roles, name=BOT_ROLE) == None:
         await after.add_roles(discord.utils.get(after.guild.roles, name=JACKPOT_NON_OPT))
     
     if api.checkOptIn(serverName, userName) and before.status != after.status:

@@ -8,8 +8,8 @@ import signal
 import subprocess as sp
 
 
-PATH = "/Users/harsha/Desktop/Leaderboard/Cache/missions.json"
-extProc = sp.Popen(['python','commands.py'])
+PATH = "./Cache/missions.json"
+extProc = sp.Popen(['python3','commands.py'])
 lastMod = os.path.getmtime(PATH)
 ## Execute only if the file has been changed
 while True:
@@ -17,6 +17,6 @@ while True:
         time.sleep(40)
         lastMod = os.path.getmtime(PATH)
         sp.Popen.terminate(extProc)
-        extProc = sp.Popen(['python','commands.py'])
+        extProc = sp.Popen(['python3','commands.py'])
     else:
         time.sleep(10)

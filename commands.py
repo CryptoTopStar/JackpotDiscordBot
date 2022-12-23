@@ -7,7 +7,7 @@ bot = interactions.Client(token=TOKEN)
 
 def getData():
     ## read in the JSON dict of missions in Cache/missions.json
-    with open("/Users/harsha/Desktop/Leaderboard/Cache/missions.json", "r") as f:
+    with open(".Cache/missions.json", "r") as f:
         data = json.load(f)
     
     if data == None or data == {}:

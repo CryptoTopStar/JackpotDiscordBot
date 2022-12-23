@@ -440,7 +440,7 @@ def createAlphaNumericCode(serverID, memberID):
         refCode = createCode()
         
     memberObject = optIn[serverID][memberID]
-    referalCode[refCode] = [serverID, memberObject]
+    referalCode[refCode] = [serverID, memberID]
     
     memberObject.referal = refCode
     saveObject(optIn, "optIn")

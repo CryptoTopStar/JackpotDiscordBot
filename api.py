@@ -82,14 +82,13 @@ def convertToDict(dictObj):
     
     ## if the object is not a dictionary, return it
     if not isinstance(dictObj, dict):
-        print(dictObj)
         return dictObj.reprJSON()
     
     data = {}
     for key in dictObj.keys():
         ## if the value is a dictionary, convert it to a dict:
         if isinstance(dictObj[key], dict):
-            data[key] = convertToDict(dict[key])
+            data[key] = convertToDict(dictObj[key])
         ## if its a list, int, str, etc. just add it to the dict
         elif isinstance(dictObj[key], list) or isinstance(dictObj[key], int) or isinstance(dictObj[key], str) or isinstance(dictObj[key], bool):
             data[key] = dictObj[key]

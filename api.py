@@ -82,6 +82,7 @@ def convertToDict(dictObj):
     
     ## if the object is not a dictionary, return it
     if not isinstance(dictObj, dict):
+        print(dictObj)
         return dictObj.reprJSON()
     
     data = {}

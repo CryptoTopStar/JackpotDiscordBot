@@ -79,6 +79,11 @@ class ComplexEncoder(json.JSONEncoder):
 def convertToDict(dictObj):
     ## this dict could have other dicts as values with nested class objects. Convert the nested class objects to dicts as well, storing them in a new dict
     ## to convert class object to dict, use obj.reprJSON()
+    
+    ## if the object is not a dictionary, return it
+    if not isinstance(dictObj, dict):
+        return dictObj.reprJSON()
+    
     data = {}
     for key in dictObj.keys():
         ## if the value is a dictionary, convert it to a dict:

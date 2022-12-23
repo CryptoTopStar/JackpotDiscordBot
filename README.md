@@ -1,1 +1,1 @@
-![Jackpot Codebase Header](./Assets/Jackpot Codebase.png)
+![Jackpot Codebase Header](/Assets/Jackpot Codebase.png)

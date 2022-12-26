@@ -122,10 +122,33 @@ def saveMissions():
     with open('Cache/missions.json', 'w') as f:
         json.dump(refresh(missions), f)
 
+def basicMissions(serverID):
+    createMission(serverID, "project_tweet", "Post a Tweet from your personal Twitter account that tags the project", 2000)
+    createMission(serverID, "server_booster", "Boost the server", 3000)
+    createMission(serverID, "shoutout_tweet", "Post a Tweet from your personal Twitter account that recognizes another community member for their community contributions", 3500)
+    createMission(serverID, "project_thread_tweet", "Post a Twitter Thread from your personal Twitter account that tags the project", 3500)
+    createMission(serverID, "floor_buy", "Purchase on of the NFT’s with the current floor price", 3000)
+    createMission(serverID, "floor_sweep", "Purchase a minimum of 3 NFT’s on the current floor ", 7500)
+    createMission(serverID, "pfp_change", "Change your Twitter profile picture to your NFT", 4000)
+    createMission(serverID, "bio_change", "Add @project (the name of the project) to your Twitter bio ", 4000)
+    createMission(serverID, "banner_change", "Change your Twitter banner to a banner related to the project", 3500)
+    createMission(serverID, "spread_the_word", "Tell other communities about the project in another DIscord server", 2000)
+    createMission(serverID, "community_bonding", "Have a 10 minute call via Discord, phone, Google Meet, or some other form of call, with another member of the community ", 2500)
+    createMission(serverID, "mission_idea", "Come up with an idea for a new Mission and share it with an Admin, if it is implemented submit proof.", 1500)
+    createMission(serverID, "join_twitter_space", "Listen into any Twitter space that talks about the project, whether its hosted by the project, another member, or another project.", 2000)
+    createMission(serverID, "host_twitter_space", "Host a project-inspired Twitter space that has at least 10 listeners", 5000)
+    createMission(serverID, "create_youtube_video", "Upload a video to YouTube that relates to the project in someway ", 4000)
+    createMission(serverID, "create_meme", "Create an original meme that relates to the project in someway", 3500)
+    createMission(serverID, "retweet_pinned_tweet", "Retweet from your personal account the project’s pinned Tweet", 3600)
+    createMission(serverID, "fan_art", "Create an original graphic or fan art that relates to the project in someway", 3500)
+    createMission(serverID, "blog_post", "Write an online blog post, more than 500 words, that relates to the project in someway", 4000)
+    createMission(serverID, "follow_twitter", "Follow the project account from your personal Twitter", 1000)
+
 def addServer(serverID, serverName, url):
     if serverID not in SERVERS:
         SERVERS[serverID] = Server(serverName, serverID, url)
         SERVER_NAMES[serverName] = serverID
+        basicMissions(serverID)
         saveObject(SERVERS, "SERVERS")
         saveObject(SERVER_NAMES, "SERVER_NAMES")
         return True
@@ -208,7 +231,7 @@ def createTwitterRaid(serverID, title, link, boosted, retweet, react, comment):
 def retMissions():
     return missions
 
-def createMission(serverID, name, discp, reward, suppy, perperson):
+def createMission(serverID, name, discp, reward, suppy = "", perperson = ""):
     if serverID not in missions:
         missions[serverID] = {}
         

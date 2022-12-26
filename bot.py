@@ -38,7 +38,7 @@ def getGettingStartedEmbed():
     return embed
 
 def getReferalEmbed():
-    embed=discord.Embed(title="Unique Referral Link", description="Share your link to refer a new community to Jackpot. If they sign up as a paying customer, you will earn a substantial XP bonus for yourself and everyone in your community.", color=0x222222)
+    embed=discord.Embed(title="Unique Referral Code", description="Share your code with friends to refer a new community to Jackpot! If they sign up as a paying customer, you will earn a substantial XP bonus for yourself and everyone in your community!", color=0x222222)
     return embed 
 
 def getMultiplierEmbed():
@@ -63,23 +63,23 @@ def getIntroEmbed():
     return embed
     
 def getXPEmbed():
-    embed=discord.Embed(title="**How to Earn XP**", description="Here's a guide to all the ways you can get rewarded for your participation in this community.", color=0xe9e9e9)
+    embed=discord.Embed(title="**How to Earn XP**", description="Below is a guide to all the actions you can take in your community that will be automatically rewarded.", color=0xe9e9e9)
     embed.add_field(name="**Discord:**", value="🎟️ Sending messages *(diminishing returns)*\n🎟️ Reacting to messages *(diminishing returns)*\n🎟️ Other people reacting to your messages\n🎟️ Other people replying to your messages\n🎟️ Being one of the first people to interact with a new member\n🎟️ Inviting real human people to the server\n🎟️ Visiting the server daily\n", inline=False) 
-    embed.add_field(name="**Twitter:**", value = "🎟️ Retweeting a `#raids` tweet\n🎟️ Replying to a `#raids` tweet\n🎟️ Liking a `#raids` tweet\n🎟️ Following other community members\n🎟️ Being followed by other community members\n", inline=False) 
-    embed.add_field(name="**Missions:**", value = "🎟️ Successfully completing `#missions`", inline=False)
+    embed.add_field(name="**Twitter:**", value = "🎟️ Retweeting a #raids tweet\n🎟️ Replying to a #raids tweet\n🎟️ Liking a #raids tweet\n🎟️ Following other community members\n🎟️ Being followed by other community members\n", inline=False) 
+    embed.add_field(name="**Missions:**", value = "🎟️ Successfully completing #missions", inline=False)
     return embed
 
 def getChannelsEmbed():
     embed=discord.Embed(title="**Channel Overview**", color=0xe9e9e9)
-    embed.add_field(name="Important channels to keep track of:", value="📍 `#opt-in` | Verify your Twitter and wallet address to begin earning XP.\n📍 `#leaderboard` | Find the community’s most valuable contributors.\n📍 `#raids` | Participate in Twitter raids to earn XP.\n📍 `#missions` | Choose from the available missions.\n📍 `#mission-complete` | Submit proof of mission completion to earn XP.\n📍 `#xp-log` | Receive notifications when you earn XP.")
+    embed.add_field(name="Important channels to keep track of:", value="📍 #user-settings | Review and change your personal details.\n📍 #leaderboard | Link to our website containing your community’s most valuable contributors.\n📍 #raids | Participate in Twitter raids to earn XP.\n📍 #missions | Choose from available missions and submit proof of completion \n📍 #notifs | Get notified when you earn XP and your missions are approved.")
     return embed
 
 def getWelcomeEmbed():
-    embed=discord.Embed(title="**Welcome to Jackpot**",description="Jackpot is a simple, no-brainer loyalty and rewards program architected in collaboration with 100+ web3 industry veterans including founders, community managers, mods, and core contributors across the Ethereum and Solana ecosystems.\n\nEarn XP to climb the leaderboard and have a chance at winning the **Jackpot Raffle.**\n\n**1 XP = 1 Raffle Ticket.**", color=0xe9e9e9)
+    embed=discord.Embed(title="**Welcome to Jackpot**",description="Jackpot is a simple, no-brainer loyalty and rewards program architected in collaboration with 100+ web3 industry veterans including founders, community managers, mods, and core contributors across the Ethereum and Solana ecosystems.\n\nEarn XP to climb the leaderboard and have a chance at winning the **Jackpot Raffle.**\n\n**1 XP = 1 Raffle Ticket**", color=0xe9e9e9)
     return embed
 
 def getWelcomeOptInEmbed():
-    embed=discord.Embed(title="**Welcome to Jackpot, You're opt-ed in!!**",description="Jackpot is a simple, no-brainer loyalty and rewards program architected in collaboration with 100+ web3 industry veterans including founders, community managers, mods, and core contributors across the Ethereum and Solana ecosystems.\n\nEarn XP to climb the leaderboard and have a chance at winning the **Jackpot Raffle*.\n\n**1 XP = 1 Raffle Ticket.**", color=0x33FF5C)
+    embed=discord.Embed(title="**Welcome to Jackpot!**",description="Jackpot is a simple, no-brainer loyalty and rewards program architected in collaboration with 100+ web3 industry veterans including founders, community managers, mods, and core contributors across the Ethereum and Solana ecosystems.\n\nEarn XP to climb the leaderboard and have a chance at winning the **Jackpot Raffle.**\n\n**1 XP = 1 Raffle Ticket**", color=0x33FF5C)
     return embed
 
 def getTwitterOAUTHEmbed():
@@ -88,7 +88,7 @@ def getTwitterOAUTHEmbed():
     return embed
 
 def getMissionsEmbed():
-    embed=discord.Embed(title="Missions 🗺️", description = "Missions are the easiest way to rack up XP.  Head over to `#missions` to view the available missions. Submit proof of your work in `#missions-complete`, and once approved by your community's admin, you'll receive XP for your contribution.", color=0xe9e9e9)
+    embed=discord.Embed(title="Missions 🗺️", description = "Missions are the easiest way to rack up XP. Head over to #missions to view the available missions and submit proof of your work. Once approved by your community's admin, you'll receive XP for your contribution.", color=0xe9e9e9)
     return embed
 
 def getCommandsEmbed():
@@ -104,7 +104,7 @@ def getFullLeaderboardEmbed():
     return embed
 
 def getLeaderboardEmbed():
-    embed = discord.Embed(title="The Leaderboard", description="Check the leaderboard to see the most valuable contributors in your community and beyond.", color=0xe9e9e9)
+    embed = discord.Embed(title="📈 The Leaderboard 📈", description="Check the leaderboard to see the most valuable contributors in your community and beyond!", color=0xe9e9e9)
     return embed
 
 def getTwitterEmbed(link, boosted=False):
@@ -121,7 +121,7 @@ def getTwitterEmbed(link, boosted=False):
 
 def getMissionsEmbed():
     embed=discord.Embed(title="**🗺️ Missions 🗺️**", description="Click the **View Missions** button below to see your community's active missions and their respective XP rewards.", color=0xf21d6a)
-    embed.add_field(name="**Submitting Mission Completion**", value="To get credit (XP) for completing a mission, head over to #mission-complete and follow the directions. All you'll need to do is select the appropriate mission and submit a screenshot or link to the completed work (proof should be contained on the same message).\n\n➡️ **Select an active mission from the dropdown to view its details.**", inline=False) 
+    embed.add_field(name="**Submitting Mission Completion**", value="To get credit (XP) for completing a mission, in the message section below, type `/verify` followed by the mission id and your description (proof) of completion. If you click +1 more, you can add a screenshot to supplement the proof of completion provided.\n\n➡️ **Select an active mission from the dropdown to view its details.**", inline=False) 
     return embed
 
 def getMissionDetailsEmbed(title, description, xp, count, supply, personLimit, timesSubmitted):
@@ -133,7 +133,7 @@ def getMissionDetailsEmbed(title, description, xp, count, supply, personLimit, t
 def getMissionsListEmbed(numMissions):
     embed=discord.Embed(title="✅ **Mission Complete** ✅", description="In this channel, use `!verify [MISSION_NAME] [additional details or explaination]` to submit proof of a specific mission. If you are attaching a picture, attach it to the same message.", color=0xe9e9e9)
     embed.add_field(name="**Use the dropdown to see Active Missions**", value=str(numMissions) + " missions are active", inline=False)
-    embed.set_footer(text="\n\nOnce submitted, a community admin will be able to approve/disapprove your submission. If approved, you'll receive XP for your effort and will be notified in #xp-log.") 
+    embed.set_footer(text="\n\nOnce submitted, a community admin will be able to approve/disapprove your submission. If approved, you'll receive XP for your effort and will be notified in #notifs.") 
     return embed
 
 def getMissionsDropdownOptions(serverID):
@@ -194,8 +194,8 @@ async def on_ready():
             await discord.utils.get(guild.channels, name=channel).set_permissions(discord.utils.get(guild.roles, name=ADMIN_ROLE), read_messages=True, send_messages=True)
             await discord.utils.get(guild.channels, name=channel).set_permissions(discord.utils.get(guild.roles, name=JACKPOT_ROLE), read_messages=True, send_messages=False)
     
-    ## make the following channels visible to everyone in the "Jackpot" role they don't exist: #leaderboard, #raids, #missions, #mission-complete, #xp-log
-    channels = ["leaderboard", "raids", "missions", "mission-complete", "xp-log"]
+    ## make the following channels visible to everyone in the "Jackpot" role they don't exist: #leaderboard, #raids, #missions, #mission-complete, #notifs
+    channels = ["leaderboard", "raids", "missions", "notifs"]
     for channel in channels:
         if discord.utils.get(guild.channels, name=channel) == None:
             await guild.create_text_channel(channel)
@@ -244,8 +244,8 @@ async def on_ready():
                 ## create an XP event
                 api.xpEvent(server, memberID, 0)
                 reward = api.getReward(server, memberName, 0)
-                ## put on the xp-log channel that a user has opted in
-                await discord.utils.get(guild.channels, name="xp-log").send("✅ **" + str(interaction.user) + "** has opted in and earned " + reward + "!")
+                ## put on the notifs channel that a user has opted in
+                await discord.utils.get(guild.channels, name="notifs").send("✅ **" + str(interaction.user) + "** has opted in and earned " + reward + "!")
                 ## assign the Jackpot role to the user
                 await interaction.response.send_message(content="✅ **Success!**\n\nYou have now successfully opted in to Jackpot and have been awarded `1000 XP` 🎟️ as a token of our gratitude. You are now ready to begin earning XP for the value you bring to the table.", ephemeral=True)
                 await interaction.user.add_roles(discord.utils.get(guild.roles, name=JACKPOT_ROLE))
@@ -316,7 +316,8 @@ async def on_ready():
         await discord.utils.get(guild.channels, name="user-settings").send(embed=getChannelsEmbed())
         await discord.utils.get(guild.channels, name="user-settings").send(embed=getCommandsEmbed())
         await discord.utils.get(guild.channels, name="user-settings").send(embed = getReferalEmbed(), view = viewCode())
-        await discord.utils.get(guild.channels, name="user-settings").send(embed = getMultiplierEmbed(), view = multipler())
+        ## Individual Multiplier offline 
+        ## await discord.utils.get(guild.channels, name="user-settings").send(embed = getMultiplierEmbed(), view = multipler())
         await discord.utils.get(guild.channels, name="user-settings").send(embed = getUpdateEmbed(), view = updateInfo())
     
     ## in the leaderboard channel, send a leaderboard message
@@ -340,9 +341,9 @@ async def on_ready():
     ##if discord.utils.get(guild.channels, name="mission-complete").last_message == None or discord.utils.get(guild.channels, name="mission-complete").last_message.author != client.user:
     ##    await discord.utils.get(guild.channels, name="mission-complete").send(file=discord.File("Assets/Mission Approval.gif"))
     
-    ## DEPRECATED: send the xp-log gif
-    ##if discord.utils.get(guild.channels, name="xp-log").last_message == None or discord.utils.get(guild.channels, name="xp-log").last_message.author != client.user:
-    ##    await discord.utils.get(guild.channels, name="xp-log").send(file=discord.File("Assets/XP Log.gif"))
+    ## DEPRECATED: send the notifs gif
+    ##if discord.utils.get(guild.channels, name="notifs").last_message == None or discord.utils.get(guild.channels, name="notifs").last_message.author != client.user:
+    ##    await discord.utils.get(guild.channels, name="notifs").send(file=discord.File("Assets/XP Log.gif"))
     
     ## in the missions channel, send an getMissionsEmbed() embed with a button 
     if discord.utils.get(guild.channels, name="missions").last_message == None or discord.utils.get(guild.channels, name="missions").last_message.author != client.user:
@@ -369,10 +370,11 @@ async def on_ready():
                 
         await discord.utils.get(guild.channels, name="missions").send(embed=getMissionsEmbed(), view=missions())
         
-    ## in the mission-complete, send an getMissionsListEmbed() embed
+    ## DEPRECATED: in the mission-complete, send an getMissionsListEmbed() embed
     ##if discord.utils.get(guild.channels, name="mission-complete").last_message == None or discord.utils.get(guild.channels, name="mission-complete").last_message.author != client.user:
-    numCount = len(api.getMissions(serverID))
-    embedMessage = await discord.utils.get(guild.channels, name="mission-complete").send(embed=getMissionsListEmbed(numCount))
+    ##numCount = len(api.getMissions(serverID))
+    ##embedMessage = await discord.utils.get(guild.channels, name="mission-complete").send(embed=getMissionsListEmbed(numCount))
+    
     ## DEPRECATED: pin the message
     ## await embedMessage.pin()
     
@@ -516,7 +518,7 @@ async def on_ready():
                                         userID = interaction.user.name + "#" + interaction.user.discriminator
                                         resp = api.tweetEventRetweet(serverName, userID, tweetID)
                                         if type(resp) == int:
-                                            await discord.utils.get(interaction.guild.channels, name="xp-log").send("🎉 " + userName + " retweeted " + api.getTweetTitle(serverName) + " and earned " + str(resp) + " XP")
+                                            await discord.utils.get(interaction.guild.channels, name="notifs").send("🎉 " + userName + " retweeted " + api.getTweetTitle(serverName) + " and earned " + str(resp) + " XP")
                                             await interaction.response.send_message(content="You have earned XP for retweeting this tweet", ephemeral=True)
                                         else:
                                             await interaction.response.send_message(content=resp, ephemeral=True)
@@ -528,7 +530,7 @@ async def on_ready():
                                         userID = interaction.user.name + "#" + interaction.user.discriminator
                                         resp = api.tweetEventReact(serverName, userID, tweetID)
                                         if type(resp) == int:
-                                            await discord.utils.get(interaction.guild.channels, name="xp-log").send("🎉 " + userName + " reacted to " + api.getTweetTitle(serverName) + " and earned " + str(resp) + " XP")
+                                            await discord.utils.get(interaction.guild.channels, name="notifs").send("🎉 " + userName + " reacted to " + api.getTweetTitle(serverName) + " and earned " + str(resp) + " XP")
                                             await interaction.response.send_message(content="You have earned XP for reacting to this tweet", ephemeral=True)
                                         else:
                                             await interaction.response.send_message(content=resp, ephemeral=True)
@@ -540,7 +542,7 @@ async def on_ready():
                                         userID = interaction.user.name + "#" + interaction.user.discriminator
                                         resp = api.tweetEventComment(serverName, userID, tweetID)
                                         if type(resp) == int:
-                                            await discord.utils.get(interaction.guild.channels, name="xp-log").send("🎉 " + userName + " commented to " + api.getTweetTitle(serverName) + " and earned " + str(resp) + " XP")
+                                            await discord.utils.get(interaction.guild.channels, name="notifs").send("🎉 " + userName + " commented to " + api.getTweetTitle(serverName) + " and earned " + str(resp) + " XP")
                                             await interaction.response.send_message(content="You have earned XP for commenting to this tweet", ephemeral=True)
                                         else:
                                             await interaction.response.send_message(content=resp, ephemeral=True)
@@ -594,7 +596,7 @@ async def on_message(message):
             
             if missionID != False and eligible:
                 ## send a confirmation message to #mission-approval, delete it after 10 seconds: "mission submitted by " + str(message.author)
-                newMessage = await discord.utils.get(message.guild.channels, name="mission-complete").send("🎉 Mission '"+missionName+"' submitted by " + memberID)
+                newMessage = await discord.utils.get(message.guild.channels, name="notifs").send("🎉 Mission '"+missionName+"' submitted by " + memberID)
                 await message.delete()
                 
                 class approveButtons(discord.ui.View):
@@ -612,8 +614,8 @@ async def on_message(message):
                             await interaction.message.delete()
                             ## delete newMessage
                             await newMessage.delete()
-                            ## send a message to #xp-log with the mission name, username, and XP
-                            await discord.utils.get(message.guild.channels, name="xp-log").send("🎉 Mission '"+missionName+"' completed by " + memberID + " for " + str(missionReward) + " XP")
+                            ## send a message to #notifs with the mission name, username, and XP
+                            await discord.utils.get(message.guild.channels, name="notifs").send("🎉 Mission '"+missionName+"' completed by " + memberID + " for " + str(missionReward) + " XP")
                         
                     @discord.ui.button(label="DENY", style=discord.ButtonStyle.red)
                     async def deny(self, interaction2: discord.Interaction, button: discord.ui.Button) -> None:
@@ -637,7 +639,7 @@ async def on_message(message):
             return
     
     ## if the message is in a DM or in the bot channel, ignore it
-    if api.checkOptIn(serverName, memberID) and message.guild != None and message.channel.name not in ["get-started", "leaderboard", "raids", "missions", "mission-complete", "xp-log", "add-mission", "mission-approval", "launch-raid"] and text.startswith("!") == False:
+    if api.checkOptIn(serverName, memberID) and message.guild != None and message.channel.name not in ["get-started", "leaderboard", "raids", "missions", "mission-complete", "notifs", "add-mission", "mission-approval", "launch-raid"] and text.startswith("!") == False:
         api.xpEvent(serverName, memberID, 1)
         if message.reference != None:
             originalAuthor = message.reference.resolved.author
@@ -675,7 +677,7 @@ async def on_message(message):
             
             author = str(message.author)
             ## send a confirmation message to #mission-approval, delete it after 10 seconds: "mission submitted by " + str(message.author)
-            newMessage = await discord.utils.get(message.guild.channels, name="mission-complete").send("🎉 Mission '"+missionName+"' submitted by " + author)
+            newMessage = await discord.utils.get(message.guild.channels, name="notifs").send("🎉 Mission '"+missionName+"' submitted by " + author)
             ## delete newMessage after 10 seconds
             await message.delete()
             
@@ -694,8 +696,8 @@ async def on_message(message):
                         await interaction.message.delete()
                         ## delete newMessage
                         await newMessage.delete()
-                        ## send a message to #xp-log with the mission name, username, and XP
-                        await discord.utils.get(message.guild.channels, name="xp-log").send("🎉 Mission '"+missionName+"' completed by " + author + " for " + str(missionReward) + " XP")
+                        ## send a message to #notifs with the mission name, username, and XP
+                        await discord.utils.get(message.guild.channels, name="notifs").send("🎉 Mission '"+missionName+"' completed by " + author + " for " + str(missionReward) + " XP")
                     
                 @discord.ui.button(label="DENY", style=discord.ButtonStyle.red)
                 async def deny(self, interaction2: discord.Interaction, button: discord.ui.Button) -> None:
@@ -771,7 +773,7 @@ async def on_raw_reaction_add(payload):
     originalAuthor = message.author
     
     ## if the reaction is on a message in a bot channel and in a DM, ignore it
-    if api.checkOptIn(serverName, user) and channel.name not in ["get-started", "leaderboard", "raids", "missions", "mission-complete", "xp-log", "add-mission", "mission-approval", "launch-raid"] and channel.type != discord.ChannelType.private:
+    if api.checkOptIn(serverName, user) and channel.name not in ["get-started", "leaderboard", "raids", "missions", "notifs", "add-mission", "mission-approval", "launch-raid"] and channel.type != discord.ChannelType.private:
         if originalAuthor != user:
             api.xpEvent(serverName, user, 2)
             if api.checkOptIn(serverName, originalAuthor):
@@ -794,7 +796,7 @@ async def on_raw_reaction_add(payload):
             ## check if the user's twitter handle is valid
             if api.recordTwitterHandle(user, serverName, twitterHandle):
                 await user.send("Twitter handle verified. You're all set!")
-                await discord.utils.get(message.guild.channels, name="xp-log").send(user.mention + " just received `1000 XP` 🎟️ for successfully opting in to Jackpot! Onward and upward!")
+                await discord.utils.get(message.guild.channels, name="notifs").send(user.mention + " just received `1000 XP` 🎟️ for successfully opting in to Jackpot! Onward and upward!")
             else:
                 await user.send("Twitter handle not found. Please try again.")
     
@@ -814,9 +816,9 @@ async def on_member_update(before, after):
     if api.checkOptIn(serverName, userName) and before.status != after.status:
         if after.status == discord.Status.online and api.serverVisit(serverName, userName):
             api.xpEvent(serverName, userName, 9)
-            ## send a message in the xp-log channel
+            ## send a message in the notifs channel
             reward = api.getReward(serverName, userName, 9)
-            await discord.utils.get(after.guild.channels, name="xp-log").send("✅ **" + str(userName) + "** is active today and earned " + reward)
+            await discord.utils.get(after.guild.channels, name="notifs").send("✅ **" + str(userName) + "** is active today and earned " + reward)
             
 
 ## get a list of everyone active in the last 24 hours, run this every 24 hours

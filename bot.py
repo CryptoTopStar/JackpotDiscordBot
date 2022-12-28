@@ -188,8 +188,8 @@ async def on_ready():
     api.addServer(serverID, serverName, serverProfile)
     
     ## if the Jackpot role doesn't exist, create it
-    if discord.utils.get(client.guilds[0].roles, name=JACKPOT_ROLE) == None:
-        await client.guilds[0].create_role(name=JACKPOT_ROLE, color=discord.Color.from_rgb(219, 255, 51), hoist=False)
+    if discord.utils.get(client.guilds[0].roles, name=JACKPOT_ROLE) == None: 
+        await client.guilds[0].create_role(name=JACKPOT_ROLE, color=discord.Color.from_rgb(235, 249, 0), hoist=False)
         
     ## if the Jackpot Non Opt role doesn't exist, create it
     if discord.utils.get(client.guilds[0].roles, name=JACKPOT_NON_OPT) == None:

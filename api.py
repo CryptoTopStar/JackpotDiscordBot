@@ -477,6 +477,11 @@ def updateLeaderboards(memberID, serverID, XP):
     saveObject(GLOBAL, "GLOBAL")
     
     
+def getRank(serverID, memberID):
+    serverRank, serverTrend, serverXP = SERVERS[serverID].leaderboard.getRankTrendXP(memberID)
+    globalRank, __, __ = GLOBAL.getRankTrendXP(memberID)
+    return serverRank, serverTrend, serverXP, globalRank
+    
 saveMissions()
 
 ## ================= ##
@@ -579,5 +584,5 @@ def leaderboard():
         return flask.jsonify(convertToResponseServer(myLeaderboard, serverID))
     
 ## start the flask app, port 5000
-app.run(port=5000)
+##app.run(port=5000)
     

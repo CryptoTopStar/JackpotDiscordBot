@@ -113,7 +113,8 @@ class globalLeaderboard:
                 self.leaderboard.loc[self.leaderboard["memberID"] == memberID, "memberXP"] = XP + self.leaderboard.loc[self.leaderboard["memberID"] == memberID, "memberXP"]
                 self.leaderboard.loc[self.leaderboard["memberID"] == memberID, "servers"][serverID] = XP
         else:
-            self.leaderboard = self.leaderboard.append({"memberID":memberID, "memberXP":XP, "memberRank":None, "trend":0, "servers":{serverID:XP}, "badges":None}, ignore_index = True)
+            ##self.leaderboard = self.leaderboard.append({"memberID":memberID, "memberXP":XP, "memberRank":None, "trend":0, "servers":{serverID:XP}, "badges":None}, ignore_index = True)
+            self.leaderboard = pd.concat([self.leaderboard, pd.DataFrame([[memberID, XP, None, 0, {serverID:XP}, None]], columns = ["memberID", "memberXP", "memberRank", "trend", "servers", "badges"])], ignore_index = True)
         self.leaderboard = self.leaderboard.sort_values(by = ["memberXP"], ascending = False)
         
         def trend(old, new):
@@ -142,6 +143,13 @@ class globalLeaderboard:
     def search(self, string):
         return self.leaderboard[self.leaderboard["memberID"].str.contains(string)]
     
+    def getRankTrendXP(self, memberID):
+        row = self.leaderboard[self.leaderboard["memberID"] == memberID]
+        rank = row["memberRank"].values[0]
+        trend = row["trend"].values[0]
+        XP = row["memberXP"].values[0]
+        return rank, trend, XP
+    
     def reprJSON(self):
         return self.leaderboard.to_dict(orient = "records")
         
@@ -156,7 +164,9 @@ class serverLeaderboard:
         if memberID in self.leaderboard["memberID"]:
             self.leaderboard.loc[self.leaderboard["memberID"] == memberID, "memberXP"] = XP + self.leaderboard.loc[self.leaderboard["memberID"] == memberID, "memberXP"]
         else:
-            self.leaderboard = self.leaderboard.append({"memberID":memberID, "memberXP":XP, "memberRank":None, "trend":0}, ignore_index = True)
+            #self.leaderboard = self.leaderboard.append({"memberID":memberID, "memberXP":XP, "memberRank":None, "trend":0}, ignore_index = True)
+            self.leaderboard = pd.concat([self.leaderboard, pd.DataFrame({"memberID":[memberID], "memberXP":[XP], "memberRank":[None], "trend":[0]})], ignore_index = True)
+            
         self.leaderboard = self.leaderboard.sort_values(by = ["memberXP"], ascending = False)
         ## assign new ranks based on new XP, if XP is the same, keep the same rank
         ## if old rank is greater than new rank, trend = 1
@@ -193,6 +203,13 @@ class serverLeaderboard:
     
     def reprJSON(self):
         return self.leaderboard.to_dict(orient = "records")
+    
+    def getRankTrendXP(self, memberID):
+        row = self.leaderboard[self.leaderboard["memberID"] == memberID]
+        rank = row["memberRank"].values[0]
+        trend = row["trend"].values[0]
+        XP = row["memberXP"].values[0]
+        return rank, trend, XP
 
 """
 ## Uses XP Values to calculate XP, ignores XP Override

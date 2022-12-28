@@ -7,7 +7,7 @@ bot = interactions.Client(token=TOKEN)
 
 def getData():
     ## read in the JSON dict of missions in Cache/missions.json
-    with open(".Cache/missions.json", "r") as f:
+    with open("./Cache/missions.json", "r") as f:
         data = json.load(f)
     
     if data == None or data == {}:
@@ -45,6 +45,22 @@ def refreshCommands(data):
                 stem = f"#|# {file.url}"
             fullName = ctx.author.name + "#" + ctx.author.discriminator
             await ctx.send(f"MISSION SUBMITTED #|# {fullName} #|# {mission_id} #|# {description} " + stem)
+            
+        ####### MORE COMMANDS HERE #######
+        @bot.command(
+            name="rank",
+            description="Check your rank or someone else's rank in this Server",
+            scope=ids,
+            ## add 1 optional parameter, a user ID of the person you want to check the rank of
+            options = [
+                interactions.Option(name="user_id", description="OPTIONAL: Enter the full user ID of another person to view their rank", type=interactions.OptionType.USER, required=False)
+            ]
+        )
+                        
+        async def rankChecker(ctx: interactions.CommandContext, user_id: str = None):
+            if user_id == None:
+                user_id = ctx.author.name + "#" + ctx.author.discriminator
+            await ctx.send(f"FETCHING RANK... #|# {user_id}")
 
         bot.start()
 

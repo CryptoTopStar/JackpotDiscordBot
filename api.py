@@ -479,8 +479,8 @@ def updateLeaderboards(memberID, serverID, XP):
     
 def getRank(serverID, memberID):
     serverRank, serverTrend, serverXP = SERVERS[serverID].leaderboard.getRankTrendXP(memberID)
-    globalRank, __, __ = GLOBAL.getRankTrendXP(memberID)
-    return serverRank, serverTrend, serverXP, globalRank
+    globalRank, __, globalXP = GLOBAL.getRankTrendXP(memberID)
+    return serverRank, serverTrend, serverXP, globalRank, globalXP
     
 saveMissions()
 

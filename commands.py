@@ -57,9 +57,11 @@ def refreshCommands(data):
             ]
         )
                         
-        async def rankChecker(ctx: interactions.CommandContext, user_id: str = None):
+        async def rankChecker(ctx: interactions.CommandContext, user_id: interactions.User = None):
             if user_id == None:
                 user_id = ctx.author.name + "#" + ctx.author.discriminator
+            else:
+                user_id = user_id.name + "#" + user_id.discriminator
             await ctx.send(f"FETCHING RANK... #|# {user_id}")
 
         bot.start()

@@ -23,11 +23,17 @@ def readCSV(filename):
 
 ## Create a class to represent a user and number of interactions
 class User:
-    def __init__(self, name, unqiueIdentifier, id, community, url, handle = None, wallet = None):
+    def __init__(self, name, unqiueIdentifier, id, community, url, twitterOBJ = None, wallet = None):
+        ## twitterOBJ = [access_token, access_token_secret, user_id, screen_name]
+        if twitterOBJ == None:
+            twitterOBJ = [None, None, None, None]
+        else:
+            twitterOBJ = twitterOBJ[:3] + ["@" + str(twitterOBJ[3])]
         self.name = name
         self.full = unqiueIdentifier
         self.id = id
-        self.handle = handle
+        self.twitterOBJ = twitterOBJ[:3]
+        self.handle = twitterOBJ[3]
         self.wallet = wallet
         self.community = community
         self.pfp = url
@@ -49,7 +55,7 @@ class User:
             self.wallet = wallet
     
     def reprJSON(self):
-        return dict(name = self.name, full = self.full, id = self.id, handle = self.handle, wallet = self.wallet, community = self.community, pfp = self.pfp, referal = self.referal, joinTime = self.joinTime, lastActive = self.lastActive, xpOverride = self.xpOverride, counter = self.counter, counterOverride = self.counterOverride, finalXP = self.finalXP)
+        return dict(name = self.name, full = self.full, id = self.id, handle = self.handle, wallet = self.wallet, access_token = self.twitterOBJ[0], access_token_secret = self.twitterOBJ[1], user_id = self.twitterOBJ[2], community = self.community, pfp = self.pfp, referal = self.referal, joinTime = self.joinTime, lastActive = self.lastActive, xpOverride = self.xpOverride, counter = self.counter, counterOverride = self.counterOverride, finalXP = self.finalXP)
                     
 class TwitterRaid:
     def __init__(self, title, url, boosted, retweet, react, comment):

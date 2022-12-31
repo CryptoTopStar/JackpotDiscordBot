@@ -3,6 +3,10 @@ token = "dvdNNA7oUx2bmI8R8TbpkWLGe"
 token_secret = "s0EMFs1jCh74t7nD5rB6SxoXTdmq5T3qpScqfv27LuUijsov1j"
 bearer_token = "AAAAAAAAAAAAAAAAAAAAANWrigEAAAAAM6iZitFfLe9t5zNuLjj8Bd9JSOk%3DvTZBnHaUWgyHlMkJj6V2r44gbRWy53LyLJidUcmucXK1xHUKL8"
 
+API_KEY = "ZGUdjkFTWuuVFJYDUHoucR1Ry"
+API_KEY_SECRETE = "xfFoq1ynIvsnZ7MeipWGT6XMFUx466i1tIaexUKXfqMmoj9EU1"
+PROD_BEARER = "AAAAAAAAAAAAAAAAAAAAAKLIkwEAAAAA0KdfM2HZYg9M5bGXZJrExM2x7sg%3DnBSYpThXPQkgAhq2nXHtelNhkGAWQxtrbx1XM1eEjwEplm3MXX"
+
 ## tweet test case
 tweet_id = 1578084770172600322
 
@@ -77,3 +81,73 @@ def getLastTweetID(user):
     result = response.json()
     return int(result[0]["id"])
     
+## Use Pin based OAuth to get the access token and access token secret
+## First, get the redirect URL
+
+def getURL():
+    import time
+    import uuid
+    base_url = "https://api.twitter.com"
+    endpoint = "/oauth/request_token"
+    url = base_url + endpoint
+    oauth_timestamp = str(int(time.time()))
+    oauth_nonce = str(uuid.uuid4()).replace("-", "")
+    headers = {"Authorization": "OAuth oauth_callback=\"oob\", oauth_consumer_key=\"{}\", oauth_nonce=\"{}\", oauth_signature=\"{}\", oauth_signature_method=\"HMAC-SHA1\", oauth_version=\"1.0\"".format(API_KEY, "123456789", "123456789")}
+    response = requests.request("POST", url, headers=headers)
+    return response
+
+
+
+import sys
+import requests
+from requests_oauthlib import OAuth1Session
+
+CONSUMER_KEY = "ZGUdjkFTWuuVFJYDUHoucR1Ry"
+CONSUMER_SECRET = "xfFoq1ynIvsnZ7MeipWGT6XMFUx466i1tIaexUKXfqMmoj9EU1"
+ACCESS_TOKEN = "1585874163280928769-ZUcNBBnMkW54p7yiUdZQDVT12JewfV"
+TOKEN_SECRET = "VDbSxI4F0xylyupXJMwgU54UOfIbAZ2okFdjeoQ9x1Hdy"
+
+def request_token():
+
+    oauth = OAuth1Session(CONSUMER_KEY, client_secret=CONSUMER_SECRET, callback_uri='oob')
+
+    url = "https://api.twitter.com/oauth/request_token"
+
+    try:
+        response = oauth.fetch_request_token(url)
+        resource_owner_oauth_token = response.get('oauth_token')
+        resource_owner_oauth_token_secret = response.get('oauth_token_secret')
+    except requests.exceptions.RequestException as e:
+            print(e)
+            sys.exit(120)
+    
+    return resource_owner_oauth_token, resource_owner_oauth_token_secret
+
+def get_user_authorization(resource_owner_oauth_token):
+
+    authorization_url = f"https://api.twitter.com/oauth/authorize?oauth_token={resource_owner_oauth_token}"
+    authorization_pin = input(f" \n Send the following URL to the user you want to generate access tokens for. \n → {authorization_url} \n This URL will allow the user to authorize your application and generate a PIN. \n Paste PIN here: ")
+
+    return(authorization_pin)
+
+def get_user_access_tokens(resource_owner_oauth_token, resource_owner_oauth_token_secret, authorization_pin):
+
+    oauth = OAuth1Session(CONSUMER_KEY, 
+                            client_secret=CONSUMER_SECRET, 
+                            resource_owner_key=resource_owner_oauth_token, 
+                            resource_owner_secret=resource_owner_oauth_token_secret, 
+                            verifier=authorization_pin)
+    
+    url = "https://api.twitter.com/oauth/access_token"
+
+    try: 
+        response = oauth.fetch_access_token(url)
+        access_token = response['oauth_token']
+        access_token_secret = response['oauth_token_secret']
+        user_id = response['user_id']
+        screen_name = response['screen_name']
+    except requests.exceptions.RequestException as e:
+            print(e)
+            sys.exit(120)
+
+    return(access_token, access_token_secret, user_id, screen_name)

@@ -7,7 +7,7 @@ import random
 import requests
 import asyncio
 from multiprocessing import Process
-import io
+import twitterBridge as twitter
 import logging
 import re
 
@@ -26,6 +26,7 @@ ADMIN_GUILD = "┎- 💎 Jackpot Admin 💎 -┒"
 def getRaidsEmbed():
     embed=discord.Embed(title="⚔️ **Launch Twitter Raid** ⚔️", description="Click the button below to **Launch a Twitter Raid**", color=0xFF3F33)
     embed.add_field(name="**You'll be asked to:**", value="**1. Choose Engagement Type:** Choose what type of engagement you'd like to incentivize.\n**2. Specify Tweet:** Paste the URL of the Tweet that you'd like to raid.\n", inline=False) 
+    embed.set_footer(text="Powered by Jackpot", icon_url="https://static.wixstatic.com/media/cdc018_603e1fc27c6a4c71b2c8c333f66c858b~mv2.png")
     return embed
 
 def getMissionAddEmbed():
@@ -33,18 +34,26 @@ def getMissionAddEmbed():
     embed.add_field(name="1. **Add Mission:**", value="Click \"Add Mission\" to activate a new mission for your community. \n\nYou'll be able to specify the objective for the mission and set an appropriate XP reward for completion. The maximum possible reward for a single mission is `5,000 XP 🎟️` and the minimum is `50 XP 🎟️`. We suggest adding up to `15,000 XP 🎟️` of missions per month to maximize output from your community.", inline=False)
     embed.add_field(name="2. **Edit Mission:**", value="Click \"Edit Mission\" to change the details for any active mission.", inline=False)
     embed.add_field(name="3. **Delete Mission:**", value="Click \"Delete Mission\" to delete an active mission.", inline=False)
+    embed.set_footer(text="Powered by Jackpot", icon_url="https://static.wixstatic.com/media/cdc018_603e1fc27c6a4c71b2c8c333f66c858b~mv2.png")
     return embed
 
 def getReferalEmbed():
     embed=discord.Embed(title="Unique Referral Code", description="Share your code with friends to refer a new community to Jackpot! If they sign up as a paying customer, you will earn a substantial XP bonus for yourself and everyone in your community!", color=0x222222)
     return embed 
 
-def getOptIn():
-    embed=discord.Embed(title="Congratulations!", description="**You have now successfully joined Jackpot and are eligible to win the Jackpot raffle!** \n\n You are now ready to begin earning XP for all the value you add to your community. As a token of our gratitude, you have been awarded `1000 XP 🎟️`", color=0x33FF5C)
+def showReferalEmbed(referal):
+    embed=discord.Embed(title=referal, description="Your unique referral code is above. Copy and paste to share!", color=0x222222)
+    embed.set_footer(text="Powered by Jackpot", icon_url="https://static.wixstatic.com/media/cdc018_603e1fc27c6a4c71b2c8c333f66c858b~mv2.png")
+    return embed
+
+def getOptIn(handle):
+    embed=discord.Embed(title="Congratulations!", description="**You have successfully joined Jackpot and are eligible to win the Jackpot raffle!** \n Your twitter handle `" + handle + "` has been linked! \n\n You are now ready to begin earning XP for all the value you add to your community. As a token of our gratitude, you have been awarded `1000 XP 🎟️`", color=0x33FF5C)
+    embed.set_footer(text="Powered by Jackpot", icon_url="https://static.wixstatic.com/media/cdc018_603e1fc27c6a4c71b2c8c333f66c858b~mv2.png")
     return embed 
 
-def getOptInNoWallet(getstarted):
-    embed=discord.Embed(title="Congratulations!", description="**You have now successfully joined Jackpot. Until you add your ETH wallet address in the <#" + str(getstarted) + "> channel you are ineligible to win the Jackpot raffle.** \n\n In the meantime, you are now ready to begin earning XP for all the value you add to your community. As a token of our gratitude, you have been awarded `1000 XP 🎟️`", color=0xcffc03)
+def getOptInNoWallet(getstarted, handle):
+    embed=discord.Embed(title="Congratulations!", description="**You have successfully joined Jackpot. Until you add your ETH wallet address in the <#" + str(getstarted) + "> channel, you are ineligible to win the Jackpot raffle.** \n Your twitter handle `" + handle + "` has been linked! \n\n In the meantime, you are now ready to begin earning XP for all the value you add to your community. As a token of our gratitude, you have been awarded `1000 XP 🎟️`", color=0xcffc03)
+    embed.set_footer(text="Powered by Jackpot", icon_url="https://static.wixstatic.com/media/cdc018_603e1fc27c6a4c71b2c8c333f66c858b~mv2.png")
     return embed 
 
 def getRankEmbed(memID, serverRank, globalRank, XP, globalXP, trend = 0):
@@ -103,17 +112,20 @@ def getWelcomeOptInEmbed():
     embed=discord.Embed(title="**Welcome to Jackpot!**",description="Jackpot is a simple, no-brainer loyalty and rewards program architected in collaboration with 100+ web3 industry veterans including founders, community managers, mods, and core contributors across the Ethereum and Solana ecosystems.\n\nEarn XP to climb the leaderboard and have a chance at winning the **Jackpot Raffle.**\n\n**1 XP = 1 Raffle Ticket**", color=0x33FF5C)
     return embed
 
-def getTwitterOAUTHEmbed():
+def getTwitterOAUTHEmbed(link):
     embed=discord.Embed(title="**Verify Twitter Account Ownership**", description="To opt-in, you must link your Twitter account. Follow the steps below to get your Twitter OAUTH code", color=0x1da1f2)
-    embed.add_field(name="**Steps:**", value = "\n1. Go to the [Twitter OAuth Authorization](https://twitter.com/home) page and authorize the app using your Twitter account.\n2. Copy the *one-time pincode* provided and submit it via the `Verify Twitter` button below.", inline=False)
+    embed.add_field(name="**Steps:**", value = "\n1. Go to the [Twitter OAuth Authorization]("+link+") page and authorize the app using your Twitter account.\n2. Copy the *one-time pincode* provided and submit it via the `Verify Twitter` button below.", inline=False)
+    embed.set_footer(text="Powered by Jackpot", icon_url="https://static.wixstatic.com/media/cdc018_603e1fc27c6a4c71b2c8c333f66c858b~mv2.png")
     return embed
 
 def getLeaderboardURL():
     embed=discord.Embed(title="**📈 View the leaderboard 📈**", description="\nClick [here](https://getjackpot.xyz) to view the live leaderboard!", color=0x1da1f2)
+    embed.set_footer(text="Powered by Jackpot", icon_url="https://static.wixstatic.com/media/cdc018_603e1fc27c6a4c71b2c8c333f66c858b~mv2.png")
     return embed
 
 def getMissionsEmbed():
     embed=discord.Embed(title="Missions 🗺️", description = "Missions are the easiest way to rack up XP. Head over to #missions to view the available missions and submit proof of your work. Once approved by your community's admin, you'll receive XP for your contribution.", color=0xe9e9e9)
+    embed.set_footer(text="Powered by Jackpot", icon_url="https://static.wixstatic.com/media/cdc018_603e1fc27c6a4c71b2c8c333f66c858b~mv2.png")
     return embed
 
 def getCommandsEmbed():
@@ -128,8 +140,14 @@ def getFullLeaderboardEmbed():
     embed = discord.Embed(title="Leaderboard", description=getLeaderboardInformation(), color=0xe9e9e9)
     return embed
 
+def getLeaderboardLink():
+    embed = discord.Embed(title="Leaderboard", description="To view the live Jackpot leaderboard, [CLICK HERE](https://getjackpot.com/leaderboard)", color=0xe9e9e9)
+    embed.set_footer(text="Powered by Jackpot", icon_url="https://static.wixstatic.com/media/cdc018_603e1fc27c6a4c71b2c8c333f66c858b~mv2.png")
+    return embed
+
 def getLeaderboardEmbed():
     embed = discord.Embed(title="📈 The Leaderboard 📈", description="Check the leaderboard to see the most valuable contributors in your community and beyond!", color=0xe9e9e9)
+    embed.set_footer(text="Powered by Jackpot", icon_url="https://static.wixstatic.com/media/cdc018_603e1fc27c6a4c71b2c8c333f66c858b~mv2.png")
     return embed
 
 def getTwitterEmbed(link, retweet, react, comment, boosted=False):
@@ -170,11 +188,12 @@ def getTwitterEmbed(link, retweet, react, comment, boosted=False):
 def getMissionsEmbed():
     embed=discord.Embed(title="**🗺️ Missions 🗺️**", description="Click the **View Missions** button below to see your community's active missions and their respective XP rewards.", color=0xf21d6a)
     embed.add_field(name="**Submitting Mission Completion**", value="To get credit (XP) for completing a mission, in the message section below, type `/complete` followed by the mission id and your description (proof) of completion. If you click +1 more, you can add a screenshot to supplement the proof of completion provided.\n\n➡️ **Select an active mission from the dropdown to view its details.**", inline=False) 
+    embed.set_footer(text="Powered by Jackpot", icon_url="https://static.wixstatic.com/media/cdc018_603e1fc27c6a4c71b2c8c333f66c858b~mv2.png")
     return embed
 
-def raidSuccessfulEmbed(name, link, typeRaid):
-    embed = discord.Embed(title="**🎉 New raid created! 🎉**", description="`" + name + "` was launched successfully", color=0x1da1f2)
-    embed.add_field(name="Details:", value="**Link:** `" + name + "`\n**Type:** " + typeRaid, inline=False)
+def raidSuccessfulEmbed(link, typeRaid, name = None):
+    embed = discord.Embed(title="**🎉 New raid created! 🎉**", description="Your raid was launched successfully", color=0x1da1f2)
+    embed.add_field(name="Details:", value="**Link:** [" + link + "](" + link + ") \n**Type:** " + typeRaid, inline=False)
     embed.set_footer(text="Powered by Jackpot", icon_url="https://static.wixstatic.com/media/cdc018_603e1fc27c6a4c71b2c8c333f66c858b~mv2.png")
     return embed
     
@@ -334,6 +353,57 @@ async def on_ready():
             self.timeout = VIEW_TIMEOUT
         @discord.ui.button(label="Get Started", style=discord.ButtonStyle.green)
         async def optin(self, interaction: discord.Interaction, button: discord.ui.Button) -> None:
+            url, token, secret = twitter.link()
+            
+            class optInModal(ui.Modal, title = "Twitter OAuth Code"):
+                pin = ui.TextInput(label = "Verify and link your account", style=discord.TextStyle.short, placeholder="Copy and paste your OAuth pin-code here", required = True)
+                walletID = ui.TextInput(label = "Enter your Ethereum wallet address (Optional)", style=discord.TextStyle.short, placeholder="Jackpot winnings won't be awarded if blank", required = False)
+                async def on_submit(self, interaction: discord.Interaction):
+                    
+                    ## if JACKPOT ROLE, return
+                    if discord.utils.get(guild.roles, name=JACKPOT_ROLE) in interaction.user.roles:
+                        channelID = str(discord.utils.get(guild.channels, name="user-settings").id)
+                        await interaction.response.send_message(embed=alreadyOptIn(channelID), ephemeral=True)
+                    
+                    else:
+                        pin = self.pin.value
+                        tweeterOBJ = twitter.auth(token, secret, pin)
+                        
+                        if tweeterOBJ != None:
+                            handle = "@" + str(tweeterOBJ[3])
+                            walledID = self.walletID.value
+                            server = interaction.guild.id
+                            memberName = interaction.user.name
+                            profilePic = interaction.user.avatar
+                            if profilePic == None or profilePic == "":
+                                profilePic = "None"
+                            else:
+                                profilePic = interaction.user.avatar.url
+                            memIDNum = interaction.user.id
+                            memberID = interaction.user.name + "#" + interaction.user.discriminator
+                            if api.optInMember(server, memberID, memIDNum, memberName, profilePic, tweeterOBJ, walledID):
+                                ## create an XP event
+                                api.xpEvent(server, memberID, 0)
+                                reward = api.getReward(server, memberName, 0)
+                                ## put on the notifs channel that a user has opted in
+                                await discord.utils.get(guild.channels, name="notifs").send("✅ **" + str(interaction.user) + "** has opted in and earned " + reward + "!")
+                                
+                                ## DEPRECATED: assign the Jackpot role to the user
+                                ## await interaction.response.send_message(content="✅ **Success!**\n\nYou have now successfully opted in to Jackpot and have been awarded `1000 XP 🎟️` as a token of our gratitude. You are now ready to begin earning XP for the value you bring to the table.", ephemeral=True)
+                                await interaction.user.add_roles(discord.utils.get(guild.roles, name=JACKPOT_ROLE))
+                                await interaction.user.remove_roles(discord.utils.get(guild.roles, name=JACKPOT_NON_OPT))
+                                
+                                ## if user submits a wallet ID, show the getOptIn() embed
+                                if walledID != "" and walledID != None:
+                                    await interaction.response.send_message(embed=getOptIn(handle), ephemeral=True)
+                                else:
+                                    channelID = discord.utils.get(guild.channels, name="user-settings").id
+                                    await interaction.response.send_message(embed=getOptInNoWallet(channelID, handle), ephemeral=True)
+                            else:
+                                await interaction.response.send_message(embed=errorEmbed("We were unable to complete the opt-in process at this time. Please try again later."), ephemeral=True)
+                        else:
+                            await interaction.response.send_message(embed=userErrorEmbed("We couldn't verify your Twitter", "The pin code you entered was incorrect. Please review the instructions above and try again."), ephemeral=True)
+                            
             class optIn(discord.ui.View):
                 def __init__(self):
                     super().__init__()
@@ -350,53 +420,7 @@ async def on_ready():
                 userSettings = discord.utils.get(guild.channels, name="user-settings").id
                 await interaction.response.send_message(embed=alreadyOptIn(userSettings), ephemeral=True)
             else:
-                await interaction.response.send_message(embed=getTwitterOAUTHEmbed(), view=optIn(), ephemeral=True)
-    
-    class optInModal(ui.Modal, title = "Twitter OAuth Code"):
-        tweeterHandle = ui.TextInput(label = "Verify and link your account", style=discord.TextStyle.short, placeholder="Copy and paste your OAuth code here", required = True)
-        walletID = ui.TextInput(label = "Enter your Ethereum wallet address (Optional)", style=discord.TextStyle.short, placeholder="Jackpot winnings won't be awarded if blank", required = False)
-        async def on_submit(self, interaction: discord.Interaction):
-            
-            ## if JACKPOT ROLE, return
-            if discord.utils.get(guild.roles, name=JACKPOT_ROLE) in interaction.user.roles:
-                channelID = str(discord.utils.get(guild.channels, name="user-settings").id)
-                await interaction.response.send_message(embed=alreadyOptIn(channelID), ephemeral=True)
-            
-            else:
-                ## DO TWITTER API CALL HERE
-                handle = self.tweeterHandle.value
-                ##
-                
-                walledID = self.walletID.value
-                server = interaction.guild.id
-                memberName = interaction.user.name
-                profilePic = interaction.user.avatar
-                if profilePic == None or profilePic == "":
-                    profilePic = "None"
-                else:
-                    profilePic = interaction.user.avatar.url
-                memIDNum = interaction.user.id
-                memberID = interaction.user.name + "#" + interaction.user.discriminator
-                if api.optInMember(server, memberID, memIDNum, memberName, profilePic, handle, walledID):
-                    ## create an XP event
-                    api.xpEvent(server, memberID, 0)
-                    reward = api.getReward(server, memberName, 0)
-                    ## put on the notifs channel that a user has opted in
-                    await discord.utils.get(guild.channels, name="notifs").send("✅ **" + str(interaction.user) + "** has opted in and earned " + reward + "!")
-                    
-                    ## DEPRECATED: assign the Jackpot role to the user
-                    ## await interaction.response.send_message(content="✅ **Success!**\n\nYou have now successfully opted in to Jackpot and have been awarded `1000 XP 🎟️` as a token of our gratitude. You are now ready to begin earning XP for the value you bring to the table.", ephemeral=True)
-                    await interaction.user.add_roles(discord.utils.get(guild.roles, name=JACKPOT_ROLE))
-                    await interaction.user.remove_roles(discord.utils.get(guild.roles, name=JACKPOT_NON_OPT))
-                    
-                    ## if user submits a wallet ID, show the getOptIn() embed
-                    if walledID != "" and walledID != None:
-                        await interaction.response.send_message(embed=getOptIn(), ephemeral=True)
-                    else:
-                        channelID = discord.utils.get(guild.channels, name="user-settings").id
-                        await interaction.response.send_message(embed=getOptInNoWallet(channelID), ephemeral=True)
-                else:
-                    await interaction.response.send_message(embed=errorEmbed("We were unable to complete the opt-in process at this time. Please try again later."), ephemeral=True)
+                await interaction.response.send_message(embed=getTwitterOAUTHEmbed(url), view=optIn(), ephemeral=True)
                     
     if discord.utils.get(guild.channels, name="get-started").last_message == None or discord.utils.get(guild.channels, name="get-started").last_message.author != client.user:
         ## in the get started channel, send the gif located at Assets/Get Started.gif
@@ -437,7 +461,7 @@ async def on_ready():
                 
                 ## await interaction.response.send(content="Your referral code is: `" + refCode + "`", ephemeral=True)
                 ## send the referral code to the defered interaction
-                await interaction.response.send(content="Your referral code is: `" + refCode + "`", ephemeral=True)
+                await interaction.response.send_message(embed=showReferalEmbed(refCode), ephemeral=True)
             else:
                 getStarted = str(discord.utils.get(guild.channels, name="get-started").id)
                 await interaction.response.send_message(embed=noOptIn(getStarted), ephemeral=True)
@@ -487,6 +511,7 @@ async def on_ready():
         missions = str(discord.utils.get(guild.channels, name="missions").id)
         notifs = str(discord.utils.get(guild.channels, name="notifs").id)
         
+        await discord.utils.get(guild.channels, name="user-settings").send(file=discord.File("Assets/Get Started.gif"))
         await discord.utils.get(guild.channels, name="user-settings").send(embed=getWelcomeOptInEmbed())
         await discord.utils.get(guild.channels, name="user-settings").send(embed=getXPEmbed(raids, missions))
         await discord.utils.get(guild.channels, name="user-settings").send(embed=getChannelsEmbed(userSettings, leaderboard, raids, missions, notifs))
@@ -506,7 +531,7 @@ async def on_ready():
                 self.timeout = VIEW_TIMEOUT
             @discord.ui.button(label="🏆 View Leaderboard 🏆", style=discord.ButtonStyle.green)
             async def optin(self, interaction: discord.Interaction, button: discord.ui.Button):
-                await interaction.response.send_message(embed=getFullLeaderboardEmbed(), ephemeral=True)
+                await interaction.response.send_message(embed=getLeaderboardLink(), ephemeral=True)
         await discord.utils.get(guild.channels, name="leaderboard").send(embed = getLeaderboardEmbed(), view = printLeaderboard())
         
     ## DEPRECATED: in the raids channel, sent a twitter raid embed for both boosted and normal
@@ -686,13 +711,14 @@ async def on_ready():
                     async def on_select(self, interaction: discord.Interaction, select: discord.ui.Select):
                         ## API CALL TO GET DATA
                         class addRaid(ui.Modal, title = "Create a Twitter Raid"):
-                            raidTitle = ui.TextInput(label = "Raid Title", style=discord.TextStyle.short, placeholder = "Name this Twitter Raid", required = True)
+                            ##raidTitle = ui.TextInput(label = "Raid Title", style=discord.TextStyle.short, placeholder = "Name this Twitter Raid", required = True)
                             url = ui.TextInput(label = "Tweet URL", style=discord.TextStyle.short, placeholder = "What is the URL of a tweet", required = True)
                             #boosted = ui.TextInput(label = "Boosted XP", style=discord.TextStyle.short, placeholder = "True/False (Boosted Tweets earn 200% XP)", required = True)
                             async def on_submit(self, interaction: discord.Interaction):
                                 ## DO API CALL HERE
                                 link = self.url.value
-                                raidTitle = self.raidTitle.value
+                                ##raidTitle = self.raidTitle.value
+                                raidTitle = "NEW RAID"
                                 boosted, retweet, react, comment = False, False, False, False
                                 
                                 #if "t" in self.boosted.value.lower():
@@ -762,7 +788,7 @@ async def on_ready():
                                     await interaction.response.send_message(embed=userErrorEmbed("Raid Error: Raid Title Not Valid", "Your new raid has not launched. To fix this issue, please enter a non-empty raid title"), ephemeral=True)
                                 else:
                                     xpAwards = xpAwards.strip()
-                                    await interaction.response.send_message(embed = raidSuccessfulEmbed(str(self.raidTitle.value), str(self.url.value), xpAwards), ephemeral=True)
+                                    await interaction.response.send_message(embed = raidSuccessfulEmbed(str(self.url.value), xpAwards), ephemeral=True)
                                     await discord.utils.get(guild.channels, name="raids").send(embed=getTwitterEmbed(str(self.url.value), retweet, react, comment, boosted), view=raidView())
                         await interaction.response.send_modal(addRaid())
                 await interaction.response.send_message(content="Select the type of Raid you want (multiple can be picked)", ephemeral=True, view=raidSelector())

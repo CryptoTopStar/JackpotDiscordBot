@@ -165,12 +165,12 @@ def checkOptIn(serverID, memberName):
 def returnXP(serverID, memberName):
     return optIn[serverID][memberName].finalXP
 
-def optInMember(serverID, memberID, fullIdentifier, memberName, url, handle = None, wallet = None):
+def optInMember(serverID, memberID, fullIdentifier, memberName, url, tweetOBJ = None, wallet = None):
     if serverID not in optIn:
         optIn[serverID] = {}
     
     if memberName not in optIn[serverID]:
-        optIn[serverID][memberID] = User(memberName, fullIdentifier, memberID, serverID, url, handle, wallet)
+        optIn[serverID][memberID] = User(memberName, fullIdentifier, memberID, serverID, url, tweetOBJ, wallet)
         saveObject(optIn, "optIn")
         return True
     else:

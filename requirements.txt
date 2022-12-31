@@ -3,3 +3,4 @@ discord-py-interactions
 pandas
 flask_cors
 flask
+requests_oauthlib

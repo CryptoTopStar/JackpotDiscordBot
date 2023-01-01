@@ -1,10 +1,12 @@
 import csv
 from datetime import datetime
-from leadboardLogic import User, TwitterRaid, Mission, Server, globalLeaderboard, serverLeaderboard
+from leadboardLogic import User, TwitterRaid, Mission, Server, globalLeaderboard, serverLeaderboard, jackpot
 import random
 import string
 import json
 import os
+
+jackpotObjects = [jackpot()]
 
 ## SCHEMA:
 ##      - KEY: Community Server ID
@@ -123,26 +125,26 @@ def saveMissions():
         json.dump(refresh(missions), f)
 
 def basicMissions(serverID):
-    createMission(serverID, "project_tweet", "Post a Tweet from your personal Twitter account that tags the project", 2000)
-    createMission(serverID, "server_booster", "Boost the server", 3000)
-    createMission(serverID, "shoutout_tweet", "Post a Tweet from your personal Twitter account that recognizes another community member for their community contributions", 3500)
-    createMission(serverID, "project_thread_tweet", "Post a Twitter Thread from your personal Twitter account that tags the project", 3500)
-    createMission(serverID, "floor_buy", "Purchase on of the NFT’s with the current floor price", 3000)
-    createMission(serverID, "floor_sweep", "Purchase a minimum of 3 NFT’s on the current floor ", 7500)
-    createMission(serverID, "pfp_change", "Change your Twitter profile picture to your NFT", 4000)
-    createMission(serverID, "bio_change", "Add @project (the name of the project) to your Twitter bio ", 4000)
-    createMission(serverID, "banner_change", "Change your Twitter banner to a banner related to the project", 3500)
-    createMission(serverID, "spread_the_word", "Tell other communities about the project in another DIscord server", 2000)
-    createMission(serverID, "community_bonding", "Have a 10 minute call via Discord, phone, Google Meet, or some other form of call, with another member of the community ", 2500)
-    createMission(serverID, "mission_idea", "Come up with an idea for a new Mission and share it with an Admin, if it is implemented submit proof.", 1500)
-    createMission(serverID, "join_twitter_space", "Listen into any Twitter space that talks about the project, whether its hosted by the project, another member, or another project.", 2000)
-    createMission(serverID, "host_twitter_space", "Host a project-inspired Twitter space that has at least 10 listeners", 5000)
-    createMission(serverID, "create_youtube_video", "Upload a video to YouTube that relates to the project in someway ", 4000)
-    createMission(serverID, "create_meme", "Create an original meme that relates to the project in someway", 3500)
-    createMission(serverID, "retweet_pinned_tweet", "Retweet from your personal account the project’s pinned Tweet", 3600)
-    createMission(serverID, "fan_art", "Create an original graphic or fan art that relates to the project in someway", 3500)
-    createMission(serverID, "blog_post", "Write an online blog post, more than 500 words, that relates to the project in someway", 4000)
-    createMission(serverID, "follow_twitter", "Follow the project account from your personal Twitter", 1000)
+    createMission(serverID, "Tweet about the project", "Post a Tweet from your personal Twitter account that tags the project", 2000)
+    createMission(serverID, "Become a server booster", "Boost the server", 3000)
+    createMission(serverID, "Give another community member a shoutout on Twitter", "Post a Tweet from your personal Twitter account that recognizes another community member for their community contributions", 3500)
+    createMission(serverID, "Write a thread about the project on Twitter", "Post a Twitter Thread from your personal Twitter account that tags the project", 3500)
+    createMission(serverID, "Buy the floor", "Purchase on of the NFT’s with the current floor price", 3000)
+    createMission(serverID, "Sweep the floor", "Purchase a minimum of 3 NFT’s on the current floor ", 7500)
+    createMission(serverID, "Set your PFP to the project’s NFT", "Change your Twitter profile picture to your NFT", 4000)
+    createMission(serverID, "Add @project in Twitter bio", "Add @project (the name of the project) to your Twitter bio ", 4000)
+    createMission(serverID, "Add project-inspired banner on Twitter profile", "Change your Twitter banner to a banner related to the project", 3500)
+    createMission(serverID, "Talk about the project in another server", "Tell other communities about the project in another DIscord server", 2000)
+    createMission(serverID, "Have a 10 minute call", "Have a 10 minute call via Discord, phone, Google Meet, or some other form of call, with another member of the community ", 2500)
+    createMission(serverID, "Introduce an idea for Missions", "Come up with an idea for a new Mission and share it with an Admin, if it is implemented submit proof.", 1500)
+    createMission(serverID, "Join a Twitter Space", "Listen into any Twitter space that talks about the project, whether its hosted by the project, another member, or another project.", 2000)
+    createMission(serverID, "Host a Twitter Space", "Host a project-inspired Twitter space that has at least 10 listeners", 5000)
+    createMission(serverID, "Create a YouTube video", "Upload a video to YouTube that relates to the project in someway ", 4000)
+    createMission(serverID, "Create a meme", "Create an original meme that relates to the project in someway", 3500)
+    createMission(serverID, "Retweet the pinned Tweet", "Retweet from your personal account the project’s pinned Tweet", 3600)
+    createMission(serverID, "Make a custom graphic", "Create an original graphic or fan art that relates to the project in someway", 3500)
+    createMission(serverID, "Write a blog post", "Write an online blog post, more than 500 words, that relates to the project in someway", 4000)
+    createMission(serverID, "Follow the project on Twitter", "Follow the project account from your personal Twitter", 1000)
 
 def addServer(serverID, serverName, url):
     if serverID not in SERVERS:
@@ -154,6 +156,27 @@ def addServer(serverID, serverName, url):
         return True
     else:
         return False
+
+def getServerDeadline(serverID):
+    try:
+        return SERVERS[serverID].endDate
+    except:
+        return None
+
+def setServerEndMessage(serverID, messageID):
+    ## messageID: [missionMes, raidMes]
+    try:
+        SERVERS[serverID].endMessage = messageID
+        return True
+    except:
+        return None
+    
+def getServerEndMessage(serverID):
+    ## messageID: [missionMes, raidMes]
+    try:
+        return SERVERS[serverID].endMessage
+    except:
+        return None
 
 def checkOptIn(serverID, memberName):
     if serverID not in optIn:
@@ -476,6 +499,14 @@ def updateLeaderboards(memberID, serverID, XP):
     saveObject(SERVERS, "SERVERS")
     saveObject(GLOBAL, "GLOBAL")
     
+def getJackpot():
+    return str(jackpotObjects[len(jackpotObjects) - 1].jackpot)
+
+def getJackpotDeadline():
+    return str(jackpotObjects[len(jackpotObjects) - 1].deadline)
+
+def getJackpotNumber():
+    return str(len(SERVER_NAMES))
     
 def getRank(serverID, memberID):
     serverRank, serverTrend, serverXP = SERVERS[serverID].leaderboard.getRankTrendXP(memberID)

@@ -63,6 +63,27 @@ def refreshCommands(data):
             else:
                 user_id = user_id.name + "#" + user_id.discriminator
             await ctx.send(f"FETCHING RANK... #|# {user_id}")
+            
+        
+        @bot.command(
+            name="leaderboard",
+            description="View the leaderboard for this Server",
+            scope=ids,
+        )  
+        
+        async def leaderboard(ctx: interactions.CommandContext):
+            serverID = ctx.guild.id
+            await ctx.send(f"GETTING THE LEADERBOARD... #|# {serverID}") 
+            
+        @bot.command(
+            name="jackpot",
+            description="View what's in the jackpot",
+            scope=ids,
+        )  
+        
+        async def jackpotRet(ctx: interactions.CommandContext):
+            await ctx.send(f"FETCHING JACKPOT...") 
+            
 
         bot.start()
 

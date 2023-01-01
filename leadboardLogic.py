@@ -8,9 +8,6 @@ INDIVIDUAL_WEIGHT = {}
 COMMUNITY_WEIGHT = {}
 XP_AWARDS = {1:40, 2:15, 3:200, 4:800, 5:700, -5:-700, 6:500, 7:1000, 8:400, 9:150, 10:600, 11:200, 12:400, 13:0, 14:1000, 15:2000, 16:3000, 17:3500, 18:3600, 19:4000, 20:5000, 21:0}
 
-##TIME = datetime.datetime.now().strftime("%m/%d/%y %H:%M")
-TIME = datetime.strptime("1/2/22 20:05", "%m/%d/%y %H:%M")
-
 ## DATA SCHEMA
 ## UNIQUE ID | TASK TYPE | XP OVERRIDE | TIME | COMMUNITY
 def readCSV(filename):
@@ -35,6 +32,7 @@ class User:
         self.twitterOBJ = twitterOBJ[:3]
         self.handle = twitterOBJ[3]
         self.wallet = wallet
+        self.isNew = True
         self.community = community
         self.pfp = url
         self.referal = None
@@ -103,6 +101,8 @@ class Server:
         self.joinTime = datetime.now().strftime("%m/%d/%y %H:%M")
         self.leaderboard = serverLeaderboard()
         self.maxMembers = 50
+        self.endDate = None
+        self.endMessage = None
     
     def reprJSON(self):
         return dict(name = self.name, id = self.id, pfp = self.pfp, joinTime = self.joinTime, leaderboard = self.leaderboard.reprJSON(), maxMembers = self.maxMembers)
@@ -166,8 +166,7 @@ class globalLeaderboard:
     
     def reprJSON(self):
         return self.leaderboard.to_dict(orient = "records")
-        
-        
+          
 class serverLeaderboard:
     def __init__(self):
         ## init an empty pandas dataframe with the following columns:
@@ -231,6 +230,23 @@ class serverLeaderboard:
         trend = row["trend"].values[0]
         XP = row["memberXP"].values[0]
         return rank, trend, XP
+    
+class jackpot:
+    def __init__(self):
+        self.jackpot = "10,000"
+        self.deadline = datetime.now() + pd.Timedelta(days = 30)
+    
+    def update(self, amount):
+        self.jackpot += amount
+    
+    def getJackpot(self):
+        return self.jackpot
+    
+    def resetJackpot(self):
+        self.jackpot = 0
+    
+    def reprJSON(self):
+        return {"jackpot": self.jackpot, "deadline": self.deadline.strftime("%Y-%m-%d %H:%M:%S")}
 
 """
 ## Uses XP Values to calculate XP, ignores XP Override

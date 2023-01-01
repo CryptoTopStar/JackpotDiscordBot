@@ -264,8 +264,9 @@ def falseLink(link):
     ## 2) Has any profile name
     ## 3) Has a /status/
     ## 4) Has a number at the end
+    ## 5) if it has a "?" followed by any number of characters, that's fine
     
-    regexOpt = r"^https?:\/\/twitter\.com\/[a-zA-Z0-9_]+\/status\/[0-9]+$"
+    regexOpt = r"^https:\/\/twitter\.com\/[a-zA-Z0-9_]+\/status\/[0-9]+(\?.*)?$"
     if re.match(regexOpt, link):
         return False
     else:

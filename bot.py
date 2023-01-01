@@ -234,6 +234,13 @@ def userErrorEmbed(title, message):
     embed.set_footer(text="Powered by Jackpot", icon_url="https://static.wixstatic.com/media/cdc018_603e1fc27c6a4c71b2c8c333f66c858b~mv2.png")
     return embed
 
+def raidCompleteEmbed(task):
+    congratsMessages = ["Congrats!", "Nice Job!", "Well Done!", "You're all set!", "Nicely Done!"]
+    randMessage = random.choice(congratsMessages)
+    embed = discord.Embed(title="**"+randMessage+"**", description="✅ You've earned XP for "+task+" this Raid.", color=0x33FF5C)
+    embed.set_footer(text="Powered by Jackpot", icon_url="https://static.wixstatic.com/media/cdc018_603e1fc27c6a4c71b2c8c333f66c858b~mv2.png")
+    return embed
+
 def missionCompleteCommandInvalid(missions, title = "The `/complete` command is invalid in this channel"):
     embed = discord.Embed(title="**" + title + "**", description="Head over to the <#" + missions + "> channel to submit this mission. \n\n This message will delete in 10 seconds.", color=0xFF3333)
     embed.set_footer(text="Powered by Jackpot", icon_url="https://static.wixstatic.com/media/cdc018_603e1fc27c6a4c71b2c8c333f66c858b~mv2.png")
@@ -738,7 +745,7 @@ async def on_ready():
                                 
                                 serverID = interaction.guild.id
                                 tweetID = api.createTwitterRaid(serverID, raidTitle, link, boosted, retweet, react, comment)
-                                
+                                twitterID = link.split("/")[-1].split("?")[0]
                                 ## make a new view of 1 -3 buttons for retweeting, reacting, commenting
                                 class raidView(discord.ui.View):
                                     def __init__(self):
@@ -750,37 +757,55 @@ async def on_ready():
                                         serverName = interaction.guild.id
                                         userName = interaction.user.name
                                         userID = interaction.user.name + "#" + interaction.user.discriminator
-                                        resp = api.tweetEventReact(serverName, userID, tweetID)
-                                        if type(resp) == int:
-                                            await discord.utils.get(interaction.guild.channels, name="notifs").send("🎉 " + userName + " reacted to " + api.getTweetTitle(serverName) + " and earned `" + str(resp) + " XP 🎟️`")
-                                            await interaction.response.send_message(content="You have earned XP for reacting to this tweet", ephemeral=True)
+                                        
+                                        memberObj = api.getMember(serverName, userID)
+                                        liked, retweeted = twitter.likedRetweeted(memberObj.twitterOBJ[0], memberObj.twitterOBJ[1], twitterID)
+                                        if liked:
+                                            resp = api.tweetEventReact(serverName, userID, tweetID)
+                                            if type(resp) == int:
+                                                await discord.utils.get(interaction.guild.channels, name="notifs").send("🎉 " + userName + " reacted to " + api.getTweetTitle(serverName, tweetID) + " and earned `" + str(resp) + " XP 🎟️`")
+                                                await interaction.response.send_message(embed=raidCompleteEmbed("`reacting` to"), ephemeral=True)
+                                            else:
+                                                await interaction.response.send_message(embed=userErrorEmbed("You're not eligible to earn XP for `liking` this Raid", resp), ephemeral=True)
                                         else:
-                                            await interaction.response.send_message(content=resp, ephemeral=True)
-    
+                                            await interaction.response.send_message(embed=userErrorEmbed("No XP Earned", "We weren't able to verify completion of `liking` this raid."), ephemeral=True)
+        
                                     @discord.ui.button(label="Claim Reply XP", style=discord.ButtonStyle.green)
                                     async def comment(self, interaction: discord.Interaction, button: discord.ui.Button):
                                         serverName = interaction.guild.id
                                         userName = interaction.user.name
                                         userID = interaction.user.name + "#" + interaction.user.discriminator
-                                        resp = api.tweetEventComment(serverName, userID, tweetID)
-                                        if type(resp) == int:
-                                            await discord.utils.get(interaction.guild.channels, name="notifs").send("🎉 " + userName + " commented to " + api.getTweetTitle(serverName) + " and earned " + str(resp) + " XP")
-                                            await interaction.response.send_message(content="You have earned XP for commenting to this tweet", ephemeral=True)
+                                        memberObj = api.getMember(serverName, userID)
+                                        replied = twitter.hasCommented(memberObj.twitterOBJ[0], memberObj.twitterOBJ[1], twitterID)
+                                        if replied:
+                                            resp = api.tweetEventComment(serverName, userID, tweetID)
+                                            if type(resp) == int:
+                                                await discord.utils.get(interaction.guild.channels, name="notifs").send("🎉 " + userName + " replied to " + api.getTweetTitle(serverName, tweetID) + " and earned " + str(resp) + " XP")
+                                                await interaction.response.send_message(embed=raidCompleteEmbed("`replying` to"), ephemeral=True)
+                                            else:
+                                                await interaction.response.send_message(embed=userErrorEmbed("You're not eligible to earn XP for `replying` to this Raid", resp), ephemeral=True)
                                         else:
-                                            await interaction.response.send_message(content=resp, ephemeral=True)
+                                            await interaction.response.send_message(embed=userErrorEmbed("No XP Earned", "We weren't able to verify completion of `replying` to this raid."), ephemeral=True)
+        
                                             
                                     @discord.ui.button(label="Claim Retweet XP", style=discord.ButtonStyle.red)
                                     async def retweet(self, interaction: discord.Interaction, button: discord.ui.Button):
                                         serverName = interaction.guild.id
                                         userName = interaction.user.name
                                         userID = interaction.user.name + "#" + interaction.user.discriminator
-                                        resp = api.tweetEventRetweet(serverName, userID, tweetID)
-                                        if type(resp) == int:
-                                            await discord.utils.get(interaction.guild.channels, name="notifs").send("🎉 " + userName + " retweeted " + api.getTweetTitle(serverName) + " and earned `" + str(resp) + " XP 🎟️`")
-                                            await interaction.response.send_message(content="You have earned XP for retweeting this tweet", ephemeral=True)
+                                        
+                                        memberObj = api.getMember(serverName, userID)
+                                        liked, retweeted = twitter.likedRetweeted(memberObj.twitterOBJ[0], memberObj.twitterOBJ[1], twitterID)
+                                        if retweeted:
+                                            resp = api.tweetEventRetweet(serverName, userID, tweetID)
+                                            if type(resp) == int:
+                                                await discord.utils.get(interaction.guild.channels, name="notifs").send("🎉 " + userName + " retweeted " + api.getTweetTitle(serverName, tweetID) + " and earned `" + str(resp) + " XP 🎟️`")
+                                                await interaction.response.send_message(embed=raidCompleteEmbed("`retweeting`"), ephemeral=True)
+                                            else:
+                                                await interaction.response.send_message(embed=userErrorEmbed("You're not eligible to earn XP for `retweeting` this Raid", resp), ephemeral=True)
                                         else:
-                                            await interaction.response.send_message(content=resp, ephemeral=True)
-                            
+                                            await interaction.response.send_message(embed=userErrorEmbed("No XP Earned", "We weren't able to verify completion of `retweeting` this raid."), ephemeral=True)
+                                
                                 ## if link is blank, make an error message
                                 if link == "" or falseLink(link):
                                     ## send a userErrorEmbed embed message

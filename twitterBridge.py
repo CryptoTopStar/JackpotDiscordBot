@@ -46,7 +46,7 @@ def auth(resource_owner_oauth_token, resource_owner_oauth_token_secret, authoriz
 
 ## given a user access_tokem, access_token_secret, user_id, screen_name
 ## and a tweet id, return if the user has liked the tweet
-def likedRetweeted(access_token, access_token_secret, user_id, tweet_id):
+def likedRetweeted(access_token, access_token_secret, tweet_id):
     oauth = OAuth1Session(CONSUMER_KEY, 
                             client_secret=CONSUMER_SECRET, 
                             resource_owner_key=access_token, 

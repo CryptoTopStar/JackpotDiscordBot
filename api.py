@@ -1,10 +1,11 @@
 import csv
 from datetime import datetime
-from leadboardLogic import User, TwitterRaid, Mission, Server, globalLeaderboard, serverLeaderboard, jackpot
+from leadboardLogic import User, TwitterRaid, Mission, Server, globalLeaderboard, serverLeaderboard, jackpot, Member
 import random
 import string
 import json
 import os
+import math
 
 jackpotObjects = [jackpot()]
 
@@ -226,7 +227,20 @@ def addLogEvent(serverID, memberName, taskType, xpOverride = None):
 def calXP(memberObject):
     xp = 0
     for key, value in memberObject.counter.items():
-        xp += value * XP_AWARDS[key]
+        if key == 1:
+            xp += messageXP(value)
+        elif key == 2:
+            xp += reactXP(value)
+        elif key == 5:
+            count = value - memberObject.counter[-5]
+            if count <= 0:
+                continue
+            else:
+                xp += inviteXP(count)
+        elif key == -5:
+            continue
+        else:
+            xp += value * XP_AWARDS[key]
     return xp
 
 def deleteTwitterRaid(serverID, raidID):
@@ -507,11 +521,39 @@ def getJackpotDeadline():
 
 def getJackpotNumber():
     return str(len(SERVER_NAMES))
+
+def isNew(serverID, memberID, memberInteractionID):
+    try:
+        if memberID in SERVERS[serverID].newMembers and len(SERVERS[serverID].newMembers[memberID].interactions) < 10 and memberInteractionID not in SERVERS[serverID].newMembers[memberID].interactions:
+            SERVERS[serverID].newMembers[memberID].interactions.append(memberInteractionID)
+            return True
+    except:
+        return False
+
+def addNewMember(serverID, name, memberID):
+    SERVERS[serverID].newMembers[memberID] = Member(name, memberID, serverID)
+    saveObject(SERVERS, "SERVERS")
     
 def getRank(serverID, memberID):
     serverRank, serverTrend, serverXP = SERVERS[serverID].leaderboard.getRankTrendXP(memberID)
     globalRank, __, globalXP = GLOBAL.getRankTrendXP(memberID)
     return serverRank, serverTrend, serverXP, globalRank, globalXP
+
+def messageXP(x): ## code 1
+    if x <= 10:
+        return 40 * x
+    return math.floor(2070.317 + (-11.18103 - 2070.317)/(1 + (x/38.73653)**1.029935) + 4.11)
+
+def reactXP(x): ## code 2
+    if x <= 10:
+        return 15 * x
+    return math.floor(1546.222 + (7.613213 - 1546.222)/(1 + (x/62.02515)**1.249896)-6)
+
+def inviteXP(x): ## code 5
+    if x <= 7:
+        return (700 * x) - 50 * ((x - 1) ** 2)
+    else:
+        return 3100 + (100 * (x - 7))
     
 saveMissions()
 

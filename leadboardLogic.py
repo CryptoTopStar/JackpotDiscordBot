@@ -18,6 +18,17 @@ def readCSV(filename):
             data.append(row)
     return data
 
+class Member:
+    def __init__(self, name, id, communityID):
+        self.name = name
+        self.id = id
+        self.communityID = communityID
+        self.date = datetime.now().strftime("%m/%d/%y %H:%M")
+        self.interactions = []
+    
+    def reprJSON(self):
+        return dict(name=self.name, id=self.id, communityID=self.communityID, new=self.new)
+
 ## Create a class to represent a user and number of interactions
 class User:
     def __init__(self, name, unqiueIdentifier, id, community, url, twitterOBJ = None, wallet = None):
@@ -32,7 +43,6 @@ class User:
         self.twitterOBJ = twitterOBJ[:3]
         self.handle = twitterOBJ[3]
         self.wallet = wallet
-        self.isNew = True
         self.community = community
         self.pfp = url
         self.referal = None
@@ -101,6 +111,7 @@ class Server:
         self.joinTime = datetime.now().strftime("%m/%d/%y %H:%M")
         self.leaderboard = serverLeaderboard()
         self.maxMembers = 50
+        self.newMembers = {} ## {memberID: MemberOBJ, ... }
         self.endDate = None
         self.endMessage = None
     

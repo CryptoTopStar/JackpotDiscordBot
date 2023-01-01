@@ -1014,11 +1014,24 @@ async def on_message(message):
         
     ## if the message is in a DM or in the bot channel, ignore it
     if api.checkOptIn(serverName, memberID) and serverName != None and message.channel.name not in ["get-started", "leaderboard", "raids", "missions", "mission-complete", "notifs", "add-mission", "mission-approval", "launch-raid"] and text.startswith("!") == False:
-        api.xpEvent(serverName, memberID, 1)
+        ## see if the message mentions someone
+        receivedXP = False
+        for mention in message.mentions:
+            mentionID = mention + "#" + mention.discriminator
+            if api.isNew(serverID, mentionID, memberID):
+                receivedXP = True
+                api.xpEvent(serverName, memberID, 4)
+        
+        if receivedXP == False:
+            api.xpEvent(serverName, memberID, 1)
+                
         if message.reference != None:
             origAuthorID = message.reference.resolved.author + "#" + message.reference.resolved.author.discriminator
             if api.checkOptIn(serverName, origAuthorID):
-                api.xpEvent(serverName, origAuthorID, 6)        
+                api.xpEvent(serverName, origAuthorID, 6) 
+            if receivedXP == False and api.isNew(serverID, origAuthorID, memberID):
+                api.xpEvent(serverName, memberID, 4)
+                
         
     ## if someone messages the #missions-complete channel with command !verify then send a message to #mission-approval
     if message.channel.name == "mission-complete" and message.content.lower().startswith("!verify"):
@@ -1136,7 +1149,7 @@ async def on_message(message):
             await message.reply("Update your profile", view = updateInfr())
         else: 
             await message.reply("To interact with me, opt-in via the `#get-started` channel")
-    
+
 ## create an event to see everytime a user reacts to a message
 @client.event
 async def on_raw_reaction_add(payload):

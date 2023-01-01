@@ -909,14 +909,13 @@ async def on_message(message):
         else:
             return
         
-        
     ## if the message is in a DM or in the bot channel, ignore it
-    if api.checkOptIn(serverName, memberID) and message.guild != None and message.channel.name not in ["get-started", "leaderboard", "raids", "missions", "mission-complete", "notifs", "add-mission", "mission-approval", "launch-raid"] and text.startswith("!") == False:
+    if api.checkOptIn(serverName, memberID) and serverName != None and message.channel.name not in ["get-started", "leaderboard", "raids", "missions", "mission-complete", "notifs", "add-mission", "mission-approval", "launch-raid"] and text.startswith("!") == False:
         api.xpEvent(serverName, memberID, 1)
         if message.reference != None:
-            originalAuthor = message.reference.resolved.author
-            if api.checkOptIn(serverName, originalAuthor):
-                api.xpEvent(serverName, originalAuthor, 6)        
+            origAuthorID = message.reference.resolved.author + "#" + message.reference.resolved.author.discriminator
+            if api.checkOptIn(serverName, origAuthorID):
+                api.xpEvent(serverName, origAuthorID, 6)        
         
     ## if someone messages the #missions-complete channel with command !verify then send a message to #mission-approval
     if message.channel.name == "mission-complete" and message.content.lower().startswith("!verify"):

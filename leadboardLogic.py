@@ -61,6 +61,7 @@ class TwitterRaid:
     def __init__(self, title, url, boosted, retweet, react, comment):
         self.title = title
         self.link = url
+        self.id = int(url.split("/")[-1].split("?")[0])
         self.boosted = boosted
         self.retweet = retweet
         self.react = react
@@ -111,7 +112,7 @@ class globalLeaderboard:
         self.leaderboard = pd.DataFrame(columns = ["memberID", "memberXP", "memberRank", "trend", "servers", "badges"])
     
     def update(self, memberID, XP, serverID):
-        if memberID in self.leaderboard["memberID"]:
+        if memberID in list(self.leaderboard["memberID"]):
             if serverID in self.leaderboard.loc[self.leaderboard["memberID"] == memberID, "servers"]:
                 self.leaderboard.loc[self.leaderboard["memberID"] == memberID, "memberXP"] = XP + self.leaderboard.loc[self.leaderboard["memberID"] == memberID, "memberXP"]
                 self.leaderboard.loc[self.leaderboard["memberID"] == memberID, "servers"][serverID] = XP + self.leaderboard.loc[self.leaderboard["memberID"] == memberID, "servers"][serverID]
@@ -122,6 +123,7 @@ class globalLeaderboard:
             ##self.leaderboard = self.leaderboard.append({"memberID":memberID, "memberXP":XP, "memberRank":None, "trend":0, "servers":{serverID:XP}, "badges":None}, ignore_index = True)
             self.leaderboard = pd.concat([self.leaderboard, pd.DataFrame([[memberID, XP, None, 0, {serverID:XP}, None]], columns = ["memberID", "memberXP", "memberRank", "trend", "servers", "badges"])], ignore_index = True)
         self.leaderboard = self.leaderboard.sort_values(by = ["memberXP"], ascending = False)
+        self.leaderboard = self.leaderboard.reset_index(drop = True)
         
         def trend(old, new):
             if old > new:
@@ -133,15 +135,21 @@ class globalLeaderboard:
         
         for i in range(len(self.leaderboard)):
             oldRank = self.leaderboard.loc[i, "memberRank"]
-            if oldRank == None:
-                oldRank = 1 
             if i == 0:
+                if oldRank == None:
+                    oldRank = 1 
                 newTrend, newRank = trend(oldRank, 1)
             else:
                 if self.leaderboard.loc[i, "memberXP"] == self.leaderboard.loc[i-1, "memberXP"]:
-                    newTrend, newRank = trend(oldRank, self.leaderboard.loc[i-1, "memberRank"])
+                    if oldRank == None:
+                        newTrend, newRank = trend(self.leaderboard.loc[i-1, "memberRank"], self.leaderboard.loc[i-1, "memberRank"])
+                    else:
+                        newTrend, newRank = trend(oldRank, self.leaderboard.loc[i-1, "memberRank"])
                 else:
-                    newTrend, newRank = trend(oldRank, i+1)
+                    if oldRank == None:
+                        newTrend, newRank = trend(i+1, i+1)
+                    else:
+                        newTrend, newRank = trend(oldRank, i+1)
                    
             self.leaderboard.loc[i, "memberRank"] = newRank
             self.leaderboard.loc[i, "trend"] = newTrend
@@ -167,13 +175,14 @@ class serverLeaderboard:
         self.leaderboard = pd.DataFrame(columns = ["memberID", "memberXP", "memberRank", "trend"])
     
     def update(self, memberID, XP):
-        if memberID in self.leaderboard["memberID"]:
+        if memberID in list(self.leaderboard["memberID"]):
             self.leaderboard.loc[self.leaderboard["memberID"] == memberID, "memberXP"] = XP + self.leaderboard.loc[self.leaderboard["memberID"] == memberID, "memberXP"]
         else:
             #self.leaderboard = self.leaderboard.append({"memberID":memberID, "memberXP":XP, "memberRank":None, "trend":0}, ignore_index = True)
             self.leaderboard = pd.concat([self.leaderboard, pd.DataFrame({"memberID":[memberID], "memberXP":[XP], "memberRank":[None], "trend":[0]})], ignore_index = True)
             
         self.leaderboard = self.leaderboard.sort_values(by = ["memberXP"], ascending = False)
+        self.leaderboard = self.leaderboard.reset_index(drop = True)
         ## assign new ranks based on new XP, if XP is the same, keep the same rank
         ## if old rank is greater than new rank, trend = 1
         ## if old rank is less than new rank, trend = -1
@@ -189,15 +198,21 @@ class serverLeaderboard:
             
         for i in range(len(self.leaderboard)):
             oldRank = self.leaderboard.loc[i, "memberRank"]
-            if oldRank == None:
-                oldRank = 1 
             if i == 0:
+                if oldRank == None:
+                    oldRank = 1 
                 newTrend, newRank = trend(oldRank, 1)
             else:
                 if self.leaderboard.loc[i, "memberXP"] == self.leaderboard.loc[i-1, "memberXP"]:
-                    newTrend, newRank = trend(oldRank, self.leaderboard.loc[i-1, "memberRank"])
+                    if oldRank == None:
+                        newTrend, newRank = trend(self.leaderboard.loc[i-1, "memberRank"], self.leaderboard.loc[i-1, "memberRank"])
+                    else:
+                        newTrend, newRank = trend(oldRank, self.leaderboard.loc[i-1, "memberRank"])
                 else:
-                    newTrend, newRank = trend(oldRank, i+1)
+                    if oldRank == None:
+                        newTrend, newRank = trend(i+1, i+1)
+                    else:
+                        newTrend, newRank = trend(oldRank, i+1)
                    
             self.leaderboard.loc[i, "memberRank"] = newRank
             self.leaderboard.loc[i, "trend"] = newTrend

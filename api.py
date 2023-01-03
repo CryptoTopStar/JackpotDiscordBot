@@ -126,31 +126,33 @@ def saveMissions():
         json.dump(refresh(missions), f)
 
 def basicMissions(serverID):
-    createMission(serverID, "Tweet about the project", "Post a Tweet from your personal Twitter account that tags the project", 2000)
-    createMission(serverID, "Become a server booster", "Boost the server", 3000)
-    createMission(serverID, "Give another community member a shoutout on Twitter", "Post a Tweet from your personal Twitter account that recognizes another community member for their community contributions", 3500)
-    createMission(serverID, "Write a thread about the project on Twitter", "Post a Twitter Thread from your personal Twitter account that tags the project", 3500)
-    createMission(serverID, "Buy the floor", "Purchase on of the NFT’s with the current floor price", 3000)
-    createMission(serverID, "Sweep the floor", "Purchase a minimum of 3 NFT’s on the current floor ", 7500)
-    createMission(serverID, "Set your PFP to the project’s NFT", "Change your Twitter profile picture to your NFT", 4000)
-    createMission(serverID, "Add @project in Twitter bio", "Add @project (the name of the project) to your Twitter bio ", 4000)
-    createMission(serverID, "Add project-inspired banner on Twitter profile", "Change your Twitter banner to a banner related to the project", 3500)
-    createMission(serverID, "Talk about the project in another server", "Tell other communities about the project in another DIscord server", 2000)
-    createMission(serverID, "Have a 10 minute call", "Have a 10 minute call via Discord, phone, Google Meet, or some other form of call, with another member of the community ", 2500)
-    createMission(serverID, "Introduce an idea for Missions", "Come up with an idea for a new Mission and share it with an Admin, if it is implemented submit proof.", 1500)
-    createMission(serverID, "Join a Twitter Space", "Listen into any Twitter space that talks about the project, whether its hosted by the project, another member, or another project.", 2000)
-    createMission(serverID, "Host a Twitter Space", "Host a project-inspired Twitter space that has at least 10 listeners", 5000)
-    createMission(serverID, "Create a YouTube video", "Upload a video to YouTube that relates to the project in someway ", 4000)
-    createMission(serverID, "Create a meme", "Create an original meme that relates to the project in someway", 3500)
-    createMission(serverID, "Retweet the pinned Tweet", "Retweet from your personal account the project’s pinned Tweet", 3600)
-    createMission(serverID, "Make a custom graphic", "Create an original graphic or fan art that relates to the project in someway", 3500)
-    createMission(serverID, "Write a blog post", "Write an online blog post, more than 500 words, that relates to the project in someway", 4000)
-    createMission(serverID, "Follow the project on Twitter", "Follow the project account from your personal Twitter", 1000)
+    #DEPRECATED FOR NOW: buy the floor, sweep the floor, set your pfp to the project's nft, retweet pinned tweet
+    createMission(serverID, "Tweet about the project", "Post a Tweet from your personal Twitter account that tags the project. Submit the link or a screenshot as proof.", 2000)
+    createMission(serverID, "Become a server booster", "Boost the server. Submit a screenshot as proof.", 3000)
+    createMission(serverID, "Give another community member a shoutout on Twitter", "Post a Tweet from your personal Twitter account that recognizes another community member for their community contributions. Submit the link or a screenshot as proof.", 3500)
+    createMission(serverID, "Write a thread about the project on Twitter", "Post a Twitter Thread from your personal Twitter account that tags the project. Submit the link or a screenshot as proof.", 3500)
+    # createMission(serverID, "Buy the floor", "Purchase one of the NFT’s with the current floor price", 3000)
+    # createMission(serverID, "Sweep the floor", "Purchase a minimum of 3 NFT’s on the current floor ", 7500)
+    # createMission(serverID, "Set your PFP to the project’s NFT", "Change your Twitter profile picture to your NFT", 4000)
+    createMission(serverID, "Add the project’s handle to your twitter bio", "Add the project’s handle to your Twitter bio. Submit a link to your profile or a screenshot of your bio as proof.", 4000)
+    createMission(serverID, "Add project-inspired banner to your Twitter profile", "Change your Twitter banner to any image related to the project. Submit a link to your profile or a screenshot of your profile as proof.", 3500)
+    createMission(serverID, "Talk about the project in another server", "Mention the project in another community’s Discord Server. Submit a screenshot of the interaction as proof.", 2000)
+    # createMission(serverID, "Have a 10 minute call", "Have a 10 minute call via Discord, phone, Google Meet, or some other form of call, with another member of the community ", 2500)
+    # createMission(serverID, "Introduce an idea for Missions", "Come up with an idea for a new Mission and share it with an Admin, if it is implemented submit proof.", 1500)
+    createMission(serverID, "Join Twitter Spaces", "Join Twitter Spaces hosted by the project or the community. Submit a link to the spaces and a screenshot of your attendance as proof.", 2000)
+    createMission(serverID, "Host Twitter Spaces", "Host Twitter Spaces for members of the community. The Spaces should have at least 5 attendees. Submit a link to the spaces and a screenshot of attendees as proof.", 5000)
+    createMission(serverID, "Create a YouTube video", "Create a Public Youtube video that relates to the project in some way. Submit a link to the video as proof.", 4000)
+    createMission(serverID, "Create a meme", "Create an original meme that relates to the project in some way. Submit the image as proof.", 3500)
+    # createMission(serverID, "Retweet the pinned Tweet", "Retweet from your personal account the project’s pinned Tweet", 3600)
+    createMission(serverID, "Make fan art", "Create an original graphic or fan art that relates to the project in some way. Submit the image as proof.", 3500)
+    # createMission(serverID, "Write a blog post", "Write an online blog post, more than 500 words, that relates to the project in someway", 4000)
+    createMission(serverID, "Follow the project on Twitter", "Follow the project from your personal Twitter account. Submit a screenshot as proof.", 1000)
 
-def addServer(serverID, serverName, url):
+def addServer(serverID, serverName, url, invites):
     if serverID not in SERVERS:
-        SERVERS[serverID] = Server(serverName, serverID, url)
+        SERVERS[serverID] = Server(serverName, serverID, url, invites)
         SERVER_NAMES[serverName] = serverID
+        jackpotObjects[len(jackpotObjects) - 1].servers += 1
         basicMissions(serverID)
         saveObject(SERVERS, "SERVERS")
         saveObject(SERVER_NAMES, "SERVER_NAMES")
@@ -161,6 +163,20 @@ def addServer(serverID, serverName, url):
 def getServerDeadline(serverID):
     try:
         return SERVERS[serverID].endDate
+    except:
+        return None
+
+def updateInvites(serverID, invites):
+    try:
+        SERVERS[serverID].invites = invites
+        saveObject(SERVERS, "SERVERS")
+        return True
+    except:
+        return False
+
+def getInvites(serverID):
+    try:
+        return SERVERS[serverID].invites
     except:
         return None
 
@@ -192,7 +208,8 @@ def returnXP(serverID, memberName):
 def optInMember(serverID, memberID, fullIdentifier, memberName, url, tweetOBJ = None, wallet = None):
     if serverID not in optIn:
         optIn[serverID] = {}
-    
+    SERVERS[serverID].optInCount = SERVERS[serverID].optInCount + 1
+    jackpotObjects[len(jackpotObjects) - 1].members += 1
     if memberName not in optIn[serverID]:
         optIn[serverID][memberID] = User(memberName, fullIdentifier, memberID, serverID, url, tweetOBJ, wallet)
         saveObject(optIn, "optIn")
@@ -437,11 +454,11 @@ def serverVisit(serverID, memberName):
     month = lastActive.month
     day = lastActive.day
     
+    saveObject(optIn, "optIn")
+    
     ## if lastActive is the same calendar day as today
     if month != datetime.now().month and day != datetime.now().day:
         return True
-
-    saveObject(optIn, "optIn")
     
     return False
     
@@ -475,7 +492,7 @@ def checkMissionEligibility(serverID, memberName, missionID):
         limit =  missions[serverID][missionID].limit
         personLimit =  missions[serverID][missionID].personLimit
         
-        if missions[serverID][missionID].count >= limit:
+        if int(missions[serverID][missionID].count) >= limit:
             return False
         
         if memberName in missions[serverID][missionID].completed and len(missions[serverID][missionID].completed[memberName]) >= personLimit:
@@ -520,7 +537,7 @@ def getJackpotDeadline():
     return str(jackpotObjects[len(jackpotObjects) - 1].deadline)
 
 def getJackpotNumber():
-    return str(len(SERVER_NAMES))
+    return str(jackpotObjects[len(jackpotObjects) - 1].servers), str(jackpotObjects[len(jackpotObjects) - 1].members), str(jackpotObjects[len(jackpotObjects) - 1].winners)
 
 def isNew(serverID, memberID, memberInteractionID):
     try:
@@ -531,8 +548,18 @@ def isNew(serverID, memberID, memberInteractionID):
         return False
 
 def addNewMember(serverID, name, memberID):
-    SERVERS[serverID].newMembers[memberID] = Member(name, memberID, serverID)
-    saveObject(SERVERS, "SERVERS")
+    if memberID not in SERVERS[serverID].newMembers:
+        SERVERS[serverID].newMembers[memberID] = Member(name, memberID, serverID)
+        saveObject(SERVERS, "SERVERS")
+        return SERVERS[serverID].newMembers[memberID]
+    else:
+        return False
+
+def findNewMember(serverID, memberID):
+    if memberID in SERVERS[serverID].newMembers:
+        return SERVERS[serverID].newMembers[memberID]
+    else:
+        return None
     
 def getRank(serverID, memberID):
     serverRank, serverTrend, serverXP = SERVERS[serverID].leaderboard.getRankTrendXP(memberID)
@@ -554,6 +581,37 @@ def inviteXP(x): ## code 5
         return (700 * x) - 50 * ((x - 1) ** 2)
     else:
         return 3100 + (100 * (x - 7))
+    
+def gettingStarted(serverID):
+    try:
+        return SERVERS[serverID].welcomeMessages[0]
+    except:
+        return None
+
+def userSettings(serverID):
+    try:
+        return SERVERS[serverID].welcomeMessages[1]
+    except:
+        return None
+    
+def storeGettingStarted(serverID, message):
+    try:
+        SERVERS[serverID].welcomeMessages[0] = message
+        saveObject(SERVERS, "SERVERS")
+        return True
+    except:
+        return False
+
+def storeUserSettings(serverID, message):
+    try:
+        SERVERS[serverID].welcomeMessages[1] = message
+        saveObject(SERVERS, "SERVERS")
+        return True
+    except:
+        return False
+    
+def getTop3(serverID):
+    return SERVERS[serverID].leaderboard.top3()
     
 saveMissions()
 

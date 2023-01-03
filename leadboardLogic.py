@@ -25,6 +25,7 @@ class Member:
         self.communityID = communityID
         self.date = datetime.now().strftime("%m/%d/%y %H:%M")
         self.interactions = []
+        self.referer = None
     
     def reprJSON(self):
         return dict(name=self.name, id=self.id, communityID=self.communityID, new=self.new)
@@ -83,12 +84,12 @@ class TwitterRaid:
 class Mission:
     def __init__(self, title, description, xp, supply = None, perPerson = None):
         if supply != None:
-            self.limit = supply
+            self.limit = int(supply)
         else:
             self.limit = math.inf
         
         if perPerson != None:
-            self.personLimit = perPerson
+            self.personLimit = int(perPerson)
         else:
             self.personLimit = math.inf
             
@@ -104,13 +105,16 @@ class Mission:
         return dict(title = self.title, description = self.description, date = self.date, xp = self.xp, count = self.count, numPeople = self.numPeople, completed = self.completed, limit = self.limit, personLimit = self.personLimit)
 
 class Server:
-    def __init__(self, name, id, url):
+    def __init__(self, name, id, url, invites):
         self.name = name
         self.id = id
         self.pfp = url
         self.joinTime = datetime.now().strftime("%m/%d/%y %H:%M")
         self.leaderboard = serverLeaderboard()
         self.maxMembers = 50
+        self.optInCount = 0
+        self.invites = invites
+        self.welcomeMessages = [None, None] ## [get-started, user-settings]
         self.newMembers = {} ## {memberID: MemberOBJ, ... }
         self.endDate = None
         self.endMessage = None
@@ -232,6 +236,23 @@ class serverLeaderboard:
         ## for example, the string "ABC" would return all rows with memberID containing "ABC"
         return self.leaderboard[self.leaderboard["memberID"].str.contains(string)]
     
+    def top3(self):
+        ## return a list of the top 3 members, in this format: 
+        ## [MemberID, Rank, XP]
+        ## if there are less than 3 members, return all members
+        top3 = []
+        for i in range(len(self.leaderboard)):
+            if i == 0:
+                top3 = [[self.leaderboard.loc[i, "memberID"], self.leaderboard.loc[i, "memberRank"], self.leaderboard.loc[i, "memberXP"]]]
+            elif i == 1:
+                top3.append([self.leaderboard.loc[i, "memberID"], self.leaderboard.loc[i, "memberRank"], self.leaderboard.loc[i, "memberXP"]])
+            elif i == 2:
+                top3.append([self.leaderboard.loc[i, "memberID"], self.leaderboard.loc[i, "memberRank"], self.leaderboard.loc[i, "memberXP"]])
+            else:
+                break
+        return top3
+        
+    
     def reprJSON(self):
         return self.leaderboard.to_dict(orient = "records")
     
@@ -244,8 +265,12 @@ class serverLeaderboard:
     
 class jackpot:
     def __init__(self):
-        self.jackpot = "10,000"
-        self.deadline = datetime.now() + pd.Timedelta(days = 30)
+        self.jackpot = "2500"
+        ##self.deadline = datetime.now() + pd.Timedelta(days = 30)
+        self.winners = 7
+        self.deadline = "Feb 22nd @ 9:00pm EST"
+        self.servers = 0
+        self.members = 0
     
     def update(self, amount):
         self.jackpot += amount

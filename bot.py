@@ -398,10 +398,10 @@ async def bot_set_up(myGuild):
             await discord.utils.get(guild.channels, name=channel).set_permissions(guild.default_role, read_messages=False)
             await discord.utils.get(guild.channels, name=channel).set_permissions(discord.utils.get(guild.roles, name=BOT_ROLE), read_messages=True, send_messages=True)
             await discord.utils.get(guild.channels, name=channel).set_permissions(discord.utils.get(guild.roles, name=ADMIN_ROLE), read_messages=True, send_messages=True)
-            if channel != "mission-complete":
-                await discord.utils.get(guild.channels, name=channel).set_permissions(discord.utils.get(guild.roles, name=JACKPOT_ROLE), read_messages=True)
+            if channel != "missions":
+                await discord.utils.get(guild.channels, name=channel).set_permissions(discord.utils.get(guild.roles, name=JACKPOT_ROLE), read_messages=True, send_messages=False)
             else:
-                await discord.utils.get(guild.channels, name=channel).set_permissions(discord.utils.get(guild.roles, name=JACKPOT_ROLE), read_messages=False, send_messages=True)
+                await discord.utils.get(guild.channels, name=channel).set_permissions(discord.utils.get(guild.roles, name=JACKPOT_ROLE), read_messages=True, send_messages=True)
     
     ## Create a get-started channel
     class optInstructions(discord.ui.View):

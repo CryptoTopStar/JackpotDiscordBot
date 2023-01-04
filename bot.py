@@ -338,6 +338,9 @@ async def bot_set_up(myGuild):
     invites = await myGuild.invites()
     api.addServer(serverID, serverName, serverProfile, invites)
     
+    ## change the BOT_ROLE permissions to include view channels, manage channels, manage roles
+    ##await myGuild.get_role(discord.utils.get(myGuild.roles, name=BOT_ROLE).id).edit(permissions=discord.Permissions(permissions=4398046511095))
+    
     ## if the Jackpot role doesn't exist, create it
     if discord.utils.get(myGuild.roles, name=JACKPOT_ROLE) == None: 
         await myGuild.create_role(name=JACKPOT_ROLE, color=discord.Color.from_rgb(235, 249, 0), hoist=False)
@@ -345,13 +348,21 @@ async def bot_set_up(myGuild):
     ## if the Jackpot Non Opt role doesn't exist, create it
     if discord.utils.get(myGuild.roles, name=JACKPOT_NON_OPT) == None:
         await myGuild.create_role(name=JACKPOT_NON_OPT, color=discord.Color.from_rgb(255, 110, 110), hoist=False)
+        
+    if discord.utils.get(myGuild.roles, name=ADMIN_ROLE) == None:
+        await myGuild.create_role(name=ADMIN_ROLE, color=discord.Color.from_rgb(153, 170, 181), hoist=False)
+        await myGuild.get_role(discord.utils.get(myGuild.roles, name=ADMIN_ROLE).id).edit(permissions=discord.Permissions(permissions=4398046511095))
+        ## give this role to everyone with BOT_ROLE
     
     guild = myGuild
     
     ## give everyone the Jackpot Non Opt role if they dont have the Jackpot role already
     for member in guild.members:
-        if discord.utils.get(member.roles, name=JACKPOT_NON_OPT) == None and discord.utils.get(member.roles, name=JACKPOT_ROLE) == None and discord.utils.get(member.roles, name=BOT_ROLE) == None:
-            await member.add_roles(discord.utils.get(guild.roles, name=JACKPOT_NON_OPT))
+        try:
+            if discord.utils.get(member.roles, name=JACKPOT_NON_OPT) == None and discord.utils.get(member.roles, name=JACKPOT_ROLE) == None and discord.utils.get(member.roles, name=BOT_ROLE) == None:
+                await member.add_roles(discord.utils.get(guild.roles, name=JACKPOT_NON_OPT))
+        except:
+            pass
             
     ## create Guild categories if they don't exist, REG_GUILD and ADMIN_GUILD
     if discord.utils.get(guild.categories, name=REG_GUILD) == None:
@@ -377,7 +388,7 @@ async def bot_set_up(myGuild):
         if discord.utils.get(guild.channels, name=channel) == None:
             await guild.create_text_channel(channel, category=discord.utils.get(guild.categories, name=REG_GUILD))
             await discord.utils.get(guild.channels, name=channel).set_permissions(guild.default_role, read_messages=False, send_messages=False)   
-            await discord.utils.get(guild.channels, name=channel).set_permissions(discord.utils.get(guild.roles, name=BOT_ROLE), read_messages=True, send_messages=True)
+            #await discord.utils.get(guild.channels, name=channel).set_permissions(discord.utils.get(guild.roles, name=BOT_ROLE), read_messages=True, send_messages=True)
             await discord.utils.get(guild.channels, name=channel).set_permissions(discord.utils.get(guild.roles, name=ADMIN_ROLE), read_messages=True, send_messages=True)
             await discord.utils.get(guild.channels, name=channel).set_permissions(discord.utils.get(guild.roles, name=JACKPOT_NON_OPT), read_messages=True, send_messages=False)
     
@@ -387,7 +398,7 @@ async def bot_set_up(myGuild):
         if discord.utils.get(guild.channels, name=channel) == None:
             await guild.create_text_channel(channel, category=discord.utils.get(guild.categories, name=REG_GUILD))
             await discord.utils.get(guild.channels, name=channel).set_permissions(guild.default_role, read_messages=False)   
-            await discord.utils.get(guild.channels, name=channel).set_permissions(discord.utils.get(guild.roles, name=BOT_ROLE), read_messages=True, send_messages=True)
+            #await discord.utils.get(guild.channels, name=channel).set_permissions(discord.utils.get(guild.roles, name=BOT_ROLE), read_messages=True, send_messages=True)
             await discord.utils.get(guild.channels, name=channel).set_permissions(discord.utils.get(guild.roles, name=ADMIN_ROLE), read_messages=True, send_messages=True)
             await discord.utils.get(guild.channels, name=channel).set_permissions(discord.utils.get(guild.roles, name=JACKPOT_ROLE), read_messages=True, send_messages=False)
     
@@ -397,7 +408,7 @@ async def bot_set_up(myGuild):
         if discord.utils.get(guild.channels, name=channel) == None:
             await guild.create_text_channel(channel, category=discord.utils.get(guild.categories, name=REG_GUILD))
             await discord.utils.get(guild.channels, name=channel).set_permissions(guild.default_role, read_messages=False)
-            await discord.utils.get(guild.channels, name=channel).set_permissions(discord.utils.get(guild.roles, name=BOT_ROLE), read_messages=True, send_messages=True)
+            #await discord.utils.get(guild.channels, name=channel).set_permissions(discord.utils.get(guild.roles, name=BOT_ROLE), read_messages=True, send_messages=True)
             await discord.utils.get(guild.channels, name=channel).set_permissions(discord.utils.get(guild.roles, name=ADMIN_ROLE), read_messages=True, send_messages=True)
             if channel != "missions":
                 await discord.utils.get(guild.channels, name=channel).set_permissions(discord.utils.get(guild.roles, name=JACKPOT_ROLE), read_messages=True, send_messages=False)
@@ -655,7 +666,7 @@ async def bot_set_up(myGuild):
         if discord.utils.get(guild.channels, name=channel) == None:
             await guild.create_text_channel(channel, category=discord.utils.get(guild.categories, name=ADMIN_GUILD))
             await discord.utils.get(guild.channels, name=channel).set_permissions(guild.default_role, read_messages=False)
-            await discord.utils.get(guild.channels, name=channel).set_permissions(discord.utils.get(guild.roles, name=BOT_ROLE), read_messages=True, send_messages=True)
+            #await discord.utils.get(guild.channels, name=channel).set_permissions(discord.utils.get(guild.roles, name=BOT_ROLE), read_messages=True, send_messages=True)
             await discord.utils.get(guild.channels, name=channel).set_permissions(discord.utils.get(guild.roles, name=ADMIN_ROLE), read_messages=True, send_messages=True)
     ## in the add-mission, send a message and 3 buttons: Add Quest, Edit Quest, Delete Quest
     if discord.utils.get(guild.channels, name="add-mission").last_message == None or discord.utils.get(guild.channels, name="add-mission").last_message.author != client.user:
@@ -848,6 +859,10 @@ async def bot_set_up(myGuild):
                                         userID = interaction.user.name + "#" + interaction.user.discriminator
                                         
                                         memberObj = api.getMember(serverName, userID)
+                                        if memberObj == None:
+                                            gettingStartedID = str(discord.utils.get(interaction.guild.channels, name="get-started").id)
+                                            await interaction.response.send_message(embed=noOptIn(gettingStartedID), ephemeral=True)
+                                            return
                                         liked, retweeted = twitter.likedRetweeted(memberObj.twitterOBJ[0], memberObj.twitterOBJ[1], twitterID)
                                         if liked:
                                             resp = api.tweetEventReact(serverName, userID, tweetID)
@@ -865,6 +880,10 @@ async def bot_set_up(myGuild):
                                         userName = interaction.user.name
                                         userID = interaction.user.name + "#" + interaction.user.discriminator
                                         memberObj = api.getMember(serverName, userID)
+                                        if memberObj == None:
+                                            gettingStartedID = str(discord.utils.get(interaction.guild.channels, name="get-started").id)
+                                            await interaction.response.send_message(embed=noOptIn(gettingStartedID), ephemeral=True)
+                                            return
                                         replied = twitter.hasCommented(memberObj.twitterOBJ[0], memberObj.twitterOBJ[1], twitterID)
                                         if replied:
                                             resp = api.tweetEventComment(serverName, userID, tweetID)
@@ -884,6 +903,10 @@ async def bot_set_up(myGuild):
                                         userID = interaction.user.name + "#" + interaction.user.discriminator
                                         
                                         memberObj = api.getMember(serverName, userID)
+                                        if memberObj == None:
+                                            gettingStartedID = str(discord.utils.get(interaction.guild.channels, name="get-started").id)
+                                            await interaction.response.send_message(embed=noOptIn(gettingStartedID), ephemeral=True)
+                                            return
                                         liked, retweeted = twitter.likedRetweeted(memberObj.twitterOBJ[0], memberObj.twitterOBJ[1], twitterID)
                                         if retweeted:
                                             resp = api.tweetEventRetweet(serverName, userID, tweetID)
@@ -921,9 +944,11 @@ async def on_ready():
     if TIMMER == False:
         billing.start()
         changeMessages.start()
+        saveAssets.start()
         TIMMER = True
-        
-    await bot_set_up(client.guilds[0])
+    
+    for guild in client.guilds:
+        await bot_set_up(guild)
         
 ## run when bot is in a new server
 @client.event
@@ -1293,15 +1318,19 @@ async def billing():
                 for Objs in messObj:
                     await Objs.delete()
                     
-@tasks.loop(hours=0.5)
+@tasks.loop(hours=0.15)
 async def changeMessages():
     for guild in client.guilds:
         guidID = guild.id
         ctx, ctx2 = api.gettingStarted(guidID), api.userSettings(guidID)
+        ## ctx is a message id in the "get-started" channel
         if ctx != None:
-            ## edit the embed message in ctx
             await ctx.edit(embed = getWelcomeEmbed())
         if ctx2 != None:
             await ctx2.edit(embed = getWelcomeOptInEmbed())
+            
+@tasks.loop(hours=0.02)
+async def saveAssets():
+    api.pickleAll()
 
 client.run(TOKEN, log_handler=handler, log_level=logging.DEBUG)

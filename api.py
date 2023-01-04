@@ -6,6 +6,7 @@ import string
 import json
 import os
 import math
+import pickle
 
 jackpotObjects = [jackpot()]
 
@@ -612,6 +613,79 @@ def storeUserSettings(serverID, message):
     
 def getTop3(serverID):
     return SERVERS[serverID].leaderboard.top3()
+
+def pickleAll():
+    if not os.path.exists("./Cache/Backup"):
+        os.makedirs("./Cache/Backup")
+    try:
+        pickle.dump(jackpotObjects, open("./Cache/Backup/jackpot.pickle", "wb"))
+    except:
+        pass
+    try:
+        pickle.dump(optIn, open("./Cache/Backup/optIn.pickle", "wb"))
+    except:
+        pass
+    try:
+        pickle.dump(twitterRaids, open("./Cache/Backup/twitterRaids.pickle", "wb"))
+    except:
+        pass
+    try:
+        pickle.dump(missions, open("./Cache/Backup/missions.pickle", "wb"))
+    except:
+        pass
+    try:
+        pickle.dump(logs, open("./Cache/Backup/logs.pickle", "wb"))
+    except:
+        pass
+    try:
+        pickle.dump(INDIVIDUAL_WEIGHTS, open("./Cache/Backup/INDIVIDUAL_WEIGHTS.pickle", "wb"))
+    except:
+        pass
+    try:
+        pickle.dump(COMMUNITY_WEIGHT, open("./Cache/Backup/COMMUNITY_WEIGHT.pickle", "wb"))
+    except:
+        pass
+    try:
+        pickle.dump(SERVERS, open("./Cache/Backup/SERVERS.pickle", "wb"))
+    except:
+        pass
+    try:
+        pickle.dump(SERVER_NAMES, open("./Cache/Backup/SERVER_NAMES.pickle", "wb"))
+    except:
+        pass
+    try:
+        pickle.dump(GLOBAL, open("./Cache/Backup/GLOBAL.pickle", "wb"))
+    except:
+        pass
+    try:
+        pickle.dump(DEFAULT_WEIGHT, open("./Cache/Backup/DEFAULT_WEIGHT.pickle", "wb"))
+    except:
+        pass
+    try:
+        pickle.dump(XP_AWARDS, open("./Cache/Backup/XP_AWARDS.pickle", "wb"))
+    except:
+        pass
+    try:
+        pickle.dump(referalCode, open("./Cache/Backup/referalCode.pickle", "wb"))
+    except:
+        pass
+
+def loadAll():
+    if os.path.exists("./Cache/Backup"):
+        jackpotObjects = pickle.load(open("./Cache/Backup/jackpot.pickle", "rb"))
+        optIn = pickle.load(open("./Cache/Backup/optIn.pickle", "rb"))
+        twitterRaids = pickle.load(open("./Cache/Backup/twitterRaids.pickle", "rb"))
+        missions = pickle.load(open("./Cache/Backup/missions.pickle", "rb"))
+        logs = pickle.load(open("./Cache/Backup/logs.pickle", "rb"))
+        INDIVIDUAL_WEIGHTS = pickle.load(open("./Cache/Backup/INDIVIDUAL_WEIGHTS.pickle", "rb"))
+        COMMUNITY_WEIGHT = pickle.load(open("./Cache/Backup/COMMUNITY_WEIGHT.pickle", "rb"))
+        SERVERS = pickle.load(open("./Cache/Backup/SERVERS.pickle", "rb"))
+        SERVER_NAMES = pickle.load(open("./Cache/Backup/SERVER_NAMES.pickle", "rb"))
+        GLOBAL = pickle.load(open("./Cache/Backup/GLOBAL.pickle", "rb"))
+        DEFAULT_WEIGHT = pickle.load(open("./Cache/Backup/DEFAULT_WEIGHT.pickle", "rb"))
+        XP_AWARDS = pickle.load(open("./Cache/Backup/XP_AWARDS.pickle", "rb"))
+        referalCode = pickle.load(open("./Cache/Backup/referalCode.pickle", "rb"))
+    
     
 saveMissions()
 

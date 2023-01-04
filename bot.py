@@ -98,7 +98,7 @@ def getIntroEmbed():
 def getXPEmbed(raids, missions):
     embed=discord.Embed(title="**How to Earn XP**", description="Below is a guide to all the actions you can take in your community that will be automatically rewarded.", color=0xe9e9e9)
     embed.add_field(name="**Discord:**", value="🎟️ Sending messages *(diminishing returns)*\n🎟️ Reacting to messages *(diminishing returns)*\n🎟️ Other people reacting to your messages\n🎟️ Other people replying to your messages\n🎟️ Being one of the first people to interact with a new member\n🎟️ Inviting real people to the server\n🎟️ Visiting the server daily\n", inline=False) 
-    embed.add_field(name="**Twitter:**", value = "🎟️ Retweeting a <#"+raids+"> tweet\n🎟️ Replying to a <#"+raids+"> tweet\n🎟️ Liking a <#"+raids+"> tweet\n🎟️ Following other community members\n🎟️ Being followed by other community members\n", inline=False) 
+    embed.add_field(name="**Twitter:**", value = "🎟️ Retweeting a <#"+raids+"> tweet\n🎟️ Replying to a <#"+raids+"> tweet\n🎟️ Liking a <#"+raids+"> tweet\n", inline=False) 
     embed.add_field(name="**Missions:**", value = "🎟️ Successfully completing <#"+missions+">", inline=False)
     return embed
 
@@ -221,7 +221,8 @@ def getMissionsEmbed():
 
 def raidSuccessfulEmbed(link, typeRaid, name = None):
     embed = discord.Embed(title="**🎉 New raid created! 🎉**", description="Your raid was launched successfully", color=0x1da1f2)
-    embed.add_field(name="Details:", value="**Link:** [" + link + "](" + link + ") \n**Type:** " + typeRaid, inline=False)
+    #embed.add_field(name="Details:", value="**Link:** [" + link + "](" + link + ") \n**Type:** " + typeRaid, inline=False)
+    embed.add_field(name="Details:", value="**Link:** [" + link + "](" + link + ")", inline=False)
     embed.set_footer(text="Powered by Jackpot", icon_url="https://static.wixstatic.com/media/cdc018_603e1fc27c6a4c71b2c8c333f66c858b~mv2.png")
     return embed
     
@@ -856,7 +857,7 @@ async def bot_set_up(myGuild):
                                             else:
                                                 await interaction.response.send_message(embed=userErrorEmbed("You're not eligible to earn XP for `liking` this Raid", resp), ephemeral=True)
                                         else:
-                                            await interaction.response.send_message(embed=userErrorEmbed("No XP Earned", "We weren't able to verify completion of `liking` this raid."), ephemeral=True)
+                                            await interaction.response.send_message(embed=userErrorEmbed("No XP Earned", "We weren't able to verify completion of **" + memberObj.handle + "** `liking` this raid."), ephemeral=True)
         
                                     @discord.ui.button(label="Claim Reply XP", style=discord.ButtonStyle.green)
                                     async def comment(self, interaction: discord.Interaction, button: discord.ui.Button):
@@ -873,7 +874,7 @@ async def bot_set_up(myGuild):
                                             else:
                                                 await interaction.response.send_message(embed=userErrorEmbed("You're not eligible to earn XP for `replying` to this Raid", resp), ephemeral=True)
                                         else:
-                                            await interaction.response.send_message(embed=userErrorEmbed("No XP Earned", "We weren't able to verify completion of `replying` to this raid."), ephemeral=True)
+                                            await interaction.response.send_message(embed=userErrorEmbed("No XP Earned", "We weren't able to verify completion of **" + memberObj.handle + "** `replying` to this raid."), ephemeral=True)
         
                                             
                                     @discord.ui.button(label="Claim Retweet XP", style=discord.ButtonStyle.red)
@@ -892,7 +893,7 @@ async def bot_set_up(myGuild):
                                             else:
                                                 await interaction.response.send_message(embed=userErrorEmbed("You're not eligible to earn XP for `retweeting` this Raid", resp), ephemeral=True)
                                         else:
-                                            await interaction.response.send_message(embed=userErrorEmbed("No XP Earned", "We weren't able to verify completion of `retweeting` this raid."), ephemeral=True)
+                                            await interaction.response.send_message(embed=userErrorEmbed("No XP Earned", "We weren't able to verify completion of **" + memberObj.handle + "** `retweeting` this raid."), ephemeral=True)
                                 
                                 ## if link is blank, make an error message
                                 if link == "" or falseLink(link):
@@ -1048,7 +1049,7 @@ async def on_message(message):
                                 feedback = ui.TextInput(label = "Reason why mission declined", style=discord.TextStyle.long, default = "You have not completed the mission spec", required = True)
                                 async def on_submit(self, interaction: discord.Interaction):
                                     await newMessage.delete()
-                                    await discord.utils.get(message.guild.channels, name="notifs").send("❌ **"+memberID+"'s** submission for **" + missionName + "** has been denied.\nReason: `" + self.feedback.value + "`")
+                                    await discord.utils.get(message.guild.channels, name="notifs").send("❌ **"+memberID+"'s** submission for **" + missionName + "** has been denied. Reason: `" + self.feedback.value + "`")
                                     await interaction.response.send_message("MISSION DENIED", ephemeral=True)
                             await interaction2.response.send_modal(feedbackMission())
                             await interaction2.message.delete()
@@ -1233,7 +1234,7 @@ async def on_member_join(member):
                 if api.getMember(member.guild.id, str(inviter)) != None:
                     valueNew.referer = str(inviter)
                     api.xpEvent(member.guild.id, str(inviter), 5)
-                    await discord.utils.get(member.guild.channels, name="notifs").send(f"❤️ **{str(inviter)}** just invited {member.mention} to the server!")
+                    await discord.utils.get(member.guild.channels, name="notifs").send(f"❤️ **{str(inviter)}** just invited {member.mention} to the server and earned `"+ api.getReward(None, None, 5) +" 🎟️`!")
     
     api.updateInvites(member.guild.id, cur_invites)
                     

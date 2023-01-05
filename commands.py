@@ -14,6 +14,7 @@ def getData():
         data = {}
         data[1053902791321604217] = ["LOLLLLLL", "MYMISSION1", "MY MISSION 2"]
     
+    ##refreshCommands(data)
     refreshCommands(data)
 
 def refreshCommands(data):
@@ -24,11 +25,10 @@ def refreshCommands(data):
         if len(choices) == 0:
             choices.append(interactions.Choice(name="No missions available", value="NULL"))
         return choices
-
-    for ids in data.keys():
-
+    
+    for i, ids in enumerate(list(data.keys())):
         @bot.command(
-            name="complete",
+            name="complete" + str(i),
             description="Verify a completed mission to earn XP",
             scope=ids,
             ## add 3 options, a mission ID (can either be "1", "2", "3"), a description (string), and a file attachment
@@ -47,44 +47,44 @@ def refreshCommands(data):
             await ctx.send(f"MISSION SUBMITTED #|# {fullName} #|# {mission_id} #|# {description} " + stem)
             
         ####### MORE COMMANDS HERE #######
-        @bot.command(
-            name="rank",
-            description="Check your rank or someone else's rank in this Server",
-            scope=ids,
-            ## add 1 optional parameter, a user ID of the person you want to check the rank of
-            options = [
-                interactions.Option(name="user_id", description="OPTIONAL: Enter the full user ID of another person to view their rank", type=interactions.OptionType.USER, required=False)
-            ]
-        )
-                        
-        async def rankChecker(ctx: interactions.CommandContext, user_id: interactions.User = None):
-            if user_id == None:
-                user_id = ctx.author.name + "#" + ctx.author.discriminator
-            else:
-                user_id = user_id.name + "#" + user_id.discriminator
-            await ctx.send(f"FETCHING RANK... #|# {user_id}")
-            
+    @bot.command(
+        name="rank",
+        description="Check your rank or someone else's rank in this Server",
+        scope=list(data.keys()),
+        ## add 1 optional parameter, a user ID of the person you want to check the rank of
+        options = [
+            interactions.Option(name="user_id", description="OPTIONAL: Enter the full user ID of another person to view their rank", type=interactions.OptionType.USER, required=False)
+        ]
+    )
+                    
+    async def rankChecker(ctx: interactions.CommandContext, user_id: interactions.User = None):
+        if user_id == None:
+            user_id = ctx.author.name + "#" + ctx.author.discriminator
+        else:
+            user_id = user_id.name + "#" + user_id.discriminator
+        await ctx.send(f"FETCHING RANK... #|# {user_id}")
         
-        @bot.command(
-            name="leaderboard",
-            description="View the leaderboard for this Server",
-            scope=ids,
-        )  
+    
+    @bot.command(
+        name="leaderboard",
+        description="View the leaderboard for this Server",
+        scope=list(data.keys()),
+    )  
+    
+    async def leaderboard(ctx: interactions.CommandContext):
+        serverID = ctx.guild.id
+        await ctx.send(f"GETTING THE LEADERBOARD... #|# {serverID}") 
         
-        async def leaderboard(ctx: interactions.CommandContext):
-            serverID = ctx.guild.id
-            await ctx.send(f"GETTING THE LEADERBOARD... #|# {serverID}") 
-            
-        @bot.command(
-            name="jackpot",
-            description="View what's in the jackpot",
-            scope=ids,
-        )  
-        
-        async def jackpotRet(ctx: interactions.CommandContext):
-            await ctx.send(f"FETCHING JACKPOT...") 
+    @bot.command(
+        name="jackpot",
+        description="View what's in the jackpot",
+        scope=list(data.keys()),
+    )  
+    
+    async def jackpotRet(ctx: interactions.CommandContext):
+        await ctx.send(f"FETCHING JACKPOT...") 
             
 
-        bot.start()
+    bot.start()
 
 getData()

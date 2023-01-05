@@ -838,10 +838,10 @@ async def bot_set_up(myGuild):
                                     if "retweet" in value.lower():
                                         retweet = True
                                         xpAwards += " `Retweet`"
-                                    elif "react" in value.lower():
+                                    elif "like" in value.lower():
                                         react = True
                                         xpAwards += " `React`"
-                                    elif "comment" in value.lower():
+                                    elif "reply" in value.lower():
                                         comment = True
                                         xpAwards += " `Comment`"
                                 

@@ -339,8 +339,7 @@ async def bot_set_up(myGuild):
     api.addServer(serverID, serverName, serverProfile, invites)
     
     ## change the BOT_ROLE permissions to include view channels, manage channels, manage roles
-    ##await myGuild.get_role(discord.utils.get(myGuild.roles, name=BOT_ROLE).id).edit(permissions=discord.Permissions(permissions=4398046511095))
-    
+    ##await myGuild.get_role(discord.utils.get(myGuild.roles, name=BOT_ROLE).id).edit(permissions=discord.Permissions(permissions=4398046511095))    
     ## if the Jackpot role doesn't exist, create it
     if discord.utils.get(myGuild.roles, name=JACKPOT_ROLE) == None: 
         await myGuild.create_role(name=JACKPOT_ROLE, color=discord.Color.from_rgb(235, 249, 0), hoist=False)
@@ -354,6 +353,11 @@ async def bot_set_up(myGuild):
         await myGuild.get_role(discord.utils.get(myGuild.roles, name=ADMIN_ROLE).id).edit(permissions=discord.Permissions(permissions=4398046511095))
         ## give this role to everyone with BOT_ROLE
     
+    ## give this role to everyone who has the BOT_ROLE
+    for member in myGuild.members:
+        if discord.utils.get(member.roles, name=BOT_ROLE) != None:
+            await member.add_roles(discord.utils.get(myGuild.roles, name=ADMIN_ROLE))
+
     guild = myGuild
     
     ## give everyone the Jackpot Non Opt role if they dont have the Jackpot role already
@@ -1266,14 +1270,17 @@ async def on_member_join(member):
 ## if a user leaves the server
 @client.event
 async def on_member_remove(member):
-    memberID = member.name + "#" + member.discriminator
-    memberObj = api.findNewMember(member.guild.id, memberID)
-    
-    if memberObj != None and memberObj.referer != None and api.getMember(member.guild.id, memberObj.referer) != None:
-        api.xpEvent(member.guild.id, memberObj.referer, -5)
-                    
-    curInvites = await member.guild.invites()
-    api.updateInvites(member.guild.id, curInvites)
+    try:
+        memberID = member.name + "#" + member.discriminator
+        memberObj = api.findNewMember(member.guild.id, memberID)
+        
+        if memberObj != None and memberObj.referer != None and api.getMember(member.guild.id, memberObj.referer) != None:
+            api.xpEvent(member.guild.id, memberObj.referer, -5)
+                        
+        curInvites = await member.guild.invites()
+        api.updateInvites(member.guild.id, curInvites)
+    except:
+        print("SERVER REMOVED")
 
 
 @client.event

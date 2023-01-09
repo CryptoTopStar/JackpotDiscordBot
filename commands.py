@@ -27,24 +27,25 @@ def refreshCommands(data):
         return choices
     
     for i, ids in enumerate(list(data.keys())):
-        @bot.command(
-            name="complete" + str(i),
-            description="Verify a completed mission to earn XP",
-            scope=ids,
-            ## add 3 options, a mission ID (can either be "1", "2", "3"), a description (string), and a file attachment
-            options = [
-                interactions.Option(name="mission_id", description="Mission ID", type=interactions.OptionType.STRING, required=True, choices=makeChoices(ids)),
-                interactions.Option(name="description", description="Description of the mission", type=interactions.OptionType.STRING, required=True),
-                interactions.Option(name="file", description="Add an image (optional)", type=interactions.OptionType.ATTACHMENT, required=False)
-            ]
-        )
-                        
-        async def verifyMission(ctx: interactions.CommandContext, mission_id: str, description: str, file: interactions.File = None):
-            stem = ""
-            if file != None:
-                stem = f"#|# {file.url}"
-            fullName = ctx.author.name + "#" + ctx.author.discriminator
-            await ctx.send(f"MISSION SUBMITTED #|# {fullName} #|# {mission_id} #|# {description} " + stem)
+        if ids != "names":
+            @bot.command(
+                name="complete_" + str(data["names"][ids]),
+                description="Verify a completed mission to earn XP",
+                scope=ids,
+                ## add 3 options, a mission ID (can either be "1", "2", "3"), a description (string), and a file attachment
+                options = [
+                    interactions.Option(name="mission_id", description="Mission ID", type=interactions.OptionType.STRING, required=True, choices=makeChoices(ids)),
+                    interactions.Option(name="description", description="Description of the mission", type=interactions.OptionType.STRING, required=True),
+                    interactions.Option(name="file", description="Add an image (optional)", type=interactions.OptionType.ATTACHMENT, required=False)
+                ]
+            )
+                            
+            async def verifyMission(ctx: interactions.CommandContext, mission_id: str, description: str, file: interactions.File = None):
+                stem = ""
+                if file != None:
+                    stem = f"#|# {file.url}"
+                fullName = ctx.author.name + "#" + ctx.author.discriminator
+                await ctx.send(f"MISSION SUBMITTED #|# {fullName} #|# {mission_id} #|# {description} " + stem)
             
         ####### MORE COMMANDS HERE #######
     @bot.command(

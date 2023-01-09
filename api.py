@@ -116,11 +116,16 @@ def saveObject(obj, name):
 def saveMissions():
     def refresh(missions):
         data = {}
+        names = {}
         for ids in missions.keys():
             data[ids] = []
+            serverName = SERVERS[ids].name
+            serverName = serverName.lower().replace(" ", "")
+            names[ids] = serverName
         for ids in missions.keys():
             for mission in missions[ids]:
                 data[ids].append(missions[ids][mission].title)
+        data["names"] = names
         return data
     
     with open('Cache/missions.json', 'w') as f:

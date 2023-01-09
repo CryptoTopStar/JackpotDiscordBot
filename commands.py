@@ -26,10 +26,16 @@ def refreshCommands(data):
             choices.append(interactions.Choice(name="No missions available", value="NULL"))
         return choices
     
+    serverIDs = list(data.keys())
+    ## if the serverID "names" exist in the list, delete it
+    if "names" in serverIDs:
+       serverIDs.remove("names")
+    
     for i, ids in enumerate(list(data.keys())):
         if ids != "names":
+            name = "".join([char for char in str(data["names"][ids]) if char.isalnum()])
             @bot.command(
-                name="complete_" + str(data["names"][ids]),
+                name="complete_" + name,
                 description="Verify a completed mission to earn XP",
                 scope=ids,
                 ## add 3 options, a mission ID (can either be "1", "2", "3"), a description (string), and a file attachment
@@ -51,7 +57,7 @@ def refreshCommands(data):
     @bot.command(
         name="rank",
         description="Check your rank or someone else's rank in this Server",
-        scope=list(data.keys()),
+        scope=serverIDs,
         ## add 1 optional parameter, a user ID of the person you want to check the rank of
         options = [
             interactions.Option(name="user_id", description="OPTIONAL: Enter the full user ID of another person to view their rank", type=interactions.OptionType.USER, required=False)
@@ -69,7 +75,7 @@ def refreshCommands(data):
     @bot.command(
         name="leaderboard",
         description="View the leaderboard for this Server",
-        scope=list(data.keys()),
+        scope=serverIDs,
     )  
     
     async def leaderboard(ctx: interactions.CommandContext):
@@ -79,7 +85,7 @@ def refreshCommands(data):
     @bot.command(
         name="jackpot",
         description="View what's in the jackpot",
-        scope=list(data.keys()),
+        scope=serverIDs,
     )  
     
     async def jackpotRet(ctx: interactions.CommandContext):

@@ -355,7 +355,7 @@ async def bot_set_up(myGuild):
     
     ## give this role to everyone who has the BOT_ROLE
     for member in myGuild.members:
-        if discord.utils.get(member.roles, name=BOT_ROLE) != None:
+        if discord.utils.get(member.roles, name=BOT_ROLE) != None and discord.utils.get(member.roles, name=ADMIN_ROLE) == None:
             await member.add_roles(discord.utils.get(myGuild.roles, name=ADMIN_ROLE))
 
     guild = myGuild

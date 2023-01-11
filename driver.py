@@ -15,7 +15,7 @@ lastMod2 = os.path.getmtime(PATH2)
 ## Execute only if the file has been changed
 while True:
     if lastMod != os.path.getmtime(PATH) or lastMod2 != os.path.getmtime(PATH2):
-        time.sleep(40)
+        time.sleep(10)
         lastMod = os.path.getmtime(PATH)
         lastMod2 = os.path.getmtime(PATH2)
         sp.Popen.terminate(extProc)

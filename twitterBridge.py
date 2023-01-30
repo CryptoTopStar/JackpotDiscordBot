@@ -100,3 +100,17 @@ def isComment(access_token, access_token_secret, tweet_id_original, tweet_id):
         return False
     except:
         return False
+    
+## get the link of their last tweet
+def getLastTweetLink(access_token, access_token_secret):
+    oauth = OAuth1Session(CONSUMER_KEY, 
+                            client_secret=CONSUMER_SECRET, 
+                            resource_owner_key=access_token, 
+                            resource_owner_secret=access_token_secret)
+    
+    url = f"https://api.twitter.com/1.1/statuses/user_timeline.json?count=1"
+    try:
+        response = oauth.get(url)
+        return response.json()[0]['entities']['urls'][0]['expanded_url']
+    except:
+        return None

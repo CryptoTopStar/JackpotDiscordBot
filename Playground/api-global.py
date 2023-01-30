@@ -1,91 +1,12 @@
 import csv
 from datetime import datetime
-from leadboardLogic import User, TwitterRaid, Mission, Server, globalLeaderboard, serverLeaderboard, jackpot, Member, ServerPickle
+from leadboardLogic import User, TwitterRaid, Mission, Server, globalLeaderboard, serverLeaderboard, jackpot, Member
 import random
 import string
 import json
 import os
 import math
 import pickle
-import database
-
-jackpotObjects = [jackpot("2500", "Feb 22nd @ 9:00pm EST", 7, 0, 0)]
-
-## SCHEMA:
-##      - KEY: Community Server ID
-##      - VALUE: MEMBER_DICT
-##               - KEY: Member Name/ID
-##               - VALUE: Member Object
-optIn = {}
-
-## SCHEMA:
-##     - KEY: MISSION UI
-##     - VALUE: MISSION DICT
-##               - KEY: mission_id
-##               - KEY: server_id
-##               - KEY: member_id
-missionStorage = {}
-
-## SCHEMA:
-##      - KEY: Community Server ID
-##      - VALUE: LIST (TWITTER RAID OBJECTS)
-##               - .link: str --> link to the tweet
-##               - .date: date --> when the tweet raid was made
-##               - .boosted: bool --> if the tweet was boosted
-##               - .retweet: bool --> if raid includes retweets
-##               - .react: bool --> if raid includes reactions
-##               - .comment: bool --> if raid includes comments
-##               - .completed: dict --> 
-##                      - KEY: Member Name/ID
-##                      - VALUE: list --> 
-##                             -  ["reaction" (optional), "comment" (optional), "retweet" (optional)] representing reaction, comment, and retweet
-twitterRaids = {}
-missions = {}
-
-## SCHEMA:
-##     - KEY: Community Server ID
-##     - VALUE: LOG_LIST
-##        - [0]: Member Name/ID
-##        - [1]: Task Type
-##        - [2]: XP Override
-##        - [3]: Task Time
-logs = {}
-
-## SCHEMA:
-##     - KEY: Community Server ID
-##     - VALUE: INDIVIDUAL_WEIGHTS_DICT
-##               - KEY: Member Name/ID
-##               - VALUE: Member Weight
-INDIVIDUAL_WEIGHTS = {}
-
-## SCHEMA:
-##     - KEY: Community Server ID
-##     - VALUE: Community Weight
-COMMUNITY_WEIGHT = {}
-
-## SCHEMA:
-##    - KEY: Community Server ID
-##    - VALUE: Server Object
-SERVERS = {}
-
-## SCHEMA:
-##   - KEY: Community Server Name
-##   - VALUE: Community Server ID
-SERVER_NAMES = {}
-
-CRYPTO_WALLET = {}
-## SCHEMA:
-##   - KEY: WALLET ID
-##   - VALUE: [LIST OF SERVERS IT IS IN]
-
-DEFAULT_WEIGHT = 1
-XP_AWARDS = {0:1000, 1:40, 2:15, 3:200, 4:800, 5:700, -5:-700, 6:500, 7:1000, 8:400, 9:150, 10:600, 11:200, 12:400, 13:1200, 14:400, 15:800, 16:0, 17:15000, 18:3000, 19:4000, 20:5000, 21:0}
-GLOBAL = globalLeaderboard()
-
-## SCHEMA:
-##    - KEY: Referal Code
-##    - VALUE: [SERVER ID, MEMBER OBJECT]
-referalCode = {}
 
 class ComplexEncoder(json.JSONEncoder):
     def default(self, obj):
@@ -93,24 +14,48 @@ class ComplexEncoder(json.JSONEncoder):
             return obj.reprJSON()
         else:
             return json.JSONEncoder.default(self, obj)
-        
-def saveMissions():
-    def refresh(missions):
-        data = {}
-        names = {}
-        for ids in missions.keys():
-            data[ids] = []
-            serverName = SERVERS[ids].name
-            serverName = serverName.lower().replace(" ", "")
-            names[ids] = serverName
-        for ids in missions.keys():
-            for mission in missions[ids]:
-                data[ids].append(missions[ids][mission].title)
-        data["names"] = names
-        return data
 
-    with open('Cache/missions.json', 'w') as f:
-        json.dump(refresh(missions), f)
+class API:
+    def __init__(self):
+        self.jackpotObjects = [jackpot()]
+        self.optIn = {}
+        self.twitterRaids = {}
+        self.missions = {}
+        self.logs = {}
+        self.INDIVIDUAL_WEIGHTS = {}
+        self.COMMUNITY_WEIGHT = {}
+        self.SERVERS = {}
+        self.SERVER_NAMES = {}
+        self.CRYPTO_WALLET = {}
+        self.DEFAULT_WEIGHT = 1
+        self.XP_AWARDS = {0:1000, 1:40, 2:15, 3:200, 4:800, 5:700, -5:-700, 6:500, 7:1000, 8:400, 9:150, 10:600, 11:200, 12:400, 13:1200, 14:400, 15:800, 16:0, 17:15000, 18:3000, 19:4000, 20:5000, 21:0}
+        self.GLOBAL = globalLeaderboard()
+        self.referalCode = {}
+        
+_instance = None
+def get_instance():
+    global _instance
+    if _instance is None:
+        _instance = API()
+    return _instance
+
+def saveMissions(_instance):
+        def refresh(missions):
+            data = {}
+            names = {}
+            for ids in missions.keys():
+                data[ids] = []
+                serverName = _instance.SERVERS[ids].name
+                serverName = serverName.lower().replace(" ", "")
+                names[ids] = serverName
+            for ids in missions.keys():
+                for mission in missions[ids]:
+                    data[ids].append(missions[ids][mission].title)
+            data["names"] = names
+            return data
+
+        with open('Cache/missions.json', 'w') as f:
+            json.dump(refresh(_instance.missions), f)
         
 def convertToDict(dictObj):
     ## this dict could have other dicts as values with nested class objects. Convert the nested class objects to dicts as well, storing them in a new dict
@@ -168,63 +113,62 @@ def basicMissions(serverID):
     # createMission(serverID, "Write a blog post", "Write an online blog post, more than 500 words, that relates to the project in someway", 4000)
     createMission(serverID, "Follow the project on Twitter", "Follow the project from your personal Twitter account. Submit a screenshot as proof.", 1000)
 
-def addServer(serverID, serverName, url, invites):
-    if serverID not in SERVERS:
-        SERVERS[serverID] = Server(serverName, serverID, url, invites)
-        SERVER_NAMES[serverName] = serverID
-        jackpotObjects[len(jackpotObjects) - 1].servers += 1
+def addServer(_instance, serverID, serverName, url, invites):
+    if serverID not in _instance.SERVERS:
+        _instance.SERVERS[serverID] = Server(serverName, serverID, url, invites)
+        _instance.SERVER_NAMES[serverName] = serverID
+        _instance.jackpotObjects[len(_instance.jackpotObjects) - 1].servers += 1
         basicMissions(serverID)
-        saveObject(SERVERS, "SERVERS")
-        saveObject(SERVER_NAMES, "SERVER_NAMES")
-        database.setupServerTable(serverID, serverName, url)
+        saveObject(_instance.SERVERS, "SERVERS")
+        saveObject(_instance.SERVER_NAMES, "SERVER_NAMES")
         return True
     else:
         return False
 
-def getServerDeadline(serverID):
+def getServerDeadline(_instance, serverID):
     try:
-        return SERVERS[serverID].endDate
+        return _instance.SERVERS[serverID].endDate
     except:
         return None
 
-def updateInvites(serverID, invites):
+def updateInvites(_instance, serverID, invites):
     try:
-        SERVERS[serverID].invites = invites
-        saveObject(SERVERS, "SERVERS")
+        _instance.SERVERS[serverID].invites = invites
+        saveObject(_instance.SERVERS, "SERVERS")
         return True
     except:
         return False
 
-def getInvites(serverID):
+def getInvites(_instance, serverID):
     try:
-        return SERVERS[serverID].invites
+        return _instance.SERVERS[serverID].invites
     except:
         return None
 
-def setServerEndMessage(serverID, messageID):
+def setServerEndMessage(_instance, serverID, messageID):
     ## messageID: [missionMes, raidMes]
     try:
-        SERVERS[serverID].endMessage = messageID
+        _instance.SERVERS[serverID].endMessage = messageID
         return True
     except:
         return None
     
-def getServerEndMessage(serverID):
+def getServerEndMessage(_instance, serverID):
     ## messageID: [missionMes, raidMes]
     try:
-        return SERVERS[serverID].endMessage
+        return _instance.SERVERS[serverID].endMessage
     except:
         return None
 
-def checkOptIn(serverID, memberName):
-    if serverID not in optIn:
+def checkOptIn(_instance, serverID, memberName):
+    if serverID not in _instance.optIn:
         return False
-    if memberName not in optIn[serverID]:
+    if memberName not in _instance.optIn[serverID]:
         return False
-    return optIn[serverID][memberName]
+    return _instance.optIn[serverID][memberName]
 
-def returnXP(serverID, memberName):
-    return optIn[serverID][memberName].finalXP
+def returnXP(_instance, serverID, memberName):
+    return _instance.optIn[serverID][memberName].finalXP
 
 def optInMember(serverID, memberID, fullIdentifier, memberName, url, tweetOBJ = None, wallet = None):
     if serverID not in optIn:
@@ -233,10 +177,6 @@ def optInMember(serverID, memberID, fullIdentifier, memberName, url, tweetOBJ = 
     jackpotObjects[len(jackpotObjects) - 1].members += 1
     if memberName not in optIn[serverID]:
         optIn[serverID][memberID] = User(memberName, fullIdentifier, memberID, serverID, url, tweetOBJ, wallet)
-        if wallet != None:
-            database.add_user(memberID, serverID, "@" + str(tweetOBJ[3]), url, wallet)
-        else: 
-            database.add_user(memberID, serverID, "@" + str(tweetOBJ[3]), url)
         saveObject(optIn, "optIn")
         return True
     else:
@@ -335,17 +275,6 @@ def getMissionXP(serverID, missionID):
         return 0
     
     return missions[serverID][missionID].xp
-
-def getMissionDescription(serverID, missionID):
-    if serverID not in missions:
-        return None
-    
-    return missions[serverID][missionID].description
-
-def getMissionName(serverID, missionID):
-    if serverID not in missions:
-        return None
-    return missions[serverID][missionID].title
 
 def getNumMissionSubmissions(serverID, missionID, memberName):
     try:
@@ -506,8 +435,6 @@ def xpEvent(serverID, memberName, taskType, xpOverride = None):
     if xpOverride != None:
         return xpOverride
     
-    pickleAll() 
-    
     return XP_AWARDS[taskType]
 
 def serverVisit(serverID, memberName):
@@ -583,31 +510,13 @@ def createAlphaNumericCode(serverID, memberID):
     referalCode[refCode] = [serverID, memberID]
     
     memberObject.referal = refCode
-    database.add_ref_code(memberID, serverID, refCode)
     saveObject(optIn, "optIn")
     saveObject(referalCode, "referalCode")
-    pickleAll()  
     return refCode
 
 def updateLeaderboards(memberID, serverID, XP):
-    newRank, newTrend, newXP, newServers = GLOBAL.update(memberID, XP, serverID)
-    print("WHAT XP:", newXP)
-    database.leaderboard(memberID, newXP, newRank, newTrend, str(newServers))
-    
-    serverRank, serverTrend, serverXP = SERVERS[serverID].leaderboard.update(memberID, XP)
-    xpBreakdown = {}
-    
-    counter = getMember(serverID, memberID).counter
-    counterOverride = getMember(serverID, memberID).counterOverride
-    
-    for key in counter:
-        if key in counterOverride:
-            xpBreakdown[key] = counterOverride[key] + counter[key]
-        else:
-            xpBreakdown[key] = counter[key]
-    
-    database.serverLeaderboard(memberID, serverID, serverXP, serverRank, serverTrend, xpBreakdown)
-    
+    GLOBAL.update(memberID, XP, serverID)
+    SERVERS[serverID].leaderboard.update(memberID, XP)
     saveObject(SERVERS, "SERVERS")
     saveObject(GLOBAL, "GLOBAL")
     
@@ -619,14 +528,6 @@ def getJackpotDeadline():
 
 def getJackpotNumber():
     return str(jackpotObjects[len(jackpotObjects) - 1].servers), str(jackpotObjects[len(jackpotObjects) - 1].members), str(jackpotObjects[len(jackpotObjects) - 1].winners)
-
-def newJackpot(reward, deadline, winners):
-    servers, members, oldWinners = getJackpotNumber()
-    
-    jackpotObjects.append(jackpot(reward, deadline, winners, servers, members))
-    saveObject(jackpotObjects, "jackpotObjects")
-    pickleAll()  
-    return True
 
 def isNew(serverID, memberID, memberInteractionID):
     try:
@@ -726,20 +627,6 @@ def storeUserSettings(serverID, message):
 def getTop3(serverID):
     return SERVERS[serverID].leaderboard.top3()
 
-def genMissionID(serverName, memberID, missionID):
-    def randInt():
-        return random.randint(100000000000, 999999999999999)
-    
-    randID = randInt()
-    missionStorage[randID] = {"server_id": serverName, "member_id": memberID, "mission_id": missionID}
-    return randID
-
-def readMissionID(missionID):
-    if missionID in missionStorage:
-        return missionStorage[missionID]["server_id"], missionStorage[missionID]["member_id"], missionStorage[missionID]["mission_id"]
-    else:
-        return None
-    
 def serverInvite(serverID, memberID):
     allMembers = optIn[serverID]
     for mID in allMembers:
@@ -754,60 +641,55 @@ def pickleAll():
     try:
         pickle.dump(jackpotObjects, open("./Cache/Backup/jackpot.pickle", "wb"))
     except:
-        print("Failed to pickle jackpot")
+        pass
     try:
         pickle.dump(optIn, open("./Cache/Backup/optIn.pickle", "wb"))
     except:
-        print("Failed to pickle 1")
+        pass
     try:
         pickle.dump(twitterRaids, open("./Cache/Backup/twitterRaids.pickle", "wb"))
     except:
-        print("Failed to pickle 2")
+        pass
     try:
         pickle.dump(missions, open("./Cache/Backup/missions.pickle", "wb"))
     except:
-        print("Failed to pickle 3")
+        pass
     try:
         pickle.dump(logs, open("./Cache/Backup/logs.pickle", "wb"))
     except:
-        print("Failed to pickle 4")
+        pass
     try:
         pickle.dump(INDIVIDUAL_WEIGHTS, open("./Cache/Backup/INDIVIDUAL_WEIGHTS.pickle", "wb"))
     except:
-        print("Failed to pickle 5")
+        pass
     try:
         pickle.dump(COMMUNITY_WEIGHT, open("./Cache/Backup/COMMUNITY_WEIGHT.pickle", "wb"))
     except:
-        print("Failed to pickle 6")
+        pass
     try:
-        pickedServers = {}
-        for key in SERVERS:
-            pickedServers[key] = ServerPickle(SERVERS[key])
-        pickle.dump(pickedServers, open("./Cache/Backup/SERVERS.pickle", "wb"))
+        pickle.dump(SERVERS, open("./Cache/Backup/SERVERS.pickle", "wb"))
     except:
-        print("Failed to pickle 7")
+        pass
     try:
         pickle.dump(SERVER_NAMES, open("./Cache/Backup/SERVER_NAMES.pickle", "wb"))
     except:
-        print("Failed to pickle 8")
+        pass
     try:
         pickle.dump(GLOBAL, open("./Cache/Backup/GLOBAL.pickle", "wb"))
     except:
-        print("Failed to pickle 9")
+        pass
     try:
         pickle.dump(DEFAULT_WEIGHT, open("./Cache/Backup/DEFAULT_WEIGHT.pickle", "wb"))
     except:
-        print("Failed to pickle 10")
+        pass
     try:
         pickle.dump(XP_AWARDS, open("./Cache/Backup/XP_AWARDS.pickle", "wb"))
     except:
-        print("Failed to pickle 11")
+        pass
     try:
         pickle.dump(referalCode, open("./Cache/Backup/referalCode.pickle", "wb"))
     except:
-        print("Failed to pickle 12")
-        
-    print("Pickle Complete")
+        pass
 
 def loadAll():
     if os.path.exists("./Cache/Backup"):
@@ -827,96 +709,4 @@ def loadAll():
     
     
 saveMissions()
-pickleAll()  
-
-
-"""
-@app.route('/leaderboard', methods=['GET'])
-def leaderboard():
-    ## get the "page" parameter if it exists, otherwise default to 0
-    page = flask.request.args.get('page', 0)
-    if page.lower() == "all":
-        page = -1
-    else:
-        page = int(page)
-    ## get the "search" parameter if it exists, otherwise default to None
-    search = flask.request.args.get('search', None)
-    ## get the community parameter if it exists, otherwise default to None
-    community = flask.request.args.get('community', None)
-    serverID = None
     
-    if community == None:
-        myLeaderboard = GLOBAL
-    elif community in SERVER_NAMES:
-        serverID = SERVER_NAMES[community]
-        myLeaderboard = SERVERS[serverID].leaderboard
-    else:
-        return flask.jsonify({"error": "Invalid community name"})
-        
-    if search != None:
-        myLeaderboard = myLeaderboard.search(search)
-    else:
-        myLeaderboard = myLeaderboard.leaderboard
-    
-    ## myLeaderboard is now a pd.DataFrame   
-    if page != -1:
-        ## depending on the page, return the appropriate 100 entries. For example, page 0 returns entries 0-99, page 1 returns entries 100-199, etc.
-        ## if the page is out of range, return an empty pd.DataFrame with the same columns as myLeaderboard
-        if page * 100 >= len(myLeaderboard):
-            myLeaderboard = myLeaderboard.iloc[0:0]
-        else:
-            myLeaderboard = myLeaderboard.iloc[page * 100:(page + 1) * 100]
-            
-    def convertToResponseGlobal(myLeaderboard):
-        finalResp = {"users": [], "communities": {}}
-        def createCommunityObject(serverID):
-            name = SERVERS[serverID].name
-            profileLink = SERVERS[serverID].pfp
-            return {"name": name, "profileLink": profileLink}
-        
-        for indID in SERVERS:
-            finalResp["communities"][indID] = createCommunityObject(indID)
-        
-        def createUserObject(userName, XP, trend, servers, badges):
-            listofIDs = servers.keys().tolist()
-            primaryServerID = listofIDs[0]
-            profileLink = optIn[primaryServerID][userName].pfp
-            twitter = optIn[primaryServerID][userName].handle
-            
-            return {"userName": userName, "xp": XP, "profileLink":profileLink, "twitter":twitter,"trend":trend, "badges": badges, "community": listofIDs}
-        
-        for rows in myLeaderboard.iterrows():
-            row = rows[1]
-            finalResp["users"].append(createUserObject(row["memberID"], row["memberXP"], row["trend"], row["servers"], row["badges"]))
-        
-        return finalResp
-    
-    def convertToResponseServer(myLeaderboard, serverID):
-        finalResp = {"users": [], "communities": {}}
-        def createCommunityObject(serverID):
-            name = SERVERS[serverID].name
-            profileLink = SERVERS[serverID].pfp
-            return {"name": name, "profileLink": profileLink}
-        
-        finalResp["communities"][serverID] = createCommunityObject(serverID)
-        
-        def createUserObject(userName, XP, trend, serverID):
-            listofIDs = [serverID]
-            profileLink = optIn[serverID][userName].pfp
-            twitter = optIn[serverID][userName].handle
-            badges = GLOBAL.leaderboard.loc[GLOBAL.leaderboard["memberID"] == userName, "badges"].iloc[0]
-            
-            return {"userName": userName, "xp": XP, "profileLink":profileLink, "twitter":twitter,"trend":trend, "badges": badges, "community": listofIDs}
-        
-        for rows in myLeaderboard.iterrows():
-            row = rows[1]
-            finalResp["users"].append(createUserObject(row["memberID"], row["memberXP"], row["trend"], serverID))
-            
-        return finalResp
-        
-    
-    if community == None:
-        return flask.jsonify(convertToResponseGlobal(myLeaderboard))
-    else:
-        return flask.jsonify(convertToResponseServer(myLeaderboard, serverID))
-"""

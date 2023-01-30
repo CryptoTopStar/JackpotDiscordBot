@@ -104,6 +104,24 @@ class Mission:
     def reprJSON(self):
         return dict(title = self.title, description = self.description, date = self.date, xp = self.xp, count = self.count, numPeople = self.numPeople, completed = self.completed, limit = self.limit, personLimit = self.personLimit)
 
+class ServerPickle:
+    def __init__(self, SERVER):
+        self.name = SERVER.name
+        self.id = SERVER.id
+        self.pfp = SERVER.pfp
+        self.joinTime = str(SERVER.joinTime)
+        self.maxMembers = SERVER.maxMembers
+        self.optInCount = SERVER.optInCount
+        self.invites = SERVER.invites
+        self.newMembers = SERVER.newMembers
+        self.endDate = SERVER.endDate
+        self.endMessage = SERVER.endMessage
+        self.twitterOBJ = SERVER.twitterOBJ
+        self.handle = SERVER.handle
+        self.numWins = SERVER.numWins
+        self.channelNames = SERVER.channelNames
+
+
 class Server:
     def __init__(self, name, id, url, invites):
         self.name = name
@@ -118,6 +136,10 @@ class Server:
         self.newMembers = {} ## {memberID: MemberOBJ, ... }
         self.endDate = None
         self.endMessage = None
+        self.twitterOBJ = None
+        self.handle = None
+        self.numWins = 0
+        self.channelNames = {"get-started" : "💰｜get-started", "user-settings" : "💰｜user-settings", "leaderboard" : "💰｜leaderboard", "raids" : "💰｜raids", "missions" : "💰｜missions", "add-mission" : "💎｜add-mission", "mission-approval" : "💎｜mission-approval", "launch-raid" : "💎｜launch-raid", "notifs" : "💰｜notifs"}
     
     def reprJSON(self):
         return dict(name = self.name, id = self.id, pfp = self.pfp, joinTime = self.joinTime, leaderboard = self.leaderboard.reprJSON(), maxMembers = self.maxMembers)
@@ -168,6 +190,10 @@ class globalLeaderboard:
                    
             self.leaderboard.loc[i, "memberRank"] = newRank
             self.leaderboard.loc[i, "trend"] = newTrend
+            
+        
+        memXP = self.leaderboard.loc[self.leaderboard["memberID"] == memberID, "memberXP"][0]
+        return self.leaderboard.loc[self.leaderboard["memberID"] == memberID, "memberRank"][0], self.leaderboard.loc[self.leaderboard["memberID"] == memberID, "trend"][0], memXP, self.leaderboard.loc[self.leaderboard["memberID"] == memberID, "servers"][0]
             
     def search(self, string):
         return self.leaderboard[self.leaderboard["memberID"].str.contains(string)]
@@ -231,6 +257,8 @@ class serverLeaderboard:
             self.leaderboard.loc[i, "memberRank"] = newRank
             self.leaderboard.loc[i, "trend"] = newTrend
             
+        return self.leaderboard.loc[self.leaderboard["memberID"] == memberID, "memberRank"][0], self.leaderboard.loc[self.leaderboard["memberID"] == memberID, "trend"][0], self.leaderboard.loc[self.leaderboard["memberID"] == memberID, "memberXP"][0]
+            
     def search(self, string):
         ## search all member IDs for string, returning all values of the leaderboard for match
         ## for example, the string "ABC" would return all rows with memberID containing "ABC"
@@ -264,7 +292,7 @@ class serverLeaderboard:
         return rank, trend, XP
     
 class jackpot:
-    def __init__(self):
+    def __init__(self, amount, deadline, winners, servers, members):
         self.jackpot = "2500"
         ##self.deadline = datetime.now() + pd.Timedelta(days = 30)
         self.winners = 7

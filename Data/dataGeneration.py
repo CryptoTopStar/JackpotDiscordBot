@@ -3,6 +3,7 @@ import numpy as np
 import datetime
 from tqdm import tqdm
 import csv
+import api
 
 NUM_PEOPLE = 500
 NUM_COMMUNITIES = 5

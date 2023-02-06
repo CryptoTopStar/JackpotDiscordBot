@@ -417,12 +417,9 @@ async def bot_set_up(myGuild):
         channelName = api.getChannel(serverID, channel)
         if discord.utils.get(guild.channels, name=channelName) == None:
             await guild.create_text_channel(channelName, category=discord.utils.get(guild.categories, name=REG_GUILD))
-            await discord.utils.get(guild.channels, name=channelName).set_permissions(guild.default_role, read_messages=False, send_messages=False)   
-            #await discord.utils.get(guild.channels, name=channel).set_permissions(discord.utils.get(guild.roles, name=BOT_ROLE), read_messages=True, send_messages=True)
             await discord.utils.get(guild.channels, name=channelName).set_permissions(discord.utils.get(guild.roles, name=ADMIN_ROLE), read_messages=True, send_messages=True)
             ## deny access to the Jackpot role
             await discord.utils.get(guild.channels, name=channelName).set_permissions(discord.utils.get(guild.roles, name=JACKPOT_ROLE), read_messages=False, send_messages=False)
-            #await discord.utils.get(guild.channels, name=channel).set_permissions(discord.utils.get(guild.roles, name=JACKPOT_NON_OPT), read_messages=True, send_messages=False)
     
     ## make the channel #user-settings visible to everyone in the "Jackpot" role
     channels = ["user-settings"]

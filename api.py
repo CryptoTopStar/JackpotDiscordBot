@@ -68,6 +68,12 @@ COMMUNITY_WEIGHT = {}
 ##    - VALUE: Server Object
 SERVERS = {}
 
+## CRYSTALS:
+##     - KEY: COMMUNITY SERVER ID
+##     - VALUE: 0 (CRYSTAL NOT SENT), 1 (CRYSTAL SENT)
+CRYSTALS = {}
+CURRENT_DAY = int(datetime.now().day)
+
 ## SCHEMA:
 ##   - KEY: Community Server Name
 ##   - VALUE: Community Server ID
@@ -80,7 +86,7 @@ CRYPTO_WALLET = {}
 
 DEFAULT_WEIGHT = 1
 XP_AWARDS = {0:1000, 1:40, 2:15, 3:200, 4:800, 5:700, -5:-700, 6:500, 7:1000, 8:400, 9:150, 10:600, 11:200, 12:400, 13:1200, 14:400, 15:800, 16:0, 17:15000, 18:3000, 19:4000, 20:5000, 21:0}
-GLOBAL = globalLeaderboard()
+GLOBAL, GLOBAL_SUSTAINED = globalLeaderboard(), globalLeaderboard()
 
 ## SCHEMA:
 ##    - KEY: Referal Code
@@ -238,7 +244,7 @@ def optInMember(serverID, memberID, fullIdentifier, memberName, url, tweetOBJ = 
         else: 
             database.add_user(memberID, serverID, "@" + str(tweetOBJ[3]), url)
         saveObject(optIn, "optIn")
-        return True
+        return [SERVERS[serverID].optInCount, SERVERS[serverID].maxMembers]
     else:
         return False
 
@@ -417,11 +423,11 @@ def tweetEventRetweet(serverID, memberName, raidID):
     else: 
         isBoosted = twitterRaids[serverID][raidID].boosted
     if twitterRaids[serverID][raidID].retweet == False:
-        return "This tweet is not eligible for retweet XP rewards"
+        return "This tweet is not eligible for retweet 🎟️'s rewards"
     if memberName not in twitterRaids[serverID][raidID].completed:
         twitterRaids[serverID][raidID].completed[memberName] = []
     if "retweet" in twitterRaids[serverID][raidID].completed[memberName]:
-        return "You have already earned XP for retweeting this tweet"
+        return "You have already earned 🎟️'s for retweeting this tweet"
     else:
         twitterRaids[serverID][raidID].completed[memberName].append("retweet")
         if isBoosted:
@@ -438,11 +444,11 @@ def tweetEventReact(serverID, memberName, raidID):
     else: 
         isBoosted = twitterRaids[serverID][raidID].boosted
     if twitterRaids[serverID][raidID].react == False:
-        return "This tweet is not eligible for react XP rewards"
+        return "This tweet is not eligible for react 🎟️'s rewards"
     if memberName not in twitterRaids[serverID][raidID].completed:
         twitterRaids[serverID][raidID].completed[memberName] = []
     if "react" in twitterRaids[serverID][raidID].completed[memberName]:
-        return "You have already earned XP for reacting to this tweet"
+        return "You have already earned 🎟️'s for reacting to this tweet"
     else:
         twitterRaids[serverID][raidID].completed[memberName].append("react")
         if isBoosted:
@@ -459,11 +465,11 @@ def tweetEventComment(serverID, memberName, raidID):
     else: 
         isBoosted = twitterRaids[serverID][raidID].boosted
     if twitterRaids[serverID][raidID].comment == False:
-        return "This tweet is not eligible for comment XP rewards"
+        return "This tweet is not eligible for comment 🎟️'s rewards"
     if memberName not in twitterRaids[serverID][raidID].completed:
         twitterRaids[serverID][raidID].completed[memberName] = []
     if "comment" in twitterRaids[serverID][raidID].completed[memberName]:
-        return "You have already earned XP for commenting to this tweet"
+        return "You have already earned 🎟️'s for commenting to this tweet"
     else:
         twitterRaids[serverID][raidID].completed[memberName].append("comment")
         if isBoosted:
@@ -526,7 +532,7 @@ def serverVisit(serverID, memberName):
     return False
     
 def getReward(server, memberName, taskType, name = None):
-    return str(XP_AWARDS[taskType]) + " XP"
+    return str(XP_AWARDS[taskType]) + " 🎟️'s"
 
 def missionXPEvent(serverID, memberName, missionID):
     limit =  missions[serverID][missionID].limit
@@ -591,10 +597,14 @@ def createAlphaNumericCode(serverID, memberID):
 
 def updateLeaderboards(memberID, serverID, XP):
     newRank, newTrend, newXP, newServers = GLOBAL.update(memberID, XP, serverID)
-    print("WHAT XP:", newXP)
+    GnewRank, GnewTrend, GnewXP, GnewServers = GLOBAL_SUSTAINED.update(memberID, XP, serverID)
+    
+    print("WHAT 🎟️'s:", newXP)
     database.leaderboard(memberID, newXP, newRank, newTrend, str(newServers))
+    database.gleaderboard(memberID, GnewXP, GnewRank, GnewTrend, str(GnewServers))
     
     serverRank, serverTrend, serverXP = SERVERS[serverID].leaderboard.update(memberID, XP)
+    GserverRank, GserverTrend, GserverXP = SERVERS[serverID].persistantLeaderboard.update(memberID, XP)
     xpBreakdown = {}
     
     counter = getMember(serverID, memberID).counter
@@ -607,6 +617,7 @@ def updateLeaderboards(memberID, serverID, XP):
             xpBreakdown[key] = counter[key]
     
     database.serverLeaderboard(memberID, serverID, serverXP, serverRank, serverTrend, xpBreakdown)
+    database.gserverLeaderboard(memberID, serverID, GserverXP, GserverRank, GserverTrend, xpBreakdown)
     
     saveObject(SERVERS, "SERVERS")
     saveObject(GLOBAL, "GLOBAL")
@@ -715,6 +726,20 @@ def storeGettingStarted(serverID, message):
     except:
         return False
 
+def storeJoin(serverID, message):
+    try:
+        SERVERS[serverID].joinNow = message
+        saveObject(SERVERS, "SERVERS")
+        return True
+    except:
+        return False
+    
+def getJoin(serverID):
+    try:
+        return SERVERS[serverID].joinNow
+    except:
+        return None
+
 def storeUserSettings(serverID, message):
     try:
         SERVERS[serverID].welcomeMessages[1] = message
@@ -747,7 +772,42 @@ def serverInvite(serverID, memberID):
             xpEvent(serverID, mID, 17)
         else:
             xpEvent(serverID, mID, 18)
+            
+def randomRoll():
+    return random.random() < 0.005
+            
+def crystal():
+    for serverID in SERVERS:
+        if serverID not in CRYSTALS:
+            CRYSTALS[serverID] = 0
+    
+    global CURRENT_DAY
+    
+    if CURRENT_DAY != int(datetime.now().day):
+        CURRENT_DAY = int(datetime.now().day)
+        for servers in CRYSTALS:
+            CRYSTALS[servers] = 0
+    
+    returnServer = []
+    for sevrerID in CRYSTALS:
+        if CRYSTALS[serverID] == 0 and randomRoll():
+            returnServer.append(serverID)
+            CRYSTALS[serverID] = 1
+            
+    return returnServer
 
+def crystalCheck(serverID):
+    if serverID not in CRYSTALS:
+        CRYSTALS[serverID] = 2
+        return True
+    
+    if CRYSTALS[serverID] == 0 or CRYSTALS[serverID] == 2:
+        return False
+    
+    else:
+        CRYSTALS[serverID] = 2
+        return True
+            
 def pickleAll():
     if not os.path.exists("./Cache/Backup"):
         os.makedirs("./Cache/Backup")

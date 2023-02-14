@@ -129,17 +129,19 @@ class Server:
         self.pfp = url
         self.joinTime = datetime.now().strftime("%m/%d/%y %H:%M")
         self.leaderboard = serverLeaderboard()
+        self.persistantLeaderboard = serverLeaderboard()
         self.maxMembers = 50
         self.optInCount = 0
         self.invites = invites
         self.welcomeMessages = [None, None] ## [get-started, user-settings]
+        self.joinNow = None
         self.newMembers = {} ## {memberID: MemberOBJ, ... }
         self.endDate = None
         self.endMessage = None
         self.twitterOBJ = None
         self.handle = None
         self.numWins = 0
-        self.channelNames = {"get-started" : "💰｜get-started", "user-settings" : "💰｜user-settings", "leaderboard" : "💰｜leaderboard", "raids" : "💰｜raids", "missions" : "💰｜missions", "add-mission" : "💎｜add-mission", "mission-approval" : "💎｜mission-approval", "launch-raid" : "💎｜launch-raid", "notifs" : "💰｜notifs"}
+        self.channelNames = {"get-started" : "💰｜get-started", "user-settings" : "💰｜user-settings", "leaderboard" : "💰｜leaderboard", "raids" : "💰｜raids", "quests" : "💰｜quests", "add-quests" : "💎｜add-quests", "mission-approval" : "💎｜mission-approval", "launch-raid" : "💎｜launch-raid", "notifs" : "💰｜notifs"}
     
     def reprJSON(self):
         return dict(name = self.name, id = self.id, pfp = self.pfp, joinTime = self.joinTime, leaderboard = self.leaderboard.reprJSON(), maxMembers = self.maxMembers)

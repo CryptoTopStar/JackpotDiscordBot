@@ -20,7 +20,10 @@ def connectanddo(commands, args = None):
                 sql.execute(command)
             conn.commit()
         except:
-            print("Error: " + command, args[i])
+            try:
+                print("Error: " + command, args[i])
+            except:
+                print("Error: " + command)
             conn.rollback()
             
     conn.commit()
@@ -35,6 +38,7 @@ def setup():
     ## servers is a dict of serverID: xp for that server
     ## badges is a list of strings
     commands.append("CREATE TABLE leaderboard (member_id VARCHAR(255), member_xp VARCHAR(255), member_rank VARCHAR(255), trend VARCHAR(255), servers VARCHAR(1000), badges VARCHAR(255))")
+    commands.append("CREATE TABLE gleaderboard (member_id VARCHAR(255), member_xp VARCHAR(255), member_rank VARCHAR(255), trend VARCHAR(255), servers VARCHAR(1000), badges VARCHAR(255))")
     ## create a missions table with the following info "missionID", "missionName", "userID", "serverID", "missionXP", "mission discription", "mission contents", "missionStatus"
     commands.append("CREATE TABLE missions (mission_id VARCHAR(255), mission_name VARCHAR(255), user_id VARCHAR(255), server_id VARCHAR(255), mission_xp VARCHAR(255), mission_discription VARCHAR(1000), mission_contents VARCHAR(10000), mission_status VARCHAR(50))")
     ## create a serverInfo table with the following information: serverID, serverName, serverPfp link
@@ -60,6 +64,7 @@ def decode(encodedStr):
 def setupServerTable(server_id, server_name, server_pfp_link):
     commands, args = [], []
     commands.append("CREATE TABLE "+str(encode(server_id))+" (member_id VARCHAR(255), member_xp VARCHAR(255), member_rank VARCHAR(255), trend VARCHAR(255), xp_distiled VARCHAR(500), badges VARCHAR(255))")
+    commands.append("CREATE TABLE "+"g" + str(encode(server_id))+" (member_id VARCHAR(255), member_xp VARCHAR(255), member_rank VARCHAR(255), trend VARCHAR(255), xp_distiled VARCHAR(500), badges VARCHAR(255))")
     args.append(None)
     commands.append("INSERT INTO serverinfo (server_id, server_name, server_pfp_link) VALUES (%s, %s, %s)")
     args.append((server_id, server_name, server_pfp_link))
@@ -100,6 +105,7 @@ def add_ref_code(user_id, server_id, ref_code):
     connectanddo(commands, args)
     
 def add_mission(mission_id, mission_name, user_id, server_id, mission_xp, mission_discription, mission_contents, mission_status = "PENDING"):
+    print("NEW MISSIONID:", mission_id)
     commands, args = [], []
     commands.append("INSERT INTO missions (mission_id, mission_name, user_id, server_id, mission_xp, mission_discription, mission_contents, mission_status) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)")
     args.append((mission_id, mission_name, user_id, str(server_id), mission_xp, mission_discription, mission_contents, mission_status))
@@ -130,11 +136,38 @@ def leaderboard(member_id, member_xp, member_rank, trend, servers = "{}", badges
     if myData != None and member_id in myData:
         typeCode = "UPDATE leaderboard SET member_xp = %s, member_rank = %s, trend = %s, servers = %s, badges = %s WHERE member_id = %s"
         sql.execute(typeCode, (member_xp, member_rank, trend, str(servers), badges, member_id))
-        #sql.execute("UPDATE leaderboard SET member_xp = "+ str(member_xp) +", member_rank = "+ str(member_rank) +", trend = "+ str(trend) +", servers = "+ str(servers) +" WHERE member_id = "+ str(member_id))
     else:
         typeCode = "INSERT INTO leaderboard (member_id, member_xp, member_rank, trend, servers, badges) VALUES (%s, %s, %s, %s, %s, %s)"
         sql.execute(typeCode, (member_id, member_xp, member_rank, trend, str(servers), badges))
-        #sql.execute("INSERT INTO leaderboard (member_id, member_xp, member_rank, trend, servers, badges) VALUES ("+ str(member_id)+", "+ str(member_xp) +", " + str(member_rank) + ", " + str(trend) + ", " + str(servers) + ", " + str(badges) + ")")
+    
+    conn.commit()
+    sql.close()
+    conn.close()
+    
+def gleaderboard(member_id, member_xp, member_rank, trend, servers = "{}", badges = "[]"):
+    print("MEMXP", str(member_xp))
+    conn = psycopg2.connect(database="defaultdb",
+                                host="db-postgresql-sfo3-06312-do-user-13128182-0.b.db.ondigitalocean.com",
+                                user="doadmin",
+                                password="AVNS_-f7ufstYFNsmlNoq3SQ",
+                                port="25060")
+
+    sql = conn.cursor()
+    
+    ## create a leaderboard table with the following information: "memberID", "memberXP", "memberRank", "trend", "servers", "badges"
+    ## servers is a dict of serverID: xp for that server
+    ## badges is a list of strings
+    
+    ## if the member is already in the leaderboard, update their info
+    sql.execute("SELECT member_id FROM leaderboard")
+    myData = sql.fetchone()
+    if myData != None and member_id in myData:
+        typeCode = "UPDATE gleaderboard SET member_xp = %s, member_rank = %s, trend = %s, servers = %s, badges = %s WHERE member_id = %s"
+        sql.execute(typeCode, (member_xp, member_rank, trend, str(servers), badges, member_id))
+    else:
+        typeCode = "INSERT INTO gleaderboard (member_id, member_xp, member_rank, trend, servers, badges) VALUES (%s, %s, %s, %s, %s, %s)"
+        sql.execute(typeCode, (member_id, member_xp, member_rank, trend, str(servers), badges))
+    
     conn.commit()
     sql.close()
     conn.close()
@@ -162,3 +195,32 @@ def serverLeaderboard(member_id, server_id, member_xp, member_rank, trend, xp_di
     conn.commit()
     sql.close()
     conn.close()
+    
+def gserverLeaderboard(member_id, server_id, member_xp, member_rank, trend, xp_distiled = "{}", badges = "[]"):
+    conn = psycopg2.connect(database="defaultdb",
+                                host="db-postgresql-sfo3-06312-do-user-13128182-0.b.db.ondigitalocean.com",
+                                user="doadmin",
+                                password="AVNS_-f7ufstYFNsmlNoq3SQ",
+                                port="25060")
+
+    sql = conn.cursor()
+    typeCode = "SELECT member_id FROM g" + encode(server_id)
+    sql.execute(typeCode)
+    #sql.execute("SELECT member_id FROM " + str(server_id))
+    myData = sql.fetchone()
+    if myData != None and member_id in myData:
+        typeCode = "UPDATE g" + str(encode(server_id)) + " SET member_xp = %s, member_rank = %s, trend = %s, xp_distiled = %s, badges = %s WHERE member_id = %s"
+        sql.execute(typeCode, (member_xp, member_rank, trend, str(xp_distiled), badges, member_id))
+        #sql.execute("UPDATE " + encode(server_id) + " SET member_xp = "+ str(member_xp)+", member_rank = "+ str(member_rank)+", trend = "+ str(trend) +", xp_distiled = "+ str(xp_distiled)+" WHERE member_id = "+ str(member_id))
+    else:
+        typeCode = "INSERT INTO g"+ str(encode(server_id)) +" (member_id, member_xp, member_rank, trend, xp_distiled, badges) VALUES (%s, %s, %s, %s, %s, %s)"
+        sql.execute(typeCode, (member_id, member_xp, member_rank, trend, str(xp_distiled), badges))
+        #sql.execute("INSERT INTO " + encode(server_id) + " (member_id, member_xp, member_rank, trend, xp_distiled, badges) VALUES ("+ str(member_id)+", "+ str(member_xp)+", "+ str(member_rank)+", "+ str(trend)+", "+ str(xp_distiled) +", "+ str(badges) +")")
+    conn.commit()
+    sql.close()
+    conn.close()
+    
+def pushAll():
+    ## delete all rows in the leaderboard table
+    ## delete all rows in all the server tables
+    return

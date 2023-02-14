@@ -35,15 +35,15 @@ def getRaidsEmbed():
     return embed
 
 def getMissionAddEmbed():
-    embed=discord.Embed(title="🗺️ **Mission Admin** 🗺️", description="Click the buttons below to interact with your **Missions**.", color=0xe9e9e9)
-    embed.add_field(name="1. **Add Mission:**", value="Click \"Add Mission\" to activate a new mission for your community. \n\nYou'll be able to specify the objective for the mission and set an appropriate XP reward for completion. The maximum possible reward for a single mission is `5,000 XP 🎟️` and the minimum is `50 XP 🎟️`. We suggest adding up to `15,000 XP 🎟️` of missions to maximize output from your community.", inline=False)
-    embed.add_field(name="2. **Edit Mission:**", value="Click \"Edit Mission\" to change the details for any active mission.", inline=False)
-    embed.add_field(name="3. **Delete Mission:**", value="Click \"Delete Mission\" to delete an active mission.", inline=False)
+    embed=discord.Embed(title="🗺️ **Quest Admin** 🗺️", description="Click the buttons below to interact with your **Quests**.", color=0xe9e9e9)
+    embed.add_field(name="1. **Add Quest:**", value="Click \"Add Quest\" to activate a new quest for your community. \n\nYou'll be able to specify the objective for the quest and set an appropriate 🎟️'s reward for completion. The maximum possible reward for a single quest is `5,000 🎟️'s` and the minimum is `50 🎟️'s`. We suggest adding up to `15,000 🎟️'s` of quests to maximize output from your community.", inline=False)
+    embed.add_field(name="2. **Edit Quest:**", value="Click \"Edit Quest\" to change the details for any active quest.", inline=False)
+    embed.add_field(name="3. **Delete Quest:**", value="Click \"Delete Quest\" to delete an active quest.", inline=False)
     embed.set_footer(text="Powered by Jackpot", icon_url="https://static.wixstatic.com/media/cdc018_603e1fc27c6a4c71b2c8c333f66c858b~mv2.png")
     return embed
 
 def getReferalEmbed():
-    embed=discord.Embed(title="Unique Referral Code", description="Share your code with friends to refer a new community to Jackpot! If they sign up as a paying customer, you will earn a substantial XP bonus for yourself and everyone in your community!", color=0x222222)
+    embed=discord.Embed(title="Unique Referral Code", description="Refer a new community to Jackpot to earn `15,000 🎟️’s` for yourself and `3,000 🎟️’s` for everyone else in your community.", color=0x222222)
     return embed 
 
 def serverTweetLink(handle):
@@ -57,38 +57,43 @@ def showReferalEmbed(referal):
     return embed
 
 def getOptIn(handle):
-    embed=discord.Embed(title="Congratulations!", description="**You have successfully joined Jackpot and are eligible to win the Jackpot raffle!** \n Your twitter handle `" + handle + "` has been linked! \n\n You are now ready to begin earning XP for all the value you add to your community. As a token of our gratitude, you have been awarded `1000 XP 🎟️`", color=0x33FF5C)
+    embed=discord.Embed(title="Congratulations!", description="**You have successfully joined Jackpot and are eligible to win the Jackpot raffle!** \n Your twitter handle `" + handle + "` has been linked! \n\n You are now ready to begin earning 🎟️'s for all the value you add to your community. As a token of our gratitude, you have been awarded `1000 🎟️'s`", color=0x33FF5C)
     embed.set_footer(text="Powered by Jackpot", icon_url="https://static.wixstatic.com/media/cdc018_603e1fc27c6a4c71b2c8c333f66c858b~mv2.png")
     return embed 
 
 def getOptInNoWallet(getstarted, handle):
-    embed=discord.Embed(title="Congratulations!", description="**You have successfully joined Jackpot. Until you add your ETH wallet address in the <#" + str(getstarted) + "> channel, you are ineligible to win the Jackpot raffle.** \n Your twitter handle `" + handle + "` has been linked! \n\n In the meantime, you are now ready to begin earning XP for all the value you add to your community. As a token of our gratitude, you have been awarded `1000 XP 🎟️`", color=0xcffc03)
+    embed=discord.Embed(title="Congratulations!", description="**You have successfully joined Jackpot. Until you add your ETH wallet address in the <#" + str(getstarted) + "> channel, you are ineligible to win the Jackpot raffle.** \n Your twitter handle `" + handle + "` has been linked! \n\n In the meantime, you are now ready to begin earning 🎟️'s for all the value you add to your community. As a token of our gratitude, you have been awarded `1000 🎟️'s`", color=0xcffc03)
+    embed.set_footer(text="Powered by Jackpot", icon_url="https://static.wixstatic.com/media/cdc018_603e1fc27c6a4c71b2c8c333f66c858b~mv2.png")
+    return embed
+
+def outofseats():
+    embed=discord.Embed(title="Upgrade Needed.", description="All available seats in this server have been claimed. Please upgrade your server’s subscription to allow more people to opt-in.", color=0xff3042)
     embed.set_footer(text="Powered by Jackpot", icon_url="https://static.wixstatic.com/media/cdc018_603e1fc27c6a4c71b2c8c333f66c858b~mv2.png")
     return embed
 
 def getOptInInvalidWallet(getstarted, handle):
-    embed=discord.Embed(title="Congratulations!", description="**You have successfully joined Jackpot. Until you add your ETH wallet address in the <#" + str(getstarted) + "> channel, you are ineligible to win the Jackpot raffle.** \n Your twitter handle `" + handle + "` has been linked! \n\n In the meantime, you are now ready to begin earning XP for all the value you add to your community. As a token of our gratitude, you have been awarded `1000 XP 🎟️`", color=0xcffc03)
+    embed=discord.Embed(title="Congratulations!", description="**You have successfully joined Jackpot. Until you add your ETH wallet address in the <#" + str(getstarted) + "> channel, you are ineligible to win the Jackpot raffle.** \n Your twitter handle `" + handle + "` has been linked! \n\n In the meantime, you are now ready to begin earning 🎟️'s for all the value you add to your community. As a token of our gratitude, you have been awarded `1000 🎟️'s`", color=0xcffc03)
     embed.add_field(name="⚠️ **Wallet ID Invalid**", value="Another user has already opted-in to Jackpot using the Wallet ID you specified.", inline=False)
     embed.set_footer(text="Powered by Jackpot", icon_url="https://static.wixstatic.com/media/cdc018_603e1fc27c6a4c71b2c8c333f66c858b~mv2.png")
     return embed
 
 def getRankEmbed(memID, serverRank, globalRank, XP, globalXP, trend = 0):
     if str(serverRank) == "1":
-        descp = memID + " is the top contributor in this server, with `" + str(XP) + " XP 🎟️`! Keep up the great work!"
+        descp = memID + " is the top contributor in this server, with `" + str(XP) + " 🎟️'s`! Keep up the great work!"
     else:
-        descp = memID + " has `" + str(XP) + " XP 🎟️` in this server! Keep earning XP to rank up!"
+        descp = memID + " has `" + str(XP) + " 🎟️'s` in this server! Keep earning 🎟️'s to rank up!"
     emoji = "🎟️"
     if trend == 1:
         emoji = " 🔼"
     elif trend == -1:
         emoji = " 🔽"
     embed = discord.Embed(title="🎖️ " + memID + " is Rank " + str(serverRank) + " in this Server", description=descp, color=0xEBF900)
-    embed.add_field(name="🌎 Your Global Stats 🌎", value="Rank: `" + str(globalRank) + "`, Total XP earned: `" + str(globalXP) + " XP " + emoji + "` \n\n This message will delete in 10 seconds", inline=True)
+    embed.add_field(name="🌎 Your Global Stats 🌎", value="Rank: `" + str(globalRank) + "`, Total 🎟️'s earned: `" + str(globalXP) + " 🎟️'s " + emoji + "` \n\n This message will delete in 10 seconds", inline=True)
     embed.set_footer(text="Powered by Jackpot", icon_url="https://static.wixstatic.com/media/cdc018_603e1fc27c6a4c71b2c8c333f66c858b~mv2.png")
     return embed
 
 def getMultiplierEmbed():
-    embed=discord.Embed(title="Claim XP Multiplier", description="You're eligible to claim an XP Multiplier based on the length of time you've held your community's NFT.\n\nTo claim the XP Multiplier, click the button below and sign a message with the wallet that holds your NFT. Signing a message is different than signing a transaction. This will prove ownership without sharing your private key.", color=0x222222)
+    embed=discord.Embed(title="Claim 🎟️'s Multiplier", description="You're eligible to claim an 🎟️'s Multiplier based on the length of time you've held your community's NFT.\n\nTo claim the 🎟️'s Multiplier, click the button below and sign a message with the wallet that holds your NFT. Signing a message is different than signing a transaction. This will prove ownership without sharing your private key.", color=0x222222)
     return embed
 
 def getUpdateEmbed():
@@ -96,7 +101,7 @@ def getUpdateEmbed():
     return embed
 
 def getUpcomingJackpotsEmbed():
-    embed=discord.Embed(title="Upcoming Jackpot💰", description="** **💰 Current Jackpot Size: `1,000 USDC` | ⏱️ Time Until Next Drawing: `24 Days`\n✋ # of Community Participants: `65` | ✋ # of Global Participants: `195`\n🎟️ **1 XP = 1 Raffle Ticket**", color=0xe9e9e9)
+    embed=discord.Embed(title="Upcoming Jackpot💰", description="** **💰 Current Jackpot Size: `1,000 USDC` | ⏱️ Time Until Next Drawing: `24 Days`\n✋ # of Community Participants: `65` | ✋ # of Global Participants: `195`\n🎟️ **1 🎟️'s = 1 Raffle Ticket**", color=0xe9e9e9)
     return embed
 
 def getLeaderboardsEmbed():
@@ -105,30 +110,35 @@ def getLeaderboardsEmbed():
     return embed
 
 def getIntroEmbed():
-    embed = discord.Embed(title="**Join Now!**", description="Opt-in to immediately earn `1000 XP 🎟️` and have a chance at winning the Jackpot Raffle.", color=0xf59b42)
+    embed = discord.Embed(title="**Join Now!**", description="Opt-in to immediately earn `1000 🎟️'s` and have a chance at winning the Jackpot.", color=0xf59b42)
+    return embed
+
+def termsConditions():
+    embed = discord.Embed(title="**Terms and Conditions 📝**", description="**Before we get started, you'll need to agree to the [terms and conditions](https://docs.google.com/document/d/1nXBXNLBbNplktyTITFMEEZvKZc8BKq2X/edit?usp=share_link&ouid=10337345930749).**\n\n By clicking on the `I Agree` button below, you agree to have read Jackpot's terms and conditions.", color=0x4299f5)
+    embed.set_footer(text="Powered by Jackpot", icon_url="https://static.wixstatic.com/media/cdc018_603e1fc27c6a4c71b2c8c333f66c858b~mv2.png")
     return embed
     
-def getXPEmbed(raids, missions):
-    embed=discord.Embed(title="**How to Earn XP**", description="Below is a guide to all the actions you can take in your community that will be automatically rewarded.", color=0xe9e9e9)
-    embed.add_field(name="**Discord:**", value="🎟️ Sending messages *(diminishing returns)*\n🎟️ Reacting to messages *(diminishing returns)*\n🎟️ Other people reacting to your messages\n🎟️ Other people replying to your messages\n🎟️ Being one of the first people to interact with a new member\n🎟️ Inviting real people to the server\n🎟️ Visiting the server daily\n", inline=False) 
+def getXPEmbed(raids, quests):
+    embed=discord.Embed(title="**How to Earn 🎟️'s**", description="Below is a guide to all of the ways you can earn tickets for the Jackpot.", color=0xe9e9e9)
+    embed.add_field(name="**Discord:**", value="🎟️ Sending messages *(diminishing returns)*\n🎟️ Reacting to messages *(diminishing returns)*\n🎟️ Other people reacting to your messages\n🎟️ Other people replying to your messages\n🎟️ Being one of the first people to interact with a new member\n🎟️ Inviting real people to the server\n🎟️ Visiting the server daily\n🎟️ Catching a Crystal\n", inline=False) 
     embed.add_field(name="**Twitter:**", value = "🎟️ Retweeting a <#"+raids+"> tweet\n🎟️ Replying to a <#"+raids+"> tweet\n🎟️ Liking a <#"+raids+"> tweet\n", inline=False) 
-    embed.add_field(name="**Missions:**", value = "🎟️ Successfully completing <#"+missions+">", inline=False)
+    embed.add_field(name="**Quests:**", value = "🎟️ Successfully completing <#"+quests+">", inline=False)
     return embed
 
-def getChannelsEmbed(userSettings, leaderboard, raids, missions, notifs):
+def getChannelsEmbed(userSettings, leaderboard, raids, quests, notifs):
     embed=discord.Embed(title="**Channel Overview**", color=0xe9e9e9)
-    embed.add_field(name="Important channels to keep track of:", value="📍 <#"+userSettings+"> | Review and change your personal details.\n📍 <#"+leaderboard+"> | Visit our website containing your community’s most valuable contributors.\n📍 <#"+raids+"> | Participate in Twitter raids to earn XP.\n📍 <#"+missions+"> | Choose from available missions and submit proof of completion.\n📍 <#"+notifs+"> | Get notified when you earn XP and your missions are approved.")
+    embed.add_field(name="Important channels to keep track of:", value="📍 <#"+userSettings+"> | Review and change your settings.\n📍 <#"+leaderboard+"> | See who has earned the most tickets.\n📍 <#"+raids+"> | Participate in Twitter raids to earn tickets.\n📍 <#"+quests+"> | Complete quests to earn tickets.\n📍 <#"+notifs+"> | See your notifications.")
     return embed
 
-def getChannelsEmbedGetStarted(leaderboard, raids, missions, notifs):
+def getChannelsEmbedGetStarted(leaderboard, raids, quests, notifs):
     embed=discord.Embed(title="**Channel Overview**", color=0xe9e9e9)
-    embed.add_field(name="Important channels to keep track of:", value="📍 <#"+leaderboard+"> | Visit our website containing your community’s most valuable contributors.\n📍 <#"+raids+"> | Participate in Twitter raids to earn XP.\n📍 <#"+missions+"> | Choose from available missions and submit proof of completion.\n📍 <#"+notifs+"> | Get notified when you earn XP and your missions are approved.")
+    embed.add_field(name="Important channels to keep track of:", value="📍 <#"+leaderboard+"> | Visit our website containing your community’s most valuable contributors.\n📍 <#"+raids+"> | Participate in Twitter raids to earn 🎟️'s.\n📍 <#"+quests+"> | Choose from available quests and submit proof of completion.\n📍 <#"+notifs+"> | Get notified when you earn 🎟️'s and your quests are approved.")
     return embed
 
 def getWelcomeEmbed():
     deadline, reward = api.getJackpotDeadline(), api.getJackpot()
     __, __, winners = api.getJackpotNumber()
-    embed=discord.Embed(title="**Welcome to Jackpot!**",description="Jackpot is a simple, no-brainer loyalty and rewards program architected in collaboration with 100+ web3 industry veterans including founders, community managers, mods, and core contributors across the Ethereum and Solana ecosystems.\n\nEarn XP to climb the leaderboard and have a chance at winning the **Jackpot Raffle.**\n\n**1 XP = 1 Raffle Ticket**", color=0x33FF5C)
+    embed=discord.Embed(title="**Welcome to Jackpot!**",description="Jackpot is an incentive plugin for web3 communities that gamifies participation and engagement. Jackpot was architected in collaboration with 100+ web3 industry veterans including founders, community managers, mods, and core contributors across the Ethereum and Solana ecosystems.\n\nEarn tickets 🎟️ to climb the leaderboard and increase your chances of winning the Jackpot.", color=0x33FF5C)
     embed.add_field(name="**Next Drawing**", value="**Next Jackpot**: `"+str(reward)+" USDC`\n**Number of Winners**: `"+str(winners)+"`\n**Drawing on**: `"+str(deadline)+"`", inline=False)
     return embed
 
@@ -157,12 +167,12 @@ def cmdJackpotEmbed():
     return embed
 
 def getMissionsEmbed():
-    embed=discord.Embed(title="Missions 🗺️", description = "Missions are the easiest way to rack up XP. Head over to #missions to view the available missions and submit proof of your work. Once approved by your community's admin, you'll receive XP for your contribution.", color=0xe9e9e9)
+    embed=discord.Embed(title="Missions 🗺️", description = "Missions are the easiest way to rack up 🎟️'s. Head over to #quests to view the available quests and submit proof of your work. Once approved by your community's admin, you'll receive 🎟️'s for your contribution.", color=0xe9e9e9)
     embed.set_footer(text="Powered by Jackpot", icon_url="https://static.wixstatic.com/media/cdc018_603e1fc27c6a4c71b2c8c333f66c858b~mv2.png")
     return embed
 
 def getCommandsEmbed():
-    embed=discord.Embed(title="**🤖 Discord Commands 🤖**", description = "👉 Type `/rank` to see your XP earned and position on the leaderboard. \n*You can also view the rank of other members in your community.*\n\n👉 Type `/leaderboard` to visit the Jackpot website and view the leaderboard.\n\n👉 Type `/jackpot` to see the upcoming Jackpot.\n", color=0xe9e9e9)
+    embed=discord.Embed(title="**🤖 Discord Commands 🤖**", description = "👉 Type `/rank` to see your position on the leaderboard and how many tickets you've earned. \n*You can also view the rank of other users with this command*\n\n👉 Type `/leaderboard` to view the Jackpot leaderboard.\n\n👉 Type `/jackpot` to see information about the upcoming Jackpot.\n", color=0xe9e9e9)
     return embed
 
 def getLeaderboardInformation():
@@ -173,13 +183,23 @@ def getFullLeaderboardEmbed():
     embed = discord.Embed(title="Leaderboard", description=getLeaderboardInformation(), color=0xe9e9e9)
     return embed
 
+def getCrystalEmbed():
+    embed = discord.Embed(title="💎💎 // CATCH THE CRYSTAL // 💎💎", description="First one to **Catch the Crystal** will earn `5000 🎟️'s`\n\n**Crystals appear once a day at a random time and in a random channel**", color=0x00D3F9)
+    embed.set_footer(text="Powered by Jackpot", icon_url="https://static.wixstatic.com/media/cdc018_603e1fc27c6a4c71b2c8c333f66c858b~mv2.png")
+    return embed
+
+def getCaughtEmbed():
+    embed = discord.Embed(title="💎💎 Crystal Caught! 💎💎", description="Congratulations! You caught today's crystal.", color=0x00D3F9)
+    embed.set_footer(text="Powered by Jackpot", icon_url="https://static.wixstatic.com/media/cdc018_603e1fc27c6a4c71b2c8c333f66c858b~mv2.png")
+    return embed
+
 def cmdLeaderboardURL(top3):
     starter = ""
     if len(top3) <= 0:
-        starter = "`Noone on this server has earned any XP yet. Be the first to earn XP!`"
+        starter = "`Noone on this server has earned any 🎟️'s yet. Be the first to earn 🎟️'s!`"
     else:
         for member in top3:
-            starter += "🏆 " + member[0] + " is `Rank " + str(member[1]) + "` in this server and has `" + str(member[2]) + " XP 🎟️`\n"   
+            starter += "🏆 " + member[0] + " is `Rank " + str(member[1]) + "` in this server and has `" + str(member[2]) + " 🎟️'s`\n"   
     starter += "\n"
     embed = discord.Embed(title="Leaderboard", description=starter + "Click [here](https://getjackpot.com/leaderboard) to view the entire leaderboard, including the Global Leaderboard. \n\n This message will delete in 10 seconds.", color=0xe9e9e9)
     embed.set_footer(text="Powered by Jackpot", icon_url="https://static.wixstatic.com/media/cdc018_603e1fc27c6a4c71b2c8c333f66c858b~mv2.png")
@@ -188,17 +208,17 @@ def cmdLeaderboardURL(top3):
 def getLeaderboardLink(top3):
     starter = ""
     if len(top3) <= 0:
-        starter = "`Noone on this server has earned any XP yet. Be the first to earn XP!`"
+        starter = "`Noone on this server has earned any 🎟️'s yet. Be the first to earn 🎟️'s!`"
     else:
         for member in top3:
-            starter += "🏆 " + member[0] + " is `Rank " + str(member[1]) + "` in this server and has `" + str(member[2]) + " XP 🎟️`\n"   
+            starter += "🏆 " + member[0] + " is `Rank " + str(member[1]) + "` in this server and has `" + str(member[2]) + " 🎟️'s`\n"   
     starter += "\n"
     embed = discord.Embed(title="Leaderboard", description=starter + "Click [here](https://getjackpot.com/leaderboard) to view the entire leaderboard, including the Global Leaderboard.", color=0xe9e9e9)
     embed.set_footer(text="Powered by Jackpot", icon_url="https://static.wixstatic.com/media/cdc018_603e1fc27c6a4c71b2c8c333f66c858b~mv2.png")
     return embed
 
 def getLeaderboardEmbed():
-    embed = discord.Embed(title="📈 The Leaderboard 📈", description="Check the leaderboard to see the most valuable contributors in your community and beyond!", color=0xe9e9e9)
+    embed = discord.Embed(title="📈 The Leaderboard 📈", description="Check the leaderboard to see who holds the most 🎟️'s in your community and beyond", color=0xe9e9e9)
     embed.set_footer(text="Powered by Jackpot", icon_url="https://static.wixstatic.com/media/cdc018_603e1fc27c6a4c71b2c8c333f66c858b~mv2.png")
     return embed
 
@@ -209,37 +229,37 @@ def getTwitterEmbed(link, retweet, react, comment, boosted=False):
     if boosted:
         if retweet:
             xp += 1200
-            retweetStr = "`1200 XP 🎟️ (BOOSTED)`"
+            retweetStr = "`1200 🎟️'s (BOOSTED)`"
         if react:
             xp += 400
-            reactStr = "`400 XP 🎟️ (BOOSTED)`"
+            reactStr = "`400 🎟️'s (BOOSTED)`"
         if comment:
             xp += 800
-            commentStr = "`800 XP 🎟️ (BOOSTED)`"
+            commentStr = "`800 🎟️'s (BOOSTED)`"
     
         mcolor = 0xf21d6a
-        message = "**Engage** with the **Tweet** below to earn up to **"+ str(xp) +" XP**\n\n🚨 **THIS RAID IS BOOSTED -- EARN 200% XP!** 🚨\n\nLike = "+ reactStr + "\nReply = "+ commentStr +"\nRetweet = "+retweetStr+"\n\n⛓ __**" + link + "**__ ⛓"
+        message = "**Engage** with the **Tweet** below to earn up to **"+ str(xp) +" 🎟️'s**\n\n🚨 **THIS RAID IS BOOSTED -- EARN 200% 🎟️'s!** 🚨\n\nLike = "+ reactStr + "\nReply = "+ commentStr +"\nRetweet = "+retweetStr+"\n\n⛓ __**" + link + "**__ ⛓"
     else:
         if retweet:
             xp += 600
-            retweetStr = "`600 XP 🎟️`"
+            retweetStr = "`600 🎟️'s`"
         if react:
             xp += 200
-            reactStr = "`200 XP 🎟️`"
+            reactStr = "`200 🎟️'s`"
         if comment:
             xp += 400
-            commentStr = "`400 XP 🎟️`"
+            commentStr = "`400 🎟️'s`"
             
         mcolor = 0x1da1f2
-        message = "**Engage** with the **Tweet** below to earn up to **"+ str(xp) +" XP**\n\nLike = "+ reactStr + "\nReply = "+ commentStr +"\nRetweet = "+retweetStr+"\n\n⛓ __**" + link + "**__ ⛓\n"
+        message = "**Engage** with the **Tweet** below to earn up to **"+ str(xp) +" 🎟️'s**\n\nLike = "+ reactStr + "\nReply = "+ commentStr +"\nRetweet = "+retweetStr+"\n\n⛓ __**" + link + "**__ ⛓\n"
     embed=discord.Embed(title="**RAID ALERT**", description=message, color=mcolor)
     embed.set_author(name="Twitter Raid Rewards", icon_url="https://img.icons8.com/color/344/twitter--v1.png")
     embed.set_footer(text="Powered by Jackpot", icon_url="https://static.wixstatic.com/media/cdc018_603e1fc27c6a4c71b2c8c333f66c858b~mv2.png")
     return embed
 
 def getMissionsEmbed():
-    embed=discord.Embed(title="**🗺️ Missions 🗺️**", description="Click the **View Missions** button below to see your community's active missions and their respective XP rewards.", color=0xf21d6a)
-    embed.add_field(name="**Submitting Mission Completion**", value="To get credit (XP) for completing a mission, in the message section below, type `/complete` followed by the mission id and your description (proof) of completion. If you click +1 more, you can add a screenshot to supplement the proof of completion provided.\n\n➡️ **Select an active mission from the dropdown to view its details.**", inline=False) 
+    embed=discord.Embed(title="**🗺️ Quests 🗺️**", description="Click the **View Quests** button below to see your community's active quests and their respective 🎟️ rewards.", color=0xf21d6a)
+    embed.add_field(name="**Submitting Quest Completion**", value="To get credit (🎟️'s) for completing a quest, in the message section below, type `/complete` followed by the quest id and your description (proof) of completion. If you click +1 more, you can add a screenshot to supplement the proof of completion provided. Please note that all Quest submissions are approved or denied by the Jackpot team.\n\n➡️ **Select an active quest from the dropdown to view its details.**", inline=False) 
     embed.set_footer(text="Powered by Jackpot", icon_url="https://static.wixstatic.com/media/cdc018_603e1fc27c6a4c71b2c8c333f66c858b~mv2.png")
     return embed
 
@@ -252,10 +272,10 @@ def raidSuccessfulEmbed(link, typeRaid, name = None):
     
 def getMissionDetailsEmbed(title, description, xp, count, supply, personLimit, timesSubmitted):
     embed=discord.Embed(title="**🗺️ " + title + " 🗺️**", description=description, color=0xf21d6a)
-    embed.add_field(name="**Mission Information**", value="**PAYOUT:** `" + str(xp) + " XP 🎟️`", inline=False)
+    embed.add_field(name="**Quest Information**", value="**PAYOUT:** `" + str(xp) + " 🎟️'s`", inline=False)
     ## THESE FIELDS ARE NOT NEEDED FOR NOW ##
-    ##embed.add_field(name="**Mission Information**", value="**XP PAYOUT:** `" + str(xp) + "` \n **REWARDS DISTRIBUTED SO FAR:** `" + str(count) + " out of " + str(supply) + "` \n", inline=False) 
-    ##embed.add_field(name="**Submissions**", value="`You earned XP for this mission " + str(timesSubmitted) + " of a maximum of " + str(personLimit) + " times`", inline=False) 
+    ##embed.add_field(name="**Mission Information**", value="**🎟️'s PAYOUT:** `" + str(xp) + "` \n **REWARDS DISTRIBUTED SO FAR:** `" + str(count) + " out of " + str(supply) + "` \n", inline=False) 
+    ##embed.add_field(name="**Submissions**", value="`You earned 🎟️'s for this quest " + str(timesSubmitted) + " of a maximum of " + str(personLimit) + " times`", inline=False) 
     embed.set_footer(text="Powered by Jackpot", icon_url="https://static.wixstatic.com/media/cdc018_603e1fc27c6a4c71b2c8c333f66c858b~mv2.png")
     return embed
 
@@ -277,6 +297,11 @@ def noOptInMissions(getStarted, MemID):
     embed.set_footer(text="Powered by Jackpot", icon_url="https://static.wixstatic.com/media/cdc018_603e1fc27c6a4c71b2c8c333f66c858b~mv2.png")
     return embed
 
+def outOfSeats():
+    embed = discord.Embed(title="**⛔ Upgrade Needed. ⛔**", description="All available seats in this server have been claimed. Please upgrade your server’s subscription to allow more people to opt-in.", color=0xFF3333)
+    embed.set_footer(text="Powered by Jackpot", icon_url="https://static.wixstatic.com/media/cdc018_603e1fc27c6a4c71b2c8c333f66c858b~mv2.png")
+    return embed
+
 def errorEmbed(message):
     embed = discord.Embed(title="**Sorry, something went wrong on our end**", description=message, color=0xFF3333)
     embed.set_footer(text="Powered by Jackpot", icon_url="https://static.wixstatic.com/media/cdc018_603e1fc27c6a4c71b2c8c333f66c858b~mv2.png")
@@ -295,19 +320,19 @@ def cmdErrorEmbed(title, message):
 def raidCompleteEmbed(task):
     congratsMessages = ["Congrats!", "Nice Job!", "Well Done!", "You're all set!", "Nicely Done!"]
     randMessage = random.choice(congratsMessages)
-    embed = discord.Embed(title="**"+randMessage+"**", description="✅ You've earned XP for "+task+" this Raid.", color=0x33FF5C)
+    embed = discord.Embed(title="**"+randMessage+"**", description="✅ You've earned 🎟️'s for "+task+" this Raid.", color=0x33FF5C)
     embed.set_footer(text="Powered by Jackpot", icon_url="https://static.wixstatic.com/media/cdc018_603e1fc27c6a4c71b2c8c333f66c858b~mv2.png")
     return embed
 
-def missionCompleteCommandInvalid(missions, title = "The `/complete` command is invalid in this channel"):
-    embed = discord.Embed(title="**" + title + "**", description="Head over to the <#" + missions + "> channel to submit this mission. \n\n This message will delete in 10 seconds.", color=0xFF3333)
+def missionCompleteCommandInvalid(quests, title = "The `/complete` command is invalid in this channel"):
+    embed = discord.Embed(title="**" + title + "**", description="Head over to the <#" + quests + "> channel to submit this quest. \n\n This message will delete in 10 seconds.", color=0xFF3333)
     embed.set_footer(text="Powered by Jackpot", icon_url="https://static.wixstatic.com/media/cdc018_603e1fc27c6a4c71b2c8c333f66c858b~mv2.png")
     return embed
 
 def getMissionsListEmbed(numMissions):
-    embed=discord.Embed(title="✅ **Mission Complete** ✅", description="In this channel, use `!verify [MISSION_NAME] [additional details or explaination]` to submit proof of a specific mission. If you are attaching a picture, attach it to the same message.", color=0xe9e9e9)
-    embed.add_field(name="**Use the dropdown to see Active Missions**", value=str(numMissions) + " missions are active", inline=False)
-    embed.set_footer(text="\n\nOnce submitted, a community admin will be able to approve/deny your submission. If approved, you'll receive XP for your effort and will be notified in #notifs.") 
+    embed=discord.Embed(title="✅ **Quest Complete** ✅", description="In this channel, use `!verify [QUEST_NAME] [additional details or explaination]` to submit proof of a specific quest. If you are attaching a picture, attach it to the same message.", color=0xe9e9e9)
+    embed.add_field(name="**Use the dropdown to see Active Missions**", value=str(numMissions) + " quests are active", inline=False)
+    embed.set_footer(text="\n\nOnce submitted, a community admin will be able to approve/deny your submission. If approved, you'll receive 🎟️'s for your effort and will be notified in #notifs.") 
     return embed
 
 def willBeExpired(numDays):
@@ -399,7 +424,7 @@ async def bot_set_up(myGuild):
         await guild.create_category(ADMIN_GUILD)
     
     ## if any of the channels in prepChannels exist, delete them
-    prepChannels = ["get-started", "user-settings", "leaderboard", "raids", "missions", "add-mission", "mission-approval", "launch-raid", "notifs"]
+    prepChannels = ["get-started", "user-settings", "leaderboard", "raids", "quests", "add-quests", "mission-approval", "launch-raid", "notifs"]
     for channel in prepChannels:
         channelName = api.getChannel(serverID, channel)
         if discord.utils.get(guild.channels, name=channelName) != None:
@@ -433,7 +458,7 @@ async def bot_set_up(myGuild):
             await discord.utils.get(guild.channels, name=channelName).set_permissions(discord.utils.get(guild.roles, name=JACKPOT_ROLE), read_messages=True, send_messages=False)
     
     ## make the following channels visible to everyone in the "Jackpot" role they don't exist: #leaderboard, #raids, #missions, #mission-complete, #notifs
-    channels = ["leaderboard", "raids", "missions", "notifs"]
+    channels = ["leaderboard", "raids", "quests", "notifs"]
     for channel in channels:
         channelName = api.getChannel(serverID, channel)
         if discord.utils.get(guild.channels, name=channelName) == None:
@@ -441,7 +466,7 @@ async def bot_set_up(myGuild):
             await discord.utils.get(guild.channels, name=channelName).set_permissions(guild.default_role, read_messages=False)
             #await discord.utils.get(guild.channels, name=channel).set_permissions(discord.utils.get(guild.roles, name=BOT_ROLE), read_messages=True, send_messages=True)
             await discord.utils.get(guild.channels, name=channelName).set_permissions(discord.utils.get(guild.roles, name=ADMIN_ROLE), read_messages=True, send_messages=True)
-            if channel != "missions":
+            if channel != "quests":
                 await discord.utils.get(guild.channels, name=channelName).set_permissions(discord.utils.get(guild.roles, name=JACKPOT_ROLE), read_messages=True, send_messages=False)
             else:
                 await discord.utils.get(guild.channels, name=channelName).set_permissions(discord.utils.get(guild.roles, name=JACKPOT_ROLE), read_messages=True, send_messages=True)
@@ -488,15 +513,16 @@ async def bot_set_up(myGuild):
                                 profilePic = interaction.user.avatar.url
                             memIDNum = interaction.user.id
                             memberID = interaction.user.name + "#" + interaction.user.discriminator
-                            if api.optInMember(server, memberID, memIDNum, memberName, profilePic, tweeterOBJ, walledID):
-                                ## create an XP event
+                            optInRet = api.optInMember(server, memberID, memIDNum, memberName, profilePic, tweeterOBJ, walledID)
+                            if optInRet != False:
+                                ## create an 🎟️'s event
                                 api.xpEvent(server, memberID, 0)
                                 reward = api.getReward(server, memberName, 0)
                                 ## put on the notifs channel that a user has opted in
-                                await discord.utils.get(guild.channels, name=api.getChannel(serverID, "notifs")).send("✅ **" + str(interaction.user) + "** has opted in and earned `" + reward + " 🎟️`!")
+                                await discord.utils.get(guild.channels, name=api.getChannel(serverID, "notifs")).send("✅ **" + str(interaction.user) + "** has opted in and earned `" + reward + "`!")
                                 
                                 ## DEPRECATED: assign the Jackpot role to the user
-                                ## await interaction.response.send_message(content="✅ **Success!**\n\nYou have now successfully opted in to Jackpot and have been awarded `1000 XP 🎟️` as a token of our gratitude. You are now ready to begin earning XP for the value you bring to the table.", ephemeral=True)
+                                ## await interaction.response.send_message(content="✅ **Success!**\n\nYou have now successfully opted in to Jackpot and have been awarded `1000 🎟️'s` as a token of our gratitude. You are now ready to begin earning 🎟️'s for the value you bring to the table.", ephemeral=True)
                                 await interaction.user.add_roles(discord.utils.get(guild.roles, name=JACKPOT_ROLE))
                                 # await interaction.user.remove_roles(discord.utils.get(guild.roles, name=JACKPOT_NON_OPT))
                                 
@@ -509,6 +535,11 @@ async def bot_set_up(myGuild):
                                 else:
                                     channelID = discord.utils.get(guild.channels, name=api.getChannel(serverID, "user-settings")).id
                                     await interaction.response.send_message(embed=getOptInNoWallet(channelID, handle), ephemeral=True)
+                                
+                                if optInRet[0] == optInRet[1]:
+                                    ctx = api.getJoin(server)
+                                    await ctx.edit(embed = outOfSeats())
+                                    
                             else:
                                 await interaction.response.send_message(embed=errorEmbed("We were unable to complete the opt-in process at this time. Please try again later."), ephemeral=True)
                         else:
@@ -539,7 +570,7 @@ async def bot_set_up(myGuild):
         userSettings = str(discord.utils.get(guild.channels, name=api.getChannel(serverID, "user-settings")).id)
         leaderboard = str(discord.utils.get(guild.channels, name=api.getChannel(serverID, "leaderboard")).id)
         raids = str(discord.utils.get(guild.channels, name=api.getChannel(serverID, "raids")).id)
-        missions = str(discord.utils.get(guild.channels, name=api.getChannel(serverID, "missions")).id)
+        missions = str(discord.utils.get(guild.channels, name=api.getChannel(serverID, "quests")).id)
         notifs = str(discord.utils.get(guild.channels, name=api.getChannel(serverID, "notifs")).id)
         
         ## send other messages
@@ -547,8 +578,9 @@ async def bot_set_up(myGuild):
         await discord.utils.get(guild.channels, name=api.getChannel(serverID, "get-started")).send(embed=getXPEmbed(raids, missions))
         await discord.utils.get(guild.channels, name=api.getChannel(serverID, "get-started")).send(embed=getChannelsEmbedGetStarted(leaderboard, raids, missions, notifs))
         await discord.utils.get(guild.channels, name=api.getChannel(serverID, "get-started")).send(embed=getCommandsEmbed())
-        await discord.utils.get(guild.channels, name=api.getChannel(serverID, "get-started")).send(embed = getIntroEmbed(), view = optInstructions())
+        joinNowMes = await discord.utils.get(guild.channels, name=api.getChannel(serverID, "get-started")).send(embed = getIntroEmbed(), view = optInstructions())
         api.storeGettingStarted(guild.id, getStartedMes)
+        api.storeJoin(guild.id, joinNowMes)
     
     
     ## in #user-settings channel, send information from #get-started along with user settings embeds
@@ -582,7 +614,7 @@ async def bot_set_up(myGuild):
             super().__init__()
             self.value = None
             self.timeout = VIEW_TIMEOUT
-        @discord.ui.button(label="Claim XP Multiplier", style=discord.ButtonStyle.green)
+        @discord.ui.button(label="Claim 🎟️'s Multiplier", style=discord.ButtonStyle.green)
         async def referal(self, interaction: discord.Interaction, button: discord.ui.Button) -> None:
             memberID = interaction.user.name + "#" + interaction.user.discriminator
             memberObject = api.getMember(interaction.guild.id, memberID)
@@ -620,7 +652,7 @@ async def bot_set_up(myGuild):
         userSettings = str(discord.utils.get(guild.channels, name=api.getChannel(serverID, "user-settings")).id)
         leaderboard = str(discord.utils.get(guild.channels, name=api.getChannel(serverID, "leaderboard")).id)
         raids = str(discord.utils.get(guild.channels, name=api.getChannel(serverID, "raids")).id)
-        missions = str(discord.utils.get(guild.channels, name=api.getChannel(serverID, "missions")).id)
+        missions = str(discord.utils.get(guild.channels, name=api.getChannel(serverID, "quests")).id)
         notifs = str(discord.utils.get(guild.channels, name=api.getChannel(serverID, "notifs")).id)
         
         await discord.utils.get(guild.channels, name=api.getChannel(serverID, "user-settings")).send(file=discord.File("Assets/Get Started.gif"))
@@ -663,14 +695,14 @@ async def bot_set_up(myGuild):
     ##    await discord.utils.get(guild.channels, name="notifs").send(file=discord.File("Assets/XP Log.gif"))
     
     ## in the missions channel, send an getMissionsEmbed() embed with a button 
-    if discord.utils.get(guild.channels, name=api.getChannel(serverID, "missions")).last_message == None or discord.utils.get(guild.channels, name=api.getChannel(serverID, "missions")).last_message.author != client.user:
-        await discord.utils.get(guild.channels, name=api.getChannel(serverID, "missions")).send(file=discord.File("Assets/Missions.gif"))
+    if discord.utils.get(guild.channels, name=api.getChannel(serverID, "quests")).last_message == None or discord.utils.get(guild.channels, name=api.getChannel(serverID, "quests")).last_message.author != client.user:
+        await discord.utils.get(guild.channels, name=api.getChannel(serverID, "quests")).send(file=discord.File("Assets/Quests.gif"))
         class missions(discord.ui.View):
             def __init__(self):
                 super().__init__()
                 self.value = None
                 self.timeout = VIEW_TIMEOUT
-            @discord.ui.button(label="View Missions", style=discord.ButtonStyle.green)
+            @discord.ui.button(label="View Quests", style=discord.ButtonStyle.green)
             async def onButtonClick(self, interaction: discord.Interaction, button: discord.ui.Button):
                 class viewMission(discord.ui.View):
                     def __init__(self):
@@ -678,7 +710,7 @@ async def bot_set_up(myGuild):
                         self.value = None
                         self.timeout = VIEW_TIMEOUT
                     theOptions, theValues = getMissionsDropdownOptions(serverID)
-                    @discord.ui.select(placeholder="Select a Mission", options=theOptions)
+                    @discord.ui.select(placeholder="Select a Quest", options=theOptions)
                     async def on_select(self, interaction: discord.Interaction, select: discord.ui.Select):
                         userID = interaction.user.name + "#" + interaction.user.discriminator
                         selectedMission = select.values[0]
@@ -689,9 +721,9 @@ async def bot_set_up(myGuild):
                                 await interaction.response.send_message(embed=getMissionDetailsEmbed(missions[0], missions[1], missions[2], missions[4], missions[3], missions[6], numSub), ephemeral=True)
                                 break
 
-                await interaction.response.send_message("Select a mission to view:", view=viewMission(), ephemeral=True)
+                await interaction.response.send_message("Select a quest to view:", view=viewMission(), ephemeral=True)
                 
-        await discord.utils.get(guild.channels, name=api.getChannel(serverID, "missions")).send(embed=getMissionsEmbed(), view=missions())
+        await discord.utils.get(guild.channels, name=api.getChannel(serverID, "quests")).send(embed=getMissionsEmbed(), view=missions())
         
     ## DEPRECATED: in the mission-complete, send an getMissionsListEmbed() embed
     ##if discord.utils.get(guild.channels, name="mission-complete").last_message == None or discord.utils.get(guild.channels, name="mission-complete").last_message.author != client.user:
@@ -702,7 +734,7 @@ async def bot_set_up(myGuild):
     ## await embedMessage.pin()
     
     ## make the following channels visible to only Admins if they don't exist: #add-mission, #mission-approval, #launch-raid
-    channels = ["add-mission", "mission-approval", "launch-raid"]
+    channels = ["add-quests", "launch-raid"]
     for channel in channels:
         channelName = api.getChannel(serverID, channel)
         if discord.utils.get(guild.channels, name=channelName) == None:
@@ -711,15 +743,15 @@ async def bot_set_up(myGuild):
             #await discord.utils.get(guild.channels, name=channel).set_permissions(discord.utils.get(guild.roles, name=BOT_ROLE), read_messages=True, send_messages=True)
             await discord.utils.get(guild.channels, name=channelName).set_permissions(discord.utils.get(guild.roles, name=ADMIN_ROLE), read_messages=True, send_messages=True)
     ## in the add-mission, send a message and 3 buttons: Add Quest, Edit Quest, Delete Quest
-    if discord.utils.get(guild.channels, name=api.getChannel(serverID, "add-mission")).last_message == None or discord.utils.get(guild.channels, name=api.getChannel(serverID, "add-mission")).last_message.author != client.user:
-        await discord.utils.get(guild.channels, name=api.getChannel(serverID, "add-mission")).send(file=discord.File("Assets/Add Mission.gif"))
+    if discord.utils.get(guild.channels, name=api.getChannel(serverID, "add-quests")).last_message == None or discord.utils.get(guild.channels, name=api.getChannel(serverID, "add-quests")).last_message.author != client.user:
+        await discord.utils.get(guild.channels, name=api.getChannel(serverID, "add-quests")).send(file=discord.File("Assets/Add Quest.gif"))
         
-        class addQuest(ui.Modal, title = "Add Mission Form"):
-            name = ui.TextInput(label = "Mission Name", style=discord.TextStyle.short, placeholder = "Mission Name", required = True)
-            desc = ui.TextInput(label = "Mission Description", style=discord.TextStyle.long, placeholder = "Mission Description", required = True)
-            reward = ui.TextInput(label = "Mission XP Reward (Max: 5000)", style=discord.TextStyle.short, placeholder = "e.g. 400", required = True)
-            supply = ui.TextInput(label = "Mission Total Supply (Optional)", style=discord.TextStyle.short, placeholder = "Default: Unlimited", required = False)
-            perperson = ui.TextInput(label = "Mission Supply Per Person (Optional)", style=discord.TextStyle.short, placeholder = "Default: Unlimited", required = False)
+        class addQuest(ui.Modal, title = "Add Quest Form"):
+            name = ui.TextInput(label = "Quest Name", style=discord.TextStyle.short, placeholder = "Quest Name", required = True)
+            desc = ui.TextInput(label = "Quest Description", style=discord.TextStyle.long, placeholder = "Quest Description", required = True)
+            reward = ui.TextInput(label = "Quest 🎟️'s Reward (Max: 5000)", style=discord.TextStyle.short, placeholder = "e.g. 400", required = True)
+            supply = ui.TextInput(label = "Quest Total Supply (Optional)", style=discord.TextStyle.short, placeholder = "Default: Unlimited", required = False)
+            perperson = ui.TextInput(label = "Quest Supply Per Person (Optional)", style=discord.TextStyle.short, placeholder = "Default: Unlimited", required = False)
             
             async def on_submit(self, interaction: discord.Interaction):
                 serverID = interaction.guild.id
@@ -747,17 +779,17 @@ async def bot_set_up(myGuild):
                     perVal = self.perperson.value
                 
                 randID = api.createMission(serverID, name, self.desc.value, rewXP, supVal, perVal) 
-                await interaction.response.send_message(content="A Mission was successfully added: **" + str(self.name) + "**", ephemeral=True)
+                await interaction.response.send_message(content="A Quest was successfully added: **" + str(self.name) + "**", ephemeral=True)
             
         class quests(discord.ui.View):
             def __init__(self):
                 super().__init__()
                 self.value = None
                 self.timeout = VIEW_TIMEOUT
-            @discord.ui.button(label="Add Mission", style=discord.ButtonStyle.green)
+            @discord.ui.button(label="Add Quest", style=discord.ButtonStyle.green)
             async def but1(self, interaction: discord.Interaction, button: discord.ui.Button):
                 await interaction.response.send_modal(addQuest())
-            @discord.ui.button(label="Edit Mission", style=discord.ButtonStyle.primary)
+            @discord.ui.button(label="Edit Quest", style=discord.ButtonStyle.primary)
             async def but2(self, interaction: discord.Interaction, button: discord.ui.Button):
                 theOptions, __ = getMissionsDropdownOptions(serverID)
                 
@@ -766,16 +798,16 @@ async def bot_set_up(myGuild):
                         super().__init__()
                         self.value = None
                         self.timeout = VIEW_TIMEOUT
-                    @discord.ui.select(placeholder="Select a Mission", options=theOptions)
+                    @discord.ui.select(placeholder="Select a Quest", options=theOptions)
                     async def on_select(self, interaction: discord.Interaction, select: discord.ui.Select):
                         selectedMission = select.values[0]
                         __, missionObject = api.getMission(serverID, selectedMission)
                         
                         class editExistingQuest(ui.Modal, title = "EDIT TASK MODAL"):
-                            desc = ui.TextInput(label = "Mission Description", style=discord.TextStyle.short, default = str(missionObject.description), required = True)
-                            reward = ui.TextInput(label = "Mission XP Reward (Max: 5000)", style=discord.TextStyle.short, default = str(missionObject.xp), required = True)
-                            supply = ui.TextInput(label = "Mission Total Supply (Optional)", style=discord.TextStyle.short, default = str(missionObject.limit), required = False)
-                            perperson = ui.TextInput(label = "Mission Supply Per Person (Optional)", style=discord.TextStyle.short, default = str(missionObject.personLimit), required = False)
+                            desc = ui.TextInput(label = "Quest Description", style=discord.TextStyle.short, default = str(missionObject.description), required = True)
+                            reward = ui.TextInput(label = "Quest 🎟️'s Reward (Max: 5000)", style=discord.TextStyle.short, default = str(missionObject.xp), required = True)
+                            supply = ui.TextInput(label = "Quest Total Supply (Optional)", style=discord.TextStyle.short, default = str(missionObject.limit), required = False)
+                            perperson = ui.TextInput(label = "Quest Supply Per Person (Optional)", style=discord.TextStyle.short, default = str(missionObject.personLimit), required = False)
                             
                             async def on_submit(self, interaction: discord.Interaction):
                                 missionObject.description = self.desc.value
@@ -795,12 +827,12 @@ async def bot_set_up(myGuild):
                                 else:
                                     missionObject.personLimit = math.inf
                                 
-                                await interaction.response.send_message(content="A Mission has been modifed", ephemeral=True)
+                                await interaction.response.send_message(content="A Quest has been modifed", ephemeral=True)
                         await interaction.response.send_modal(editExistingQuest())
                         
-                await interaction.response.send_message(content="Select a Mission you would like to edit", ephemeral=True, view=editSelector())
+                await interaction.response.send_message(content="Select a Quest you would like to edit", ephemeral=True, view=editSelector())
             
-            @discord.ui.button(label="Delete Mission", style=discord.ButtonStyle.red)
+            @discord.ui.button(label="Delete Quest", style=discord.ButtonStyle.red)
             async def but3(self, interaction: discord.Interaction, button: discord.ui.Button):
                 theOptions, __ = getMissionsDropdownOptions(serverID)
                 
@@ -809,7 +841,7 @@ async def bot_set_up(myGuild):
                         super().__init__()
                         self.value = None
                         self.timeout = VIEW_TIMEOUT
-                    @discord.ui.select(placeholder="Select a Mission to delete", options=theOptions)
+                    @discord.ui.select(placeholder="Select a Quest to delete", options=theOptions)
                     async def on_select(self, interaction: discord.Interaction, select: discord.ui.Select):
                         selectedMission = select.values[0]
                         missionID, missionObject = api.getMission(serverID, selectedMission)
@@ -825,15 +857,15 @@ async def bot_set_up(myGuild):
                             async def on_submit(self, interaction: discord.Interaction):
                                 if self.deleteMe.value == "DELETE":
                                     api.deleteMission(serverID, missionID)
-                                    await interaction.response.send_message(content="A Mission has been deleted", ephemeral=True)
+                                    await interaction.response.send_message(content="A Quest has been deleted", ephemeral=True)
                                 else:
-                                    await interaction.repsonse.send_message(embed = userErrorEmbed("The Mission has *not* been deleted.", "Please enter `DELETE` (case-sensitive) on the delete pop-up to delete the **" + selectedMission + "** mission."), ephemeral = True)
+                                    await interaction.repsonse.send_message(embed = userErrorEmbed("The quest has *not* been deleted.", "Please enter `DELETE` (case-sensitive) on the delete pop-up to delete the **" + selectedMission + "** quest."), ephemeral = True)
                         
                         await interaction.response.send_modal(deleteExistingQuest())
                         
-                await interaction.response.send_message(content="Select a Mission you would like to delete", ephemeral=True, view=deleteSelector())
+                await interaction.response.send_message(content="Select a Quest you would like to delete", ephemeral=True, view=deleteSelector())
                 
-        await discord.utils.get(guild.channels, name=api.getChannel(serverID, "add-mission")).send(embed = getMissionAddEmbed(), view = quests())
+        await discord.utils.get(guild.channels, name=api.getChannel(serverID, "add-quests")).send(embed = getMissionAddEmbed(), view = quests())
     
     ## DEPRECATED: send a mission-approval gif in the mission-approval channel
     ##if discord.utils.get(guild.channels, name="mission-approval").last_message == None or discord.utils.get(guild.channels, name="mission-approval").last_message.author != client.user:
@@ -856,16 +888,16 @@ async def bot_set_up(myGuild):
                         self.value = None
                         self.timeout = VIEW_TIMEOUT
                     @discord.ui.select(placeholder="Select a Raid", min_values = 1, max_values = 3, options=[
-                        discord.SelectOption(label="Retweet", description="Award XP for Retweets", emoji="🔁"),
-                        discord.SelectOption(label="Like", description="Award XP for Likes", emoji="❤️"), 
-                        discord.SelectOption(label="Reply", description="Award XP for Replies", emoji="📝")
+                        discord.SelectOption(label="Retweet", description="Award 🎟️'s for Retweets", emoji="🔁"),
+                        discord.SelectOption(label="Like", description="Award 🎟️'s for Likes", emoji="❤️"), 
+                        discord.SelectOption(label="Reply", description="Award 🎟️'s for Replies", emoji="📝")
                         ])
                     async def on_select(self, interaction: discord.Interaction, select: discord.ui.Select):
                         ## API CALL TO GET DATA
                         class addRaid(ui.Modal, title = "Create a Twitter Raid"):
                             ##raidTitle = ui.TextInput(label = "Raid Title", style=discord.TextStyle.short, placeholder = "Name this Twitter Raid", required = True)
                             url = ui.TextInput(label = "Tweet URL", style=discord.TextStyle.short, placeholder = "What is the URL of a tweet", required = True)
-                            #boosted = ui.TextInput(label = "Boosted XP", style=discord.TextStyle.short, placeholder = "True/False (Boosted Tweets earn 200% XP)", required = True)
+                            #boosted = ui.TextInput(label = "Boosted 🎟️'s", style=discord.TextStyle.short, placeholder = "True/False (Boosted Tweets earn 200% 🎟️'s)", required = True)
                             async def on_submit(self, interaction: discord.Interaction):
                                 ## DO API CALL HERE
                                 link = self.url.value
@@ -894,7 +926,7 @@ async def bot_set_up(myGuild):
                                         super().__init__()
                                         self.value = None
                                         self.timeout = VIEW_TIMEOUT
-                                    @discord.ui.button(label="Claim Like XP", style=discord.ButtonStyle.primary)
+                                    @discord.ui.button(label="Claim Like 🎟️'s", style=discord.ButtonStyle.primary)
                                     async def react(self, interaction: discord.Interaction, button: discord.ui.Button):
                                         serverName = interaction.guild.id
                                         userID = interaction.user.name + "#" + interaction.user.discriminator
@@ -908,14 +940,14 @@ async def bot_set_up(myGuild):
                                         if liked:
                                             resp = api.tweetEventReact(serverName, userID, tweetID)
                                             if type(resp) == int:
-                                                await discord.utils.get(interaction.guild.channels, name=api.getChannel(serverID, "notifs")).send("✅ **" + userID + "** liked a raid tweet for `" + str(resp) + " XP 🎟️`!")
+                                                await discord.utils.get(interaction.guild.channels, name=api.getChannel(serverID, "notifs")).send("✅ **" + userID + "** liked a raid tweet for `" + str(resp) + " 🎟️'s`!")
                                                 await interaction.response.send_message(embed=raidCompleteEmbed("`reacting` to"), ephemeral=True)
                                             else:
-                                                await interaction.response.send_message(embed=userErrorEmbed("You're not eligible to earn XP for `liking` this Raid", resp), ephemeral=True)
+                                                await interaction.response.send_message(embed=userErrorEmbed("You're not eligible to earn 🎟️'s for `liking` this Raid", resp), ephemeral=True)
                                         else:
-                                            await interaction.response.send_message(embed=userErrorEmbed("No XP Earned", "We weren't able to verify completion of **" + memberObj.handle + "** `liking` this raid."), ephemeral=True)
+                                            await interaction.response.send_message(embed=userErrorEmbed("No 🎟️'s Earned", "We weren't able to verify completion of **" + memberObj.handle + "** `liking` this raid."), ephemeral=True)
         
-                                    @discord.ui.button(label="Claim Reply XP", style=discord.ButtonStyle.green)
+                                    @discord.ui.button(label="Claim Reply 🎟️'s", style=discord.ButtonStyle.green)
                                     async def comment(self, interaction: discord.Interaction, button: discord.ui.Button):
                                         serverName = interaction.guild.id
                                         userID = interaction.user.name + "#" + interaction.user.discriminator
@@ -928,15 +960,15 @@ async def bot_set_up(myGuild):
                                         if replied:
                                             resp = api.tweetEventComment(serverName, userID, tweetID)
                                             if type(resp) == int:
-                                                await discord.utils.get(interaction.guild.channels, name=api.getChannel(serverID, "notifs")).send("✅ **" + userID + "** replied to a raid tweet for `" + str(resp) + " XP 🎟️`!")
+                                                await discord.utils.get(interaction.guild.channels, name=api.getChannel(serverID, "notifs")).send("✅ **" + userID + "** replied to a raid tweet for `" + str(resp) + " 🎟️'s`!")
                                                 await interaction.response.send_message(embed=raidCompleteEmbed("`replying` to"), ephemeral=True)
                                             else:
-                                                await interaction.response.send_message(embed=userErrorEmbed("You're not eligible to earn XP for `replying` to this Raid", resp), ephemeral=True)
+                                                await interaction.response.send_message(embed=userErrorEmbed("You're not eligible to earn 🎟️'s for `replying` to this Raid", resp), ephemeral=True)
                                         else:
-                                            await interaction.response.send_message(embed=userErrorEmbed("No XP Earned", "We weren't able to verify completion of **" + memberObj.handle + "** `replying` to this raid."), ephemeral=True)
+                                            await interaction.response.send_message(embed=userErrorEmbed("No 🎟️'s Earned", "We weren't able to verify completion of **" + memberObj.handle + "** `replying` to this raid."), ephemeral=True)
         
                                             
-                                    @discord.ui.button(label="Claim Retweet XP", style=discord.ButtonStyle.red)
+                                    @discord.ui.button(label="Claim Retweet 🎟️'s", style=discord.ButtonStyle.red)
                                     async def retweet(self, interaction: discord.Interaction, button: discord.ui.Button):
                                         serverName = interaction.guild.id
                                         userID = interaction.user.name + "#" + interaction.user.discriminator
@@ -950,12 +982,12 @@ async def bot_set_up(myGuild):
                                         if retweeted:
                                             resp = api.tweetEventRetweet(serverName, userID, tweetID)
                                             if type(resp) == int:
-                                                await discord.utils.get(interaction.guild.channels, name=api.getChannel(serverID, "notifs")).send("✅ **" + userID + "** retweeted a raid tweet for `" + str(resp) + " XP 🎟️`!")
+                                                await discord.utils.get(interaction.guild.channels, name=api.getChannel(serverID, "notifs")).send("✅ **" + userID + "** retweeted a raid tweet for `" + str(resp) + " 🎟️'s`!")
                                                 await interaction.response.send_message(embed=raidCompleteEmbed("`retweeting`"), ephemeral=True)
                                             else:
-                                                await interaction.response.send_message(embed=userErrorEmbed("You're not eligible to earn XP for `retweeting` this Raid", resp), ephemeral=True)
+                                                await interaction.response.send_message(embed=userErrorEmbed("You're not eligible to earn 🎟️'s for `retweeting` this Raid", resp), ephemeral=True)
                                         else:
-                                            await interaction.response.send_message(embed=userErrorEmbed("No XP Earned", "We weren't able to verify completion of **" + memberObj.handle + "** `retweeting` this raid."), ephemeral=True)
+                                            await interaction.response.send_message(embed=userErrorEmbed("No 🎟️'s Earned", "We weren't able to verify completion of **" + memberObj.handle + "** `retweeting` this raid."), ephemeral=True)
                                 
                                 ## if link is blank, make an error message
                                 if link == "" or falseLink(link):
@@ -1019,9 +1051,9 @@ async def bot_set_up(myGuild):
                                     self.value = None
                                     self.timeout = VIEW_TIMEOUT
                                 @discord.ui.select(placeholder="Select a Raid", min_values = 1, max_values = 3, options=[
-                                    discord.SelectOption(label="Retweet", description="Award XP for Retweets", emoji="🔁"),
-                                    discord.SelectOption(label="Like", description="Award XP for Likes", emoji="❤️"), 
-                                    discord.SelectOption(label="Reply", description="Award XP for Replies", emoji="📝")
+                                    discord.SelectOption(label="Retweet", description="Award 🎟️'s for Retweets", emoji="🔁"),
+                                    discord.SelectOption(label="Like", description="Award 🎟️'s for Likes", emoji="❤️"), 
+                                    discord.SelectOption(label="Reply", description="Award 🎟️'s for Replies", emoji="📝")
                                     ])
                                 async def on_select(self, interaction: discord.Interaction, select: discord.ui.Select):
                                     xpAwards = ""
@@ -1048,7 +1080,7 @@ async def bot_set_up(myGuild):
                                             super().__init__()
                                             self.value = None
                                             self.timeout = VIEW_TIMEOUT
-                                        @discord.ui.button(label="Claim Like XP", style=discord.ButtonStyle.primary)
+                                        @discord.ui.button(label="Claim Like 🎟️'s", style=discord.ButtonStyle.primary)
                                         async def react(self, interaction: discord.Interaction, button: discord.ui.Button):
                                             serverName = interaction.guild.id
                                             userID = interaction.user.name + "#" + interaction.user.discriminator
@@ -1062,14 +1094,14 @@ async def bot_set_up(myGuild):
                                             if liked:
                                                 resp = api.tweetEventReact(serverName, userID, tweetID)
                                                 if type(resp) == int:
-                                                    await discord.utils.get(interaction.guild.channels, name=api.getChannel(serverID, "notifs")).send("✅ **" + userID + "** liked a raid tweet for `" + str(resp) + " XP 🎟️`!")
+                                                    await discord.utils.get(interaction.guild.channels, name=api.getChannel(serverID, "notifs")).send("✅ **" + userID + "** liked a raid tweet for `" + str(resp) + " 🎟️'s`!")
                                                     await interaction.response.send_message(embed=raidCompleteEmbed("`reacting` to"), ephemeral=True)
                                                 else:
-                                                    await interaction.response.send_message(embed=userErrorEmbed("You're not eligible to earn XP for `liking` this Raid", resp), ephemeral=True)
+                                                    await interaction.response.send_message(embed=userErrorEmbed("You're not eligible to earn 🎟️'s for `liking` this Raid", resp), ephemeral=True)
                                             else:
-                                                await interaction.response.send_message(embed=userErrorEmbed("No XP Earned", "We weren't able to verify completion of **" + memberObj.handle + "** `liking` this raid."), ephemeral=True)
+                                                await interaction.response.send_message(embed=userErrorEmbed("No 🎟️'s Earned", "We weren't able to verify completion of **" + memberObj.handle + "** `liking` this raid."), ephemeral=True)
             
-                                        @discord.ui.button(label="Claim Reply XP", style=discord.ButtonStyle.green)
+                                        @discord.ui.button(label="Claim Reply 🎟️'s", style=discord.ButtonStyle.green)
                                         async def comment(self, interaction: discord.Interaction, button: discord.ui.Button):
                                             serverName = interaction.guild.id
                                             userID = interaction.user.name + "#" + interaction.user.discriminator
@@ -1082,15 +1114,15 @@ async def bot_set_up(myGuild):
                                             if replied:
                                                 resp = api.tweetEventComment(serverName, userID, tweetID)
                                                 if type(resp) == int:
-                                                    await discord.utils.get(interaction.guild.channels, name=api.getChannel(serverID, "notifs")).send("✅ **" + userID + "** replied to a raid tweet for `" + str(resp) + " XP 🎟️`!")
+                                                    await discord.utils.get(interaction.guild.channels, name=api.getChannel(serverID, "notifs")).send("✅ **" + userID + "** replied to a raid tweet for `" + str(resp) + " 🎟️'s`!")
                                                     await interaction.response.send_message(embed=raidCompleteEmbed("`replying` to"), ephemeral=True)
                                                 else:
-                                                    await interaction.response.send_message(embed=userErrorEmbed("You're not eligible to earn XP for `replying` to this Raid", resp), ephemeral=True)
+                                                    await interaction.response.send_message(embed=userErrorEmbed("You're not eligible to earn 🎟️'s for `replying` to this Raid", resp), ephemeral=True)
                                             else:
-                                                await interaction.response.send_message(embed=userErrorEmbed("No XP Earned", "We weren't able to verify completion of **" + memberObj.handle + "** `replying` to this raid."), ephemeral=True)
+                                                await interaction.response.send_message(embed=userErrorEmbed("No 🎟️'s Earned", "We weren't able to verify completion of **" + memberObj.handle + "** `replying` to this raid."), ephemeral=True)
             
                                                 
-                                        @discord.ui.button(label="Claim Retweet XP", style=discord.ButtonStyle.red)
+                                        @discord.ui.button(label="Claim Retweet 🎟️'s", style=discord.ButtonStyle.red)
                                         async def retweet(self, interaction: discord.Interaction, button: discord.ui.Button):
                                             serverName = interaction.guild.id
                                             userID = interaction.user.name + "#" + interaction.user.discriminator
@@ -1104,12 +1136,12 @@ async def bot_set_up(myGuild):
                                             if retweeted:
                                                 resp = api.tweetEventRetweet(serverName, userID, tweetID)
                                                 if type(resp) == int:
-                                                    await discord.utils.get(interaction.guild.channels, name=api.getChannel(serverID, "notifs")).send("✅ **" + userID + "** retweeted a raid tweet for `" + str(resp) + " XP 🎟️`!")
+                                                    await discord.utils.get(interaction.guild.channels, name=api.getChannel(serverID, "notifs")).send("✅ **" + userID + "** retweeted a raid tweet for `" + str(resp) + " 🎟️'s`!")
                                                     await interaction.response.send_message(embed=raidCompleteEmbed("`retweeting`"), ephemeral=True)
                                                 else:
-                                                    await interaction.response.send_message(embed=userErrorEmbed("You're not eligible to earn XP for `retweeting` this Raid", resp), ephemeral=True)
+                                                    await interaction.response.send_message(embed=userErrorEmbed("You're not eligible to earn 🎟️'s for `retweeting` this Raid", resp), ephemeral=True)
                                             else:
-                                                await interaction.response.send_message(embed=userErrorEmbed("No XP Earned", "We weren't able to verify completion of **" + memberObj.handle + "** `retweeting` this raid."), ephemeral=True)
+                                                await interaction.response.send_message(embed=userErrorEmbed("No 🎟️'s Earned", "We weren't able to verify completion of **" + memberObj.handle + "** `retweeting` this raid."), ephemeral=True)
                                                 
                                     await interaction.response.send_message(embed = raidSuccessfulEmbed(str(link), xpAwards), ephemeral=True)
                                     await discord.utils.get(guild.channels, name=api.getChannel(serverID, "raids")).send(embed=getTwitterEmbed(str(self.url.value), retweet, react, comment, boosted), view=raidView())
@@ -1211,7 +1243,7 @@ async def on_message(message):
                 await newMes.delete()
         
         ## if a message is sent in the #missions channel, check if it starts with "MISSION SUBMITTED" 
-        elif serverName != None and message.channel.name == api.getChannel(serverName, "missions") and message.content.startswith("MISSION SUBMITTED"):
+        elif serverName != None and message.channel.name == api.getChannel(serverName, "quests") and message.content.startswith("MISSION SUBMITTED"):
             messageData = message.content.split("#|#")
             memberID = messageData[1].strip()
             ## check if memberID is valid and has the Jackpot Role
@@ -1240,7 +1272,7 @@ async def on_message(message):
                     missionXP, missionDis = api.getMissionXP(serverName, missionID), api.getMissionDescription(serverName, missionID)
                     missionUID = api.genMissionID(serverName, memberID, missionID)
                     database.add_mission(missionUID, missionName, memberID, serverName, missionXP, missionDis, textData + "\n\n" + attachment)
-                    newMessage = await discord.utils.get(message.guild.channels, name=api.getChannel(serverName, "notifs")).send("📨 **"+memberID+"** completed the mission **"+missionName+"**")
+                    newMessage = await discord.utils.get(message.guild.channels, name=api.getChannel(serverName, "notifs")).send("📨 **"+memberID+"** completed the quest **"+missionName+"**")
                     await message.delete()
                     
                     class approveButtons(discord.ui.View):
@@ -1252,51 +1284,50 @@ async def on_message(message):
                         async def approve(self, interaction: discord.Interaction, button: discord.ui.Button) -> None:
                             missionReward = api.missionXPEvent(serverName, memberID, missionID)
                             if missionReward == False:
-                                await interaction.response.send_message("MISSION **NOT** APPROVED \n Mission total limit or per person limit exceeded", ephemeral=True)
+                                await interaction.response.send_message("QUEST **NOT** APPROVED \n Quest total limit or per person limit exceeded", ephemeral=True)
                             else:
-                                await interaction.response.send_message("MISSION APPROVED", ephemeral=True)
+                                await interaction.response.send_message("QUEST APPROVED", ephemeral=True)
                                 ## delete the main message the button was pressed on
                                 await interaction.message.delete()
                                 ## delete newMessage
                                 # await newMessage.delete()
-                                ## send a message to #notifs with the mission name, username, and XP
-                                await discord.utils.get(message.guild.channels, name=api.getChannel(serverName, "notifs")).send("✅ **"+memberID+"'s** submission for **" + missionName + "** has been approved for `" + str(missionReward) + " XP 🎟️`!")
+                                ## send a message to #notifs with the mission name, username, and 🎟️'s
+                                await discord.utils.get(message.guild.channels, name=api.getChannel(serverName, "notifs")).send("✅ **"+memberID+"'s** submission for **" + missionName + "** has been approved for `" + str(missionReward) + " 🎟️'s`!")
                             
                         @discord.ui.button(label="DENY", style=discord.ButtonStyle.red)
                         async def deny(self, interaction2: discord.Interaction, button: discord.ui.Button) -> None:
                             class feedbackMission(ui.Modal, title = "Send feedback to " + memberID[:12] + "..."):
-                                feedback = ui.TextInput(label = "Reason why mission declined", style=discord.TextStyle.long, default = "You have not completed the mission spec", required = True)
+                                feedback = ui.TextInput(label = "Reason why quest declined", style=discord.TextStyle.long, default = "You have not completed the quest's spec", required = True)
                                 async def on_submit(self, interaction: discord.Interaction):
                                     await discord.utils.get(message.guild.channels, name=api.getChannel(serverName, "notifs")).send("❌ **"+memberID+"'s** submission for **" + missionName + "** has been denied. Reason: `" + self.feedback.value + "`")
-                                    await interaction.response.send_message("MISSION DENIED", ephemeral=True)
+                                    await interaction.response.send_message("QUEST DENIED", ephemeral=True)
                             await interaction2.response.send_modal(feedbackMission())
                             await interaction2.message.delete()
                     
                     missionReward = api.getMissionXP(serverName, missionID)
-                    await discord.utils.get(message.guild.channels, name=api.getChannel(serverName, "mission-approval")).send("📬 **New Mission Submission** 📬\n\nFrom: `" + str(memberID) + "`\nMission: `" + missionName + "`\nReward: `" + str(missionReward) + " XP 🎟️`\nText: `" + textData + "`\n\n" + "Attachments: " + attachment + "\n\n" + "*Choose whether to **APPROVE** or **DENY** by clicking the buttons below below:*", view = approveButtons())
                         
                 else:
                     if missionID == False:
-                        resp = await message.reply(embed = userErrorEmbed("Invalid mission name.", "We were unable to find a mission with that name, it may have been recently deleted. Please try again (case sensitive)."))
+                        resp = await message.reply(embed = userErrorEmbed("Invalid quest name.", "We were unable to find a quest with that name, it may have been recently deleted. Please try again (case sensitive)."))
                         await message.delete()
                         await asyncio.sleep(10)
                         await resp.delete()
                     else: 
-                        resp = await message.reply(embed = userErrorEmbed("You are not eligible for this mission.", "Either a personal limit or global limit for XP rewards has been met. Please try again with a different mission."))
+                        resp = await message.reply(embed = userErrorEmbed("You are not eligible for this quest.", "Either a personal limit or global limit for 🎟️'s rewards has been met. Please try again with a different quest."))
                         await message.delete()
                         await asyncio.sleep(10)
                         await resp.delete()
             else:
                 getStarted = str(discord.utils.get(message.guild.channels, name="get-started").id)
                 ## send an embed in the missions channel noOptIn(getStarted)
-                missionsMessage = await discord.utils.get(message.guild.channels, name=api.getChannel(serverName, "missions")).send(embed = noOptInMissions(getStarted, memberID))
+                missionsMessage = await discord.utils.get(message.guild.channels, name=api.getChannel(serverName, "quests")).send(embed = noOptInMissions(getStarted, memberID))
                 await message.delete()
                 ## delete the replyMessage after 10 seconds
                 await asyncio.sleep(10)
                 await missionsMessage.delete()
                 
-        elif serverName != None and message.channel.name != api.getChannel(serverName, "missions") and message.content.startswith("MISSION SUBMITTED"):
-            missions = str(discord.utils.get(message.guild.channels, name=api.getChannel(serverName, "missions")).id)
+        elif serverName != None and message.channel.name != api.getChannel(serverName, "quests") and message.content.startswith("MISSION SUBMITTED"):
+            missions = str(discord.utils.get(message.guild.channels, name=api.getChannel(serverName, "quests")).id)
             ## get the channel message was sent in 
             channelN = message.channel.name
             await message.delete()
@@ -1376,7 +1407,7 @@ async def on_member_join(member):
                 if api.getMember(member.guild.id, str(inviter)) != None:
                     valueNew.referer = str(inviter)
                     api.xpEvent(member.guild.id, str(inviter), 5)
-                    await discord.utils.get(member.guild.channels, name=api.getChannel(member.guild.id, "notifs")).send(f"❤️ **{str(inviter)}** just invited {member.mention} to the server and earned `"+ api.getReward(None, None, 5) +" 🎟️`!")
+                    await discord.utils.get(member.guild.channels, name=api.getChannel(member.guild.id, "notifs")).send(f"❤️ **{str(inviter)}** just invited {member.mention} to the server and earned `"+ api.getReward(None, None, 5) +"`!")
     
     api.updateInvites(member.guild.id, cur_invites)
                     
@@ -1425,16 +1456,52 @@ async def on_presence_update(before, after):
             
             ## send a message in the notifs channel
             reward = api.getReward(serverName, userName, 9)
-            await discord.utils.get(after.guild.channels, name=api.getChannel(serverName, "notifs")).send("✅ **" + userName + "** visited the server today and got `" + str(reward) + " 🎟️`!")
+            await discord.utils.get(after.guild.channels, name=api.getChannel(serverName, "notifs")).send("✅ **" + userName + "** visited the server today and got `" + str(reward) + "`!")
 
 ## create a function called "invited," so if I import this file, I can call this function and it will send a message to the notifs channel
 async def invited(serverID, inviter):
     for guild in client.guilds:
         if guild.id == serverID:
             api.serverInvite(serverID, inviter)
-            await discord.utils.get(guild.channels, name=api.getChannel(serverID, "notifs")).send(f"💎 **{inviter}** referred a new community to Jackpot for `15000 XP 🎟️`!")
-            await discord.utils.get(guild.channels, name=api.getChannel(serverID, "notifs")).send(f"🎁 **Everyone in your community** has been gifted `3000 XP 🎟️` thanks to **{inviter}'s** referral!")
+            await discord.utils.get(guild.channels, name=api.getChannel(serverID, "notifs")).send(f"💎 **{inviter}** referred a new community to Jackpot for `15000 🎟️'s`!")
+            await discord.utils.get(guild.channels, name=api.getChannel(serverID, "notifs")).send(f"🎁 **Everyone in your community** has been gifted `3000 🎟️'s` thanks to **{inviter}'s** referral!")
             break
+        
+async def crystalize(serverIDs):
+    for guild in client.guilds:
+        if guild.id in serverIDs:
+            publicChannels = []
+            ## append all public channels where guild.default_role can send and read messages
+            for channel in guild.channels:
+                if channel.type == discord.ChannelType.text and channel.permissions_for(guild.default_role).send_messages and channel.permissions_for(guild.default_role).read_messages:
+                    publicChannels.append(channel)
+            
+            ## randomly select a channel from the public channels
+            channel = random.choice(publicChannels)
+            
+            class getCr(discord.ui.View):
+                def __init__(self):
+                    super().__init__()
+                    self.value = None
+                    self.timeout = VIEW_TIMEOUT
+                @discord.ui.button(label="Catch Crystal", style=discord.ButtonStyle.primary)
+                async def catch(self, interaction: discord.Interaction, button: discord.ui.Button) -> None:
+                    serverID = interaction.guild.id
+                    isTrue = api.crystalCheck(serverID)
+                    if isTrue:
+                        ## send xp
+                        api.xpEvent(serverID, interaction.user.name + "#" + interaction.user.discriminator, 20)
+                        ## send a message in the notifs channel
+                        await discord.utils.get(interaction.guild.channels, name=api.getChannel(serverID, "notifs")).send("💎 **" + interaction.user.name + "#" + interaction.user.discriminator + "** caught the Crystal and got `5000 🎟️'s`!")
+                        await interaction.response.send_message(embed=getCaughtEmbed(), ephemeral=True)
+                        ## delete the original message 
+                        await interaction.message.delete()
+                    else:
+                        ## send the userErrorEmbed() as a response
+                        await interaction.response.send_message(embed=userErrorEmbed("This Crystal was already caught!", "Try again next time!"), ephemeral=True)
+            
+            ## send the getCrystalEmbed() to the channel
+            await channel.send(embed=getCrystalEmbed(), view=getCr())          
         
 async def missionComplete(missionUID, feedback = None):
     serverID, memberID, missionID = api.readMissionID(missionUID)
@@ -1449,9 +1516,9 @@ async def missionComplete(missionUID, feedback = None):
             else:
                 missionReward = api.missionXPEvent(int(serverID), memberID, missionID)
                 if missionReward == False:
-                    await discord.utils.get(guild.channels, name=api.getChannel(serverID, "notifs")).send("❌ **"+memberID+"'s** submission for **" + missionName + "** has been denied. Reason: `" + "Mission total limit or per person limit exceeded" + "`")
+                    await discord.utils.get(guild.channels, name=api.getChannel(serverID, "notifs")).send("❌ **"+memberID+"'s** submission for **" + missionName + "** has been denied. Reason: `" + "Quest total limit or per person limit exceeded" + "`")
                 else:
-                    await discord.utils.get(guild.channels, name=api.getChannel(serverID, "notifs")).send("✅ **"+memberID+"'s** submission for **" + missionName + "** has been approved for `" + str(missionReward) + " XP 🎟️`!")
+                    await discord.utils.get(guild.channels, name=api.getChannel(serverID, "notifs")).send("✅ **"+memberID+"'s** submission for **" + missionName + "** has been approved for `" + str(missionReward) + " 🎟️'s`!")
         
 
 ## run a scheduled task every 24 hours
@@ -1463,7 +1530,7 @@ async def billing():
         ## deadline is a date object
         if deadLine != None and deadLine - datetime.now() < pd.Timedelta(days=21):
             numDays = (deadLine - datetime.now()).days
-            missionMes = await discord.utils.get(guild.channels, name=api.getChannel(guidID, "add-mission")).send(embed = willBeExpired(numDays))
+            missionMes = await discord.utils.get(guild.channels, name=api.getChannel(guidID, "add-quests")).send(embed = willBeExpired(numDays))
             raidMes = await discord.utils.get(guild.channels, name=api.getChannel(guidID, "launch-raid")).send(embed = willBeExpired(numDays))
             api.setServerEndMessage(guidID, [missionMes, raidMes])
         else:
@@ -1487,6 +1554,8 @@ async def changeMessages():
 @tasks.loop(hours=0.05)
 async def saveAssets():
     api.pickleAll()
+    crystalServers = api.crystal()
+    await crystalize(crystalServers)
             
 @tasks.loop(hours=0.01)
 async def checkTasks():

@@ -2,6 +2,7 @@ import flask
 from flask_cors import CORS
 import pickle
 import os
+import database
 
 app = flask.Flask(__name__)
 CORS(app)
@@ -36,13 +37,18 @@ def resetJackpot():
     writeTask("JACKPOT|n|" + str(amount) + "|n|" + str(date) + "|n|" + str(winners))
     return flask.jsonify({"mes": "jackpot update has been added to the command queue, and will be processed shortly"})
 
+@app.route('/servers', methods=['GET'])
+def resetJackpot():
+    servers = pickle.load(open('./Cache/Backup/SERVER_NAMES.pickle', 'rb'))
+    return flask.jsonify(servers)
+
 @app.route('/mission', methods=['GET'])
 def missionReply():
     missionID = flask.request.args.get('id', None)
     feedback = flask.request.args.get('feedback', None)
-    
+    database.finish_mission(missionID)
     writeTask("MISSION|n|" + str(missionID) + "|n|" + str(feedback))
-    return flask.jsonify({"mes": "mission received, and will be processed shortly"})
+    return flask.jsonify({"mes": "quest received, and will be processed shortly"})
     
 ## start the flask app, port 5000
 app.run(port=5000)

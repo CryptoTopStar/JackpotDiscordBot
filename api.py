@@ -118,6 +118,17 @@ def saveMissions():
     with open('Cache/missions.json', 'w') as f:
         json.dump(refresh(missions), f)
         
+def resetJackpotServerCall():
+    GLOBAL = globalLeaderboard()
+    serverIDs = []
+    for singleServer in SERVERS:
+        serverIDs.append(singleServer)
+        serverObj = SERVERS[serverIDs]
+        serverObj.leaderboard.clear()
+        
+    saveObject(GLOBAL, "GLOBAL")
+    return serverIDs
+        
 def convertToDict(dictObj):
     ## this dict could have other dicts as values with nested class objects. Convert the nested class objects to dicts as well, storing them in a new dict
     ## to convert class object to dict, use obj.reprJSON()

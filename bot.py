@@ -1570,6 +1570,7 @@ async def checkTasks():
         date = syntax[2].strip()
         winners = syntax[3].strip()
         api.newJackpot(amount, date, winners)
+        database.resetup(api.resetJackpotServerCall())
         return
     
     ## read the lines in TASK_PATH .txt file

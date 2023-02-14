@@ -143,6 +143,9 @@ class Server:
         self.numWins = 0
         self.channelNames = {"get-started" : "💰｜get-started", "user-settings" : "💰｜user-settings", "leaderboard" : "💰｜leaderboard", "raids" : "💰｜raids", "quests" : "💰｜quests", "add-quests" : "💎｜add-quests", "mission-approval" : "💎｜mission-approval", "launch-raid" : "💎｜launch-raid", "notifs" : "💰｜notifs"}
     
+    def clear(self):
+        self.leaderboard = serverLeaderboard()
+    
     def reprJSON(self):
         return dict(name = self.name, id = self.id, pfp = self.pfp, joinTime = self.joinTime, leaderboard = self.leaderboard.reprJSON(), maxMembers = self.maxMembers)
 

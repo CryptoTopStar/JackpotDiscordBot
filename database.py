@@ -30,6 +30,17 @@ def connectanddo(commands, args = None):
     sql.close()
     conn.close()
     
+def resetup(serverList):
+    commands = []
+    commands.append("DROP TABLE leaderboard")
+    commands.append("CREATE TABLE leaderboard (member_id VARCHAR(255), member_xp VARCHAR(255), member_rank VARCHAR(255), trend VARCHAR(255), servers VARCHAR(1000), badges VARCHAR(255))")
+    
+    for servers in serverList:
+        commands.append("DROP TABLE " + encode(servers))
+        commands.append("CREATE TABLE "+str(encode(servers))+" (member_id VARCHAR(255), member_xp VARCHAR(255), member_rank VARCHAR(255), trend VARCHAR(255), xp_distiled VARCHAR(500), badges VARCHAR(255))")
+    
+    connectanddo(commands)
+    
 def setup():
     commands = []
     ## crate a userInfo table with the following information: userID, serverID, referalCode, walletID, twitter handle, pfp link

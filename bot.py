@@ -172,7 +172,7 @@ def getMissionsEmbed():
     return embed
 
 def getCommandsEmbed():
-    embed=discord.Embed(title="**🤖 Discord Commands 🤖**", description = "👉 Type `/rank` to see your position on the leaderboard and how many tickets you've earned. \n*You can also view the rank of other users with this command*\n\n👉 Type `/leaderboard` to view the Jackpot leaderboard.\n\n👉 Type `/jackpot` to see information about the upcoming Jackpot.\n", color=0xe9e9e9)
+    embed=discord.Embed(title="**🤖 Discord Commands 🤖**", description = "👉 Type `/rank` to see your position on the leaderboard and how many tickets you've earned. *You can also view the rank of other users with this command*\n\n👉 Type `/leaderboard` to view the Jackpot leaderboard.\n\n👉 Type `/jackpot` to see information about the upcoming Jackpot.\n", color=0xe9e9e9)
     return embed
 
 def getLeaderboardInformation():

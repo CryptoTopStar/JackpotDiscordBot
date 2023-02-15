@@ -162,10 +162,10 @@ class globalLeaderboard:
         if memberID in list(self.leaderboard["memberID"]):
             if serverID in self.leaderboard.loc[self.leaderboard["memberID"] == memberID, "servers"]:
                 self.leaderboard.loc[self.leaderboard["memberID"] == memberID, "memberXP"] = XP + self.leaderboard.loc[self.leaderboard["memberID"] == memberID, "memberXP"]
-                self.leaderboard.loc[self.leaderboard["memberID"] == memberID, "servers"][serverID] = XP + self.leaderboard.loc[self.leaderboard["memberID"] == memberID, "servers"][serverID]
+                self.leaderboard.loc[self.leaderboard["memberID"] == memberID].reset_index()["servers"][0][serverID] = XP + self.leaderboard.loc[self.leaderboard["memberID"] == memberID].reset_index()["servers"][0][serverID]
             else:
                 self.leaderboard.loc[self.leaderboard["memberID"] == memberID, "memberXP"] = XP + self.leaderboard.loc[self.leaderboard["memberID"] == memberID, "memberXP"]
-                self.leaderboard.loc[self.leaderboard["memberID"] == memberID, "servers"][serverID] = XP
+                self.leaderboard.loc[self.leaderboard["memberID"] == memberID].reset_index()["servers"][0][serverID] = XP
         else:
             ##self.leaderboard = self.leaderboard.append({"memberID":memberID, "memberXP":XP, "memberRank":None, "trend":0, "servers":{serverID:XP}, "badges":None}, ignore_index = True)
             self.leaderboard = pd.concat([self.leaderboard, pd.DataFrame([[memberID, XP, None, 0, {serverID:XP}, None]], columns = ["memberID", "memberXP", "memberRank", "trend", "servers", "badges"])], ignore_index = True)
@@ -200,10 +200,9 @@ class globalLeaderboard:
                    
             self.leaderboard.loc[i, "memberRank"] = newRank
             self.leaderboard.loc[i, "trend"] = newTrend
-            
         
-        memXP = self.leaderboard.loc[self.leaderboard["memberID"] == memberID, "memberXP"][0]
-        return self.leaderboard.loc[self.leaderboard["memberID"] == memberID, "memberRank"][0], self.leaderboard.loc[self.leaderboard["memberID"] == memberID, "trend"][0], memXP, self.leaderboard.loc[self.leaderboard["memberID"] == memberID, "servers"][0]
+        memXP = self.leaderboard.loc[self.leaderboard["memberID"] == memberID].reset_index()["memberXP"][0]
+        return self.leaderboard.loc[self.leaderboard["memberID"] == memberID].reset_index()["memberRank"][0], self.leaderboard.loc[self.leaderboard["memberID"] == memberID].reset_index()["trend"][0], memXP, self.leaderboard.loc[self.leaderboard["memberID"] == memberID].reset_index()["servers"][0]
             
     def search(self, string):
         return self.leaderboard[self.leaderboard["memberID"].str.contains(string)]
@@ -226,7 +225,7 @@ class serverLeaderboard:
     
     def update(self, memberID, XP):
         if memberID in list(self.leaderboard["memberID"]):
-            self.leaderboard.loc[self.leaderboard["memberID"] == memberID, "memberXP"] = XP + self.leaderboard.loc[self.leaderboard["memberID"] == memberID, "memberXP"]
+            self.leaderboard.loc[self.leaderboard["memberID"] == memberID].reset_index()["memberXP"][0] = XP + self.leaderboard.loc[self.leaderboard["memberID"] == memberID].reset_index()["memberXP"][0]
         else:
             #self.leaderboard = self.leaderboard.append({"memberID":memberID, "memberXP":XP, "memberRank":None, "trend":0}, ignore_index = True)
             self.leaderboard = pd.concat([self.leaderboard, pd.DataFrame({"memberID":[memberID], "memberXP":[XP], "memberRank":[None], "trend":[0]})], ignore_index = True)
@@ -267,7 +266,7 @@ class serverLeaderboard:
             self.leaderboard.loc[i, "memberRank"] = newRank
             self.leaderboard.loc[i, "trend"] = newTrend
             
-        return self.leaderboard.loc[self.leaderboard["memberID"] == memberID, "memberRank"][0], self.leaderboard.loc[self.leaderboard["memberID"] == memberID, "trend"][0], self.leaderboard.loc[self.leaderboard["memberID"] == memberID, "memberXP"][0]
+        return self.leaderboard.loc[self.leaderboard["memberID"] == memberID].reset_index()["memberRank"][0], self.leaderboard.loc[self.leaderboard["memberID"] == memberID].reset_index()["trend"][0], self.leaderboard.loc[self.leaderboard["memberID"] == memberID].reset_index()["memberXP"][0]
             
     def search(self, string):
         ## search all member IDs for string, returning all values of the leaderboard for match

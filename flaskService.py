@@ -38,7 +38,7 @@ def resetJackpot():
     return flask.jsonify({"mes": "jackpot update has been added to the command queue, and will be processed shortly"})
 
 @app.route('/servers', methods=['GET'])
-def resetJackpot():
+def getSer():
     servers = pickle.load(open('./Cache/Backup/SERVER_NAMES.pickle', 'rb'))
     return flask.jsonify(servers)
 

@@ -106,20 +106,25 @@ class Mission:
 
 class ServerPickle:
     def __init__(self, SERVER):
-        self.name = SERVER.name
-        self.id = SERVER.id
+        self.name = str(SERVER.name)
+        self.id = str(SERVER.id)
+        print(SERVER.pfp)
         self.pfp = SERVER.pfp
         self.joinTime = str(SERVER.joinTime)
+        print(SERVER.maxMembers)
         self.maxMembers = SERVER.maxMembers
         self.optInCount = SERVER.optInCount
+        print(SERVER.invites)
         self.invites = SERVER.invites
+        print(SERVER.newMembers)
         self.newMembers = SERVER.newMembers
         self.endDate = SERVER.endDate
+        print(SERVER.endMessage)
         self.endMessage = SERVER.endMessage
-        self.twitterOBJ = SERVER.twitterOBJ
-        self.handle = SERVER.handle
-        self.numWins = SERVER.numWins
-        self.channelNames = SERVER.channelNames
+        ##self.twitterOBJ = SERVER.twitterOBJ
+        ##self.handle = SERVER.handle
+        ##self.numWins = SERVER.numWins
+        ##self.channelNames = SERVER.channelNames
 
 
 class Server:

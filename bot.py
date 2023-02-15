@@ -19,7 +19,7 @@ handler = logging.FileHandler(filename='discord.log', encoding='utf-8', mode='w'
 TOKEN = "MTAzNzYyOTMyMDIwMzYxNjI2Ng.GhpR78.NzFqeGnDD0IZdQCArpLiL5CSAmdLtPUZ0fvIuo"
 client = discord.Client(intents=discord.Intents.all())
 BOT_ROLE = "Jackpot Official"
-ADMIN_ROLE = "Admin"
+ADMIN_ROLE = "AdminBot"
 JACKPOT_ROLE = "Jackpot"
 JACKPOT_NON_OPT = "Jackpot (Not Opted In)"
 VIEW_TIMEOUT = 1000000000000000000000000
@@ -484,19 +484,19 @@ async def bot_set_up(myGuild):
             class optInModal(ui.Modal, title = "Twitter OAuth Code"):
                 pin = ui.TextInput(label = "Verify and link your account", style=discord.TextStyle.short, placeholder="Copy and paste your OAuth pin-code here", required = True)
                 walletID = ui.TextInput(label = "Enter your Ethereum wallet address (Optional)", style=discord.TextStyle.short, placeholder="Jackpot winnings won't be awarded if blank", required = False)
-                async def on_submit(self, interaction: discord.Interaction):
+                async def on_submit(self, intx: discord.Interaction):
                     
                     ## if JACKPOT ROLE, return
-                    if discord.utils.get(guild.roles, name=JACKPOT_ROLE) in interaction.user.roles:
+                    if discord.utils.get(guild.roles, name=JACKPOT_ROLE) in intx.user.roles:
                         channelID = str(discord.utils.get(guild.channels, name=api.getChannel(serverID, "user-settings")).id)
-                        await interaction.response.send_message(embed=alreadyOptIn(channelID), ephemeral=True)
+                        await intx.response.send_message(embed=alreadyOptIn(channelID), ephemeral=True)
                     
                     else:
                         pin = self.pin.value
                         tweeterOBJ = twitter.auth(token, secret, pin)
                         
                         if tweeterOBJ != None:
-                            server = interaction.guild.id
+                            server = intx.guild.id
                             handle = "@" + str(tweeterOBJ[3])
                             walledID = self.walletID.value
                             didEnter, walletSuccess = False, False
@@ -505,63 +505,77 @@ async def bot_set_up(myGuild):
                                 walletSuccess = api.checkWallet(walledID, server)
                             if walletSuccess == False:
                                 walledID = ""
-                            memberName = interaction.user.name
-                            profilePic = interaction.user.avatar
+                            memberName = intx.user.name
+                            profilePic = intx.user.avatar
                             if profilePic == None or profilePic == "":
                                 profilePic = "None"
                             else:
-                                profilePic = interaction.user.avatar.url
-                            memIDNum = interaction.user.id
-                            memberID = interaction.user.name + "#" + interaction.user.discriminator
+                                profilePic = intx.user.avatar.url
+                            memIDNum = intx.user.id
+                            memberID = intx.user.name + "#" + intx.user.discriminator
                             optInRet = api.optInMember(server, memberID, memIDNum, memberName, profilePic, tweeterOBJ, walledID)
                             if optInRet != False:
                                 ## create an 🎟️'s event
                                 api.xpEvent(server, memberID, 0)
                                 reward = api.getReward(server, memberName, 0)
                                 ## put on the notifs channel that a user has opted in
-                                await discord.utils.get(guild.channels, name=api.getChannel(serverID, "notifs")).send("✅ **" + str(interaction.user) + "** has opted in and earned `" + reward + "`!")
+                                await discord.utils.get(guild.channels, name=api.getChannel(serverID, "notifs")).send("✅ **" + str(intx.user) + "** has opted in and earned `" + reward + "`!")
                                 
                                 ## DEPRECATED: assign the Jackpot role to the user
                                 ## await interaction.response.send_message(content="✅ **Success!**\n\nYou have now successfully opted in to Jackpot and have been awarded `1000 🎟️'s` as a token of our gratitude. You are now ready to begin earning 🎟️'s for the value you bring to the table.", ephemeral=True)
-                                await interaction.user.add_roles(discord.utils.get(guild.roles, name=JACKPOT_ROLE))
+                                await intx.user.add_roles(discord.utils.get(guild.roles, name=JACKPOT_ROLE))
                                 # await interaction.user.remove_roles(discord.utils.get(guild.roles, name=JACKPOT_NON_OPT))
                                 
                                 ## if user submits a wallet ID, show the getOptIn() embed
                                 if walledID != "" and walledID != None:
-                                    await interaction.response.send_message(embed=getOptIn(handle), ephemeral=True)
+                                    await intx.response.send_message(embed=getOptIn(handle), ephemeral=True)
                                 elif didEnter == True and walletSuccess == False:
                                     channelID = discord.utils.get(guild.channels, name=api.getChannel(serverID, "user-settings")).id
-                                    await interaction.response.send_message(embed=getOptInInvalidWallet(channelID, handle), ephemeral=True)
+                                    await intx.response.send_message(embed=getOptInInvalidWallet(channelID, handle), ephemeral=True)
                                 else:
                                     channelID = discord.utils.get(guild.channels, name=api.getChannel(serverID, "user-settings")).id
-                                    await interaction.response.send_message(embed=getOptInNoWallet(channelID, handle), ephemeral=True)
+                                    await intx.response.send_message(embed=getOptInNoWallet(channelID, handle), ephemeral=True)
                                 
                                 if optInRet[0] == optInRet[1]:
                                     ctx = api.getJoin(server)
                                     await ctx.edit(embed = outOfSeats())
                                     
                             else:
-                                await interaction.response.send_message(embed=errorEmbed("We were unable to complete the opt-in process at this time. Please try again later."), ephemeral=True)
+                                await intx.response.send_message(embed=errorEmbed("We were unable to complete the opt-in process at this time. Please try again later."), ephemeral=True)
                         else:
-                            await interaction.response.send_message(embed=userErrorEmbed("We couldn't verify your Twitter", "The pin code you entered was incorrect. Please review the instructions above and try again."), ephemeral=True)
-                            
-            class optIn(discord.ui.View):
+                            await intx.response.send_message(embed=userErrorEmbed("We couldn't verify your Twitter", "The pin code you entered was incorrect. Please review the instructions above and try again."), ephemeral=True)
+                        
+            class optInFlow(discord.ui.View):
                 def __init__(self):
                     super().__init__()
                     self.value = None
                     self.timeout = VIEW_TIMEOUT
-                @discord.ui.button(label="Verify Twitter", style=discord.ButtonStyle.green)
+                @discord.ui.button(label="I Agree", style=discord.ButtonStyle.green)
                 async def optin(self, interaction: discord.Interaction, button: discord.ui.Button) -> None:
+                    class optIn(discord.ui.View):
+                        def __init__(self):
+                            super().__init__()
+                            self.value = None
+                            self.timeout = VIEW_TIMEOUT
+                        @discord.ui.button(label="Verify Twitter", style=discord.ButtonStyle.green)
+                        async def optin(self, interaction: discord.Interaction, button: discord.ui.Button) -> None:
+                            if discord.utils.get(guild.roles, name=JACKPOT_ROLE) in interaction.user.roles:
+                                userSettings = discord.utils.get(guild.channels, name=api.getChannel(serverID, "user-settings")).id
+                                await interaction.response.send_message(embed=alreadyOptIn(userSettings), ephemeral=True)
+                            else:
+                                await interaction.response.send_modal(optInModal())
+                                
                     if discord.utils.get(guild.roles, name=JACKPOT_ROLE) in interaction.user.roles:
                         userSettings = discord.utils.get(guild.channels, name=api.getChannel(serverID, "user-settings")).id
                         await interaction.response.send_message(embed=alreadyOptIn(userSettings), ephemeral=True)
                     else:
-                        await interaction.response.send_modal(optInModal())
+                        await interaction.response.send_message(embed=getTwitterOAUTHEmbed(url), view=optIn(), ephemeral=True)
+                        
             if discord.utils.get(guild.roles, name=JACKPOT_ROLE) in interaction.user.roles:
                 userSettings = discord.utils.get(guild.channels, name=api.getChannel(serverID, "user-settings")).id
                 await interaction.response.send_message(embed=alreadyOptIn(userSettings), ephemeral=True)
             else:
-                await interaction.response.send_message(embed=getTwitterOAUTHEmbed(url), view=optIn(), ephemeral=True)
+                await interaction.response.send_message(embed = termsConditions(), view=optInFlow(), ephemeral=True)
                     
     if discord.utils.get(guild.channels, name=api.getChannel(serverID, "get-started")).last_message == None or discord.utils.get(guild.channels, name="get-started").last_message.author != client.user:
         ## in the get started channel, send the gif located at Assets/Get Started.gif

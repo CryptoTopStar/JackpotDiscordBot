@@ -607,8 +607,8 @@ def createAlphaNumericCode(serverID, memberID):
     return refCode
 
 def updateLeaderboards(memberID, serverID, XP):
-    newRank, newTrend, newXP, newServers = GLOBAL.update(memberID, XP, serverID)
     GnewRank, GnewTrend, GnewXP, GnewServers = GLOBAL_SUSTAINED.update(memberID, XP, serverID)
+    newRank, newTrend, newXP, newServers = GLOBAL.update(memberID, XP, serverID)
     
     print("WHAT 🎟️'s:", newXP)
     database.leaderboard(memberID, newXP, newRank, newTrend, str(newServers))
@@ -853,6 +853,8 @@ def pickleAll():
     try:
         pickedServers = {}
         for key in SERVERS:
+            print("trying pickle 7")
+            print(ServerPickle(SERVERS[key]))
             pickedServers[key] = ServerPickle(SERVERS[key])
         pickle.dump(pickedServers, open("./Cache/Backup/SERVERS.pickle", "wb"))
     except:

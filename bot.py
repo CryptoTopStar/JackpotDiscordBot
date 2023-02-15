@@ -88,7 +88,7 @@ def getRankEmbed(memID, serverRank, globalRank, XP, globalXP, trend = 0):
     elif trend == -1:
         emoji = " 🔽"
     embed = discord.Embed(title="🎖️ " + memID + " is Rank " + str(serverRank) + " in this Server", description=descp, color=0xEBF900)
-    embed.add_field(name="🌎 Your Global Stats 🌎", value="Rank: `" + str(globalRank) + "`, Total 🎟️'s earned: `" + str(globalXP) + " 🎟️'s " + emoji + "` \n\n This message will delete in 10 seconds", inline=True)
+    embed.add_field(name="🌎 Your Global Stats 🌎", value="Rank: `" + str(globalRank) + "`, Total 🎟️'s earned: `" + str(globalXP) + " 🎟️'s" + "` \n\n This message will delete in 10 seconds", inline=True)
     embed.set_footer(text="Powered by Jackpot", icon_url="https://static.wixstatic.com/media/cdc018_603e1fc27c6a4c71b2c8c333f66c858b~mv2.png")
     return embed
 
@@ -500,7 +500,7 @@ async def bot_set_up(myGuild):
                             handle = "@" + str(tweeterOBJ[3])
                             walledID = self.walletID.value
                             didEnter, walletSuccess = False, False
-                            if walledID != "" or walledID != None:
+                            if walledID != "" or walledID != None or len(walledID) > 0:
                                 didEnter = True
                                 walletSuccess = api.checkWallet(walledID, server)
                             if walletSuccess == False:

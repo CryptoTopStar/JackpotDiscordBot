@@ -225,7 +225,7 @@ class serverLeaderboard:
     
     def update(self, memberID, XP):
         if memberID in list(self.leaderboard["memberID"]):
-            self.leaderboard.loc[self.leaderboard["memberID"] == memberID].reset_index()["memberXP"][0] = XP + self.leaderboard.loc[self.leaderboard["memberID"] == memberID].reset_index()["memberXP"][0]
+            self.leaderboard.loc[self.leaderboard["memberID"] == memberID, "memberXP"] = XP + self.leaderboard.loc[self.leaderboard["memberID"] == memberID, "memberXP"]
         else:
             #self.leaderboard = self.leaderboard.append({"memberID":memberID, "memberXP":XP, "memberRank":None, "trend":0}, ignore_index = True)
             self.leaderboard = pd.concat([self.leaderboard, pd.DataFrame({"memberID":[memberID], "memberXP":[XP], "memberRank":[None], "trend":[0]})], ignore_index = True)

@@ -123,9 +123,10 @@ def add_mission(mission_id, mission_name, user_id, server_id, mission_xp, missio
     connectanddo(commands, args)
     
 def finish_mission(mission_id):
-    commands = []
-    commands.append("UPDATE missions SET mission_status = 'FINISHED' WHERE mission_id = "+ str(mission_id))
-    connectanddo(commands)
+    commands, args = [], []
+    commands.append("UPDATE missions SET mission_status = 'FINISHED' WHERE mission_id = %s")
+    args.append((str(mission_id),))
+    connectanddo(commands, args)
     
 def leaderboard(member_id, member_xp, member_rank, trend, servers = "{}", badges = "[]"):
     print("MEMXP", str(member_xp))

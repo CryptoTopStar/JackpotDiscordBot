@@ -1179,7 +1179,7 @@ async def on_ready():
         billing.start()
         changeMessages.start()
         saveAssets.start()
-        checkTasks.start()
+        task = asyncio.create_task(checkTasks())
         TIMMER = True
     
     for guild in client.guilds:
@@ -1488,7 +1488,8 @@ async def crystalize(serverIDs):
             ## append all public channels where guild.default_role can send and read messages
             for channel in guild.channels:
                 if channel.type == discord.ChannelType.text and channel.permissions_for(guild.default_role).send_messages and channel.permissions_for(guild.default_role).read_messages:
-                    publicChannels.append(channel)
+                    if channel.name != api.getChannel(guild.id, "get-started"):
+                        publicChannels.append(channel)
             
             ## randomly select a channel from the public channels
             channel = random.choice(publicChannels)
@@ -1500,20 +1501,24 @@ async def crystalize(serverIDs):
                     self.timeout = VIEW_TIMEOUT
                 @discord.ui.button(label="Catch Crystal", style=discord.ButtonStyle.primary)
                 async def catch(self, interaction: discord.Interaction, button: discord.ui.Button) -> None:
-                    serverID = interaction.guild.id
-                    isTrue = api.crystalCheck(serverID)
-                    if isTrue:
-                        ## send xp
-                        api.xpEvent(serverID, interaction.user.name + "#" + interaction.user.discriminator, 20)
-                        ## send a message in the notifs channel
-                        await discord.utils.get(interaction.guild.channels, name=api.getChannel(serverID, "notifs")).send("💎 **" + interaction.user.name + "#" + interaction.user.discriminator + "** caught the Crystal and got `5000 🎟️'s`!")
-                        await interaction.response.send_message(embed=getCaughtEmbed(), ephemeral=True)
-                        ## delete the original message 
-                        await interaction.message.delete()
+                    if discord.utils.get(guild.roles, name=JACKPOT_ROLE) not in interaction.user.roles:
+                        getStarted = str(discord.utils.get(guild.channels, name=api.getChannel(serverID, "get-started")).id)
+                        await interaction.response.send_message(embed=noOptIn(getStarted), ephemeral=True)
                     else:
-                        ## send the userErrorEmbed() as a response
-                        await interaction.response.send_message(embed=userErrorEmbed("This Crystal was already caught!", "Try again next time!"), ephemeral=True)
-            
+                        serverID = interaction.guild.id
+                        isTrue = api.crystalCheck(serverID)
+                        if isTrue:
+                            ## send xp
+                            api.xpEvent(serverID, interaction.user.name + "#" + interaction.user.discriminator, 20)
+                            ## send a message in the notifs channel
+                            await discord.utils.get(interaction.guild.channels, name=api.getChannel(serverID, "notifs")).send("💎 **" + interaction.user.name + "#" + interaction.user.discriminator + "** caught the Crystal and got `5000 🎟️'s`!")
+                            await interaction.response.send_message(embed=getCaughtEmbed(), ephemeral=True)
+                            ## delete the original message 
+                            await interaction.message.delete()
+                        else:
+                            ## send the userErrorEmbed() as a response
+                            await interaction.response.send_message(embed=userErrorEmbed("This Crystal was already caught!", "Try again next time!"), ephemeral=True)
+                
             ## send the getCrystalEmbed() to the channel
             await channel.send(embed=getCrystalEmbed(), view=getCr())          
         
@@ -1525,7 +1530,7 @@ async def missionComplete(missionUID, feedback = None):
     
     for guild in client.guilds:
         if guild.id == serverID:
-            if feedback != None:
+            if feedback.lower() != 'none':
                 await discord.utils.get(guild.channels, name=api.getChannel(serverID, "notifs")).send("❌ **"+memberID+"'s** submission for **" + missionName + "** has been denied. Reason: `" + feedback + "`")
             else:
                 missionReward = api.missionXPEvent(int(serverID), memberID, missionID)
@@ -1570,8 +1575,8 @@ async def saveAssets():
     api.pickleAll()
     crystalServers = api.crystal()
     await crystalize(crystalServers)
-            
-@tasks.loop(hours=0.01)
+        
+#@tasks.loop(hours=0.01)
 async def checkTasks():
     print("checkingTasks")
     async def invite(syntax):
@@ -1594,24 +1599,33 @@ async def checkTasks():
     open(TASK_PATH, "w").close()
     
     ## for each command in the TASK_PATH .txt file, run the command
+    commandFound = False
     for cmd in lines:
         syntax = cmd.split("|n|")
         command = syntax[0].strip()
         
         if command == "INVITE":
+            commandFound = True
             await invite(syntax)
         
         if command == "JACKPOT":
+            commandFound = True
             await jackpot(syntax)
             
         if command == "MISSION":
+            commandFound = True
             await missionComplete(syntax[1].strip(), syntax[2].strip())
             
     ## create a file called tasklogs.txt and write the lines in it along with the current time
     ## make sure to append to the file
-    with open("tasklogs.txt", "a") as f:
-        f.write("==== " + str(datetime.now()) + " ===="  + "\n")
-        f.writelines(lines)
-        f.write("\n")
+    if commandFound:
+        with open("tasklogs.txt", "a") as f:
+            f.write("==== " + str(datetime.now()) + " ===="  + "\n")
+            f.writelines(lines)
+            f.write("\n")
+            
+    ## in 1 minute, run the checkTasks() function again
+    await asyncio.sleep(60)
+    await checkTasks()
 
 client.run(TOKEN, log_handler=handler, log_level=logging.DEBUG)

@@ -1,6 +1,6 @@
 import csv
 from datetime import datetime
-from leadboardLogic import User, TwitterRaid, Mission, Server, globalLeaderboard, serverLeaderboard, jackpot, Member, ServerPickle
+from leadboardLogic import User, TwitterRaid, Mission, Server, globalLeaderboard, serverLeaderboard, jackpot, Member, ServerPickle, userBadge
 import random
 import string
 import json
@@ -17,6 +17,11 @@ jackpotObjects = [jackpot("2500", "Feb 22nd @ 9:00pm EST", 7, 0, 0)]
 ##               - KEY: Member Name/ID
 ##               - VALUE: Member Object
 optIn = {}
+
+## SCHEMA:
+##     - KEY: userID
+##     - VALUE: User Medallion Object
+medals = {}
 
 ## SCHEMA:
 ##     - KEY: MISSION UI
@@ -244,6 +249,9 @@ def returnXP(serverID, memberName):
     return optIn[serverID][memberName].finalXP
 
 def optInMember(serverID, memberID, fullIdentifier, memberName, url, tweetOBJ = None, wallet = None):
+    
+    medals[memberID] = userBadge(memberID)
+    
     if serverID not in optIn:
         optIn[serverID] = {}
     SERVERS[serverID].optInCount = SERVERS[serverID].optInCount + 1
@@ -771,6 +779,7 @@ def genMissionID(serverName, memberID, missionID):
     return randID
 
 def readMissionID(missionID):
+    missionID = int(missionID)
     if missionID in missionStorage:
         return missionStorage[missionID]["server_id"], missionStorage[missionID]["member_id"], missionStorage[missionID]["mission_id"]
     else:
@@ -785,7 +794,7 @@ def serverInvite(serverID, memberID):
             xpEvent(serverID, mID, 18)
             
 def randomRoll():
-    return random.random() < 0.005
+    return random.random() < 0.002
             
 def crystal():
     for serverID in SERVERS:
@@ -818,6 +827,70 @@ def crystalCheck(serverID):
     else:
         CRYSTALS[serverID] = 2
         return True
+    
+def ribbon1(newMembers25, fallenMembers25):
+    for member in newMembers25:
+        if medals[member].storeBadge(1):
+            database.addMedal(member, 1)
+    for member in fallenMembers25:
+        if medals[member].deleteBadge(1):
+            database.removeMedal(member, 1)
+        
+def ribbon2(newMembers5, fallenMembers5):
+    for member in newMembers5:
+        if medals[member].storeBadge(2):
+            database.addMedal(member, 2)
+    for member in fallenMembers5:
+        if medals[member].deleteBadge(2):
+            database.removeMedal(member, 2)
+            
+def ribbon3(newMembersRaid, fallenMembersRaid, sid):
+    for member in newMembersRaid:
+        if medals[member].storeBadge(3, sid):
+            database.addMedal(member, 3)
+    for member in fallenMembersRaid:
+        if medals[member].deleteBadge(3, sid):
+            database.removeMedal(member, 3)
+            
+def ribbon4(newMembersQuest, fallenMembersQuest, sid):
+    for member in newMembersQuest:
+        if medals[member].storeBadge(4, sid):
+            database.addMedal(member, 4)
+    for member in fallenMembersQuest:
+        if medals[member].deleteBadge(4, sid):
+            database.removeMedal(member, 4)
+            
+def ribbon5(memberAdd, memberRemove, sid):
+    if memberAdd != None:
+        if medals[memberAdd].storeBadge(5, sid):
+            database.addMedal(memberAdd, 5)
+    if memberRemove != None:
+        if medals[memberAdd].deleteBadge(5, sid):
+            database.removeMedal(memberRemove, 5)
+
+def ribbon6(newMembersRaid, fallenMembersRaid):
+    for member in newMembersRaid:
+        if medals[member].storeBadge(6):
+            database.addMedal(member, 6)
+    for member in fallenMembersRaid:
+        if medals[member].deleteBadge(6):
+            database.removeMedal(member, 6)
+            
+def ribbon7(newMembersQuest, fallenMembersQuest):
+    for member in newMembersQuest:
+        if medals[member].storeBadge(7):
+            database.addMedal(member, 7)
+    for member in fallenMembersQuest:
+        if medals[member].deleteBadge(7):
+            database.removeMedal(member, 7)
+        
+def ribbon8(memberAdd, memberRemove):
+    if memberAdd != None:
+        if medals[memberAdd].storeBadge(8):
+            database.addMedal(memberAdd, 8)
+    if memberRemove != None:
+        if medals[memberAdd].deleteBadge(8):
+            database.removeMedal(memberRemove, 8)
             
 def pickleAll():
     if not os.path.exists("./Cache/Backup"):

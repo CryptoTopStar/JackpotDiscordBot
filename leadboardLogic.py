@@ -2,6 +2,7 @@ import csv
 from datetime import datetime
 import pandas as pd
 import math
+import api as api
 
 DEFAULT_WEIGHT = 1
 INDIVIDUAL_WEIGHT = {}
@@ -29,6 +30,33 @@ class Member:
     
     def reprJSON(self):
         return dict(name=self.name, id=self.id, communityID=self.communityID, new=self.new)
+    
+class userBadge:
+    def __init__(self, userID):
+        self.userID = userID
+        self.badges = {"1": [], "2": [], "3": [], "4": [], "5": [], "6": [], "7": [], "8": [], "M1": [], "M2": [], "M3": [], "M4": [], "M5": [], "M6": [], "M7": [], "M8": []}
+    
+    def storeBadge(self, badge, serverID = "GLOBAL"):
+        if serverID not in self.badges[str(badge)]:
+            self.badges[str(badge)].append(serverID)
+        else:
+            return False
+        
+        if len(self.badges[str(badge)]) == 1:
+            return True
+        
+        return False
+    
+    def deleteBadge(self, badge, serverID = "GLOBAL"):
+        try:
+            self.badges[str(badge)].remove(serverID)
+        except:
+            pass
+        
+        if len(self.badges[str(badge)]) == 0:
+            return True
+        
+        return False
 
 ## Create a class to represent a user and number of interactions
 class User:
@@ -133,8 +161,8 @@ class Server:
         self.id = id
         self.pfp = url
         self.joinTime = datetime.now().strftime("%m/%d/%y %H:%M")
-        self.leaderboard = serverLeaderboard()
-        self.persistantLeaderboard = serverLeaderboard()
+        self.leaderboard = serverLeaderboard(id)
+        self.persistantLeaderboard = serverLeaderboard(None)
         self.maxMembers = 50
         self.optInCount = 0
         self.invites = invites
@@ -156,9 +184,28 @@ class Server:
 
 class globalLeaderboard:
     def __init__(self):
-        self.leaderboard = pd.DataFrame(columns = ["memberID", "memberXP", "memberRank", "trend", "servers", "badges"])
+        self.leaderboard = pd.DataFrame(columns = ["memberID", "memberXP", "memberRank", "trend", "servers", "badges", "questXP", "raidXP"])
     
-    def update(self, memberID, XP, serverID):
+    def update(self, memberID, XP, serverID, quest = False, raid = False):
+        ## store the memberID of the top 25% of the leaderboard, round up
+        try:
+            oldTop25 = self.leaderboard["memberID"].iloc[:math.ceil(len(self.leaderboard) * 0.25)]
+            oldTopQuest = self.leaderboard.loc[self.leaderboard["questXP"] == self.leaderboard["questXP"].max(), "memberID"]
+            oldTopRaid = self.leaderboard.loc[self.leaderboard["raidXP"] == self.leaderboard["raidXP"].max(), "memberID"]
+        except:
+            oldTop25, oldTopQuest, oldTopRaid = [], [], []
+            
+        ## store the memberID of the top 5% of the leaderboard, round up
+        try:
+            oldTop5 = self.leaderboard["memberID"].iloc[:math.ceil(len(self.leaderboard) * 0.05)]
+        except:
+            oldTop5 = []
+            
+        try:
+            oldTopEarner = self.leaderboard["memberID"].iloc[0]
+        except:
+            oldTopEarner = None
+        
         if memberID in list(self.leaderboard["memberID"]):
             if serverID in self.leaderboard.loc[self.leaderboard["memberID"] == memberID, "servers"]:
                 self.leaderboard.loc[self.leaderboard["memberID"] == memberID, "memberXP"] = XP + self.leaderboard.loc[self.leaderboard["memberID"] == memberID, "memberXP"]
@@ -166,11 +213,59 @@ class globalLeaderboard:
             else:
                 self.leaderboard.loc[self.leaderboard["memberID"] == memberID, "memberXP"] = XP + self.leaderboard.loc[self.leaderboard["memberID"] == memberID, "memberXP"]
                 self.leaderboard.loc[self.leaderboard["memberID"] == memberID].reset_index()["servers"][0][serverID] = XP
+                
+            if quest:
+                self.leaderboard.loc[self.leaderboard["memberID"] == memberID, "questXP"] = XP + self.leaderboard.loc[self.leaderboard["memberID"] == memberID, "questXP"]
+            elif raid:
+                self.leaderboard.loc[self.leaderboard["memberID"] == memberID, "raidXP"] = XP + self.leaderboard.loc[self.leaderboard["memberID"] == memberID, "raidXP"]
         else:
-            ##self.leaderboard = self.leaderboard.append({"memberID":memberID, "memberXP":XP, "memberRank":None, "trend":0, "servers":{serverID:XP}, "badges":None}, ignore_index = True)
-            self.leaderboard = pd.concat([self.leaderboard, pd.DataFrame([[memberID, XP, None, 0, {serverID:XP}, None]], columns = ["memberID", "memberXP", "memberRank", "trend", "servers", "badges"])], ignore_index = True)
+            if quest:
+                self.leaderboard = pd.concat([self.leaderboard, pd.DataFrame([[memberID, XP, None, 0, {serverID:XP}, None, XP, 0]], columns = ["memberID", "memberXP", "memberRank", "trend", "servers", "badges", "questXP", "raidXP"])], ignore_index = True)
+            elif raid:
+                self.leaderboard = pd.concat([self.leaderboard, pd.DataFrame([[memberID, XP, None, 0, {serverID:XP}, None, 0, XP]], columns = ["memberID", "memberXP", "memberRank", "trend", "servers", "badges", "questXP", "raidXP"])], ignore_index = True)
+            else:
+                self.leaderboard = pd.concat([self.leaderboard, pd.DataFrame([[memberID, XP, None, 0, {serverID:XP}, None]], columns = ["memberID", "memberXP", "memberRank", "trend", "servers", "badges"])], ignore_index = True)
+        
         self.leaderboard = self.leaderboard.sort_values(by = ["memberXP"], ascending = False)
         self.leaderboard = self.leaderboard.reset_index(drop = True)
+        
+        try:
+            newTop25 = self.leaderboard["memberID"].iloc[:math.ceil(len(self.leaderboard) * 0.25)]
+            newTopQuest = self.leaderboard.loc[self.leaderboard["questXP"] == self.leaderboard["questXP"].max(), "memberID"]
+            newTopRaid = self.leaderboard.loc[self.leaderboard["raidXP"] == self.leaderboard["raidXP"].max(), "memberID"]
+        except:
+            newTop25, newTopQuest, newTopRaid = [], [], []
+            
+        try:
+            newTop5 = self.leaderboard["memberID"].iloc[:math.ceil(len(self.leaderboard) * 0.05)]
+        except:
+            newTop5 = []
+            
+        try:
+            newTopEarner = self.leaderboard["memberID"].iloc[0]
+        except:
+            newTopEarner = None
+            
+        ## find any new members in the top 25% of the leaderboard and find members who have fallen out of the top 25%
+        newMembers25 = list(set(newTop25) - set(oldTop25))
+        fallenMembers25 = list(set(oldTop25) - set(newTop25))
+        api.ribbon1(newMembers25, fallenMembers25)
+        
+        ## find any new members in the top 5% of the leaderboard and find members who have fallen out of the top 5%
+        newMembers5 = list(set(newTop5) - set(oldTop5))
+        fallenMembers5 = list(set(oldTop5) - set(newTop5))
+        api.ribbon2(newMembers5, fallenMembers5)
+        
+        newMembersRaid = list(set(newTopRaid) - set(oldTopRaid))
+        fallenMembersRaid = list(set(oldTopRaid) - set(newTopRaid))
+        api.ribbon6(newMembersRaid, fallenMembersRaid)
+        
+        newMembersQuest = list(set(newTopQuest) - set(oldTopQuest))
+        fallenMembersQuest = list(set(oldTopQuest) - set(newTopQuest))
+        api.ribbon7(newMembersQuest, fallenMembersQuest)
+        
+        if newTopEarner != oldTopEarner:
+            api.ribbon8(newTopEarner, oldTopEarner)
         
         def trend(old, new):
             if old > new:
@@ -218,20 +313,66 @@ class globalLeaderboard:
         return self.leaderboard.to_dict(orient = "records")
           
 class serverLeaderboard:
-    def __init__(self):
+    def __init__(self, sID):
         ## init an empty pandas dataframe with the following columns:
         ## memberID, memberXP, memberRank, trend
-        self.leaderboard = pd.DataFrame(columns = ["memberID", "memberXP", "memberRank", "trend"])
+        self.serverID = sID
+        self.leaderboard = pd.DataFrame(columns = ["memberID", "memberXP", "memberRank", "trend", "questXP", "raidXP"])
     
-    def update(self, memberID, XP):
+    def update(self, memberID, XP, quest = False, raid = False):
+        
+        try:
+            oldTopQuest = self.leaderboard.loc[self.leaderboard["questXP"] == self.leaderboard["questXP"].max(), "memberID"]
+            oldTopRaid = self.leaderboard.loc[self.leaderboard["raidXP"] == self.leaderboard["raidXP"].max(), "memberID"]
+        except:
+            oldTopQuest, oldTopRaid = [], [], []
+        
+        try:
+            oldTopEarner = self.leaderboard["memberID"].iloc[0]
+        except:
+            oldTopEarner = None
+        
+        
         if memberID in list(self.leaderboard["memberID"]):
             self.leaderboard.loc[self.leaderboard["memberID"] == memberID, "memberXP"] = XP + self.leaderboard.loc[self.leaderboard["memberID"] == memberID, "memberXP"]
+            if quest:
+                self.leaderboard.loc[self.leaderboard["memberID"] == memberID, "questXP"] = XP + self.leaderboard.loc[self.leaderboard["memberID"] == memberID, "questXP"]
+            elif raid:
+                self.leaderboard.loc[self.leaderboard["memberID"] == memberID, "raidXP"] = XP + self.leaderboard.loc[self.leaderboard["memberID"] == memberID, "raidXP"]
         else:
-            #self.leaderboard = self.leaderboard.append({"memberID":memberID, "memberXP":XP, "memberRank":None, "trend":0}, ignore_index = True)
-            self.leaderboard = pd.concat([self.leaderboard, pd.DataFrame({"memberID":[memberID], "memberXP":[XP], "memberRank":[None], "trend":[0]})], ignore_index = True)
+            if quest:
+                self.leaderboard = pd.concat([self.leaderboard, pd.DataFrame({"memberID":[memberID], "memberXP":[XP], "memberRank":[None], "trend":[0], "questXP":[XP], "raidXP":[0]})], ignore_index = True)
+            elif raid:
+                self.leaderboard = pd.concat([self.leaderboard, pd.DataFrame({"memberID":[memberID], "memberXP":[XP], "memberRank":[None], "trend":[0], "questXP":[0], "raidXP":[XP]})], ignore_index = True)
+            else:
+                self.leaderboard = pd.concat([self.leaderboard, pd.DataFrame({"memberID":[memberID], "memberXP":[XP], "memberRank":[None], "trend":[0]})], ignore_index = True)
             
         self.leaderboard = self.leaderboard.sort_values(by = ["memberXP"], ascending = False)
         self.leaderboard = self.leaderboard.reset_index(drop = True)
+        
+        
+        try:
+            newTopEarner = self.leaderboard["memberID"].iloc[0]
+        except:
+            newTopEarner = None
+            
+        try:
+            newTopQuest = self.leaderboard.loc[self.leaderboard["questXP"] == self.leaderboard["questXP"].max(), "memberID"]
+            newTopRaid = self.leaderboard.loc[self.leaderboard["raidXP"] == self.leaderboard["raidXP"].max(), "memberID"]
+        except:
+            newTopQuest, newTopRaid = [], [], []
+            
+        if self.serverID != None and newTopEarner != oldTopEarner:
+            api.ribbon5(newTopEarner, oldTopEarner, self.serverID)
+            
+        newMembersRaid = list(set(newTopRaid) - set(oldTopRaid))
+        fallenMembersRaid = list(set(oldTopRaid) - set(newTopRaid))
+        api.ribbon3(newMembersRaid, fallenMembersRaid, self.serverID)
+        
+        newMembersQuest = list(set(newTopQuest) - set(oldTopQuest))
+        fallenMembersQuest = list(set(oldTopQuest) - set(newTopQuest))
+        api.ribbon4(newMembersQuest, fallenMembersQuest, self.serverID)
+        
         ## assign new ranks based on new XP, if XP is the same, keep the same rank
         ## if old rank is greater than new rank, trend = 1
         ## if old rank is less than new rank, trend = -1

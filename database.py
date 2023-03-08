@@ -54,6 +54,7 @@ def setup():
     commands.append("CREATE TABLE missions (mission_id VARCHAR(255), mission_name VARCHAR(255), user_id VARCHAR(255), server_id VARCHAR(255), mission_xp VARCHAR(255), mission_discription VARCHAR(1000), mission_contents VARCHAR(10000), mission_status VARCHAR(50))")
     ## create a serverInfo table with the following information: serverID, serverName, serverPfp link
     commands.append("CREATE TABLE serverinfo (server_id VARCHAR(255), server_name VARCHAR(255), server_pfp_link VARCHAR(1000))")
+    commands.append("CREATE TABLE medals (user_id VARCHAR(255), medals VARCHAR(1000))")
     
     connectanddo(commands)
     print("Database setup complete")
@@ -66,16 +67,17 @@ def encode(server_id):
     return encodedStr
 
 def decode(encodedStr):
-    myMap = {"a":0, "b":1, "c":2, "d":3, "e":4, "f":5, "g":6, "h":7, "i":8, "j":9}
+    myMap = {"a":"0", "b":"1", "c":"2", "d":"3", "e":"4", "f":"5", "g":"6", "h":"7", "i":"8", "j":"9"}
     decodedStr = ""
     for char in encodedStr:
         decodedStr += myMap[char]
-    return decodedStr
+    return int(decodedStr)
 
 def setupServerTable(server_id, server_name, server_pfp_link):
     commands, args = [], []
     commands.append("CREATE TABLE "+str(encode(server_id))+" (member_id VARCHAR(255), member_xp VARCHAR(255), member_rank VARCHAR(255), trend VARCHAR(255), xp_distiled VARCHAR(500), badges VARCHAR(255))")
-    commands.append("CREATE TABLE "+"g" + str(encode(server_id))+" (member_id VARCHAR(255), member_xp VARCHAR(255), member_rank VARCHAR(255), trend VARCHAR(255), xp_distiled VARCHAR(500), badges VARCHAR(255))")
+    commands.append("CREATE TABLE g"+str(encode(server_id))+" (member_id VARCHAR(255), member_xp VARCHAR(255), member_rank VARCHAR(255), trend VARCHAR(255), xp_distiled VARCHAR(500), badges VARCHAR(255))")
+    args.append(None)
     args.append(None)
     commands.append("INSERT INTO serverinfo (server_id, server_name, server_pfp_link) VALUES (%s, %s, %s)")
     args.append((server_id, server_name, server_pfp_link))
@@ -231,6 +233,63 @@ def gserverLeaderboard(member_id, server_id, member_xp, member_rank, trend, xp_d
     conn.commit()
     sql.close()
     conn.close()
+    
+def addMedal(userID, medalCode):
+    conn = psycopg2.connect(database="defaultdb",
+                                host="db-postgresql-sfo3-06312-do-user-13128182-0.b.db.ondigitalocean.com",
+                                user="doadmin",
+                                password="AVNS_-f7ufstYFNsmlNoq3SQ",
+                                port="25060")
+    sql = conn.cursor()
+    
+    ## check if the user is in the user_id column already
+    sql.execute("SELECT user_id FROM medals WHERE user_id = %s", (userID,))
+    myData = sql.fetchone()
+    if myData != None and userID in myData:
+        sql.execute("SELECT medals FROM medals WHERE user_id = %s", (userID,))
+        myData = sql.fetchone()
+        myData = myData[0]
+        myData += " " + str(medalCode) + ","
+        ## update the medals column of the same user_id row with the new myData string
+        sql.execute("UPDATE medals SET medals = %s WHERE user_id = %s", (myData, userID))
+    else:
+        ## add a new row with the user_id and the medalCode
+        sql.execute("INSERT INTO medals (user_id, medals) VALUES (%s, %s)", (userID, str(medalCode) + ","))
+        
+    conn.commit()
+    sql.close()
+    conn.close()
+    
+def removeMedal(userID, medalCode):
+    medalCode = str(medalCode)
+    conn = psycopg2.connect(database="defaultdb",
+                            host="db-postgresql-sfo3-06312-do-user-13128182-0.b.db.ondigitalocean.com",
+                                user="doadmin",
+                                password="AVNS_-f7ufstYFNsmlNoq3SQ",
+                                port="25060")
+    sql = conn.cursor()
+    
+    ## find the value of medal for the user
+    sql.execute("SELECT medals FROM medals WHERE user_id = %s", (userID,))
+    myData = sql.fetchone()
+    myData = myData[0]
+    myData = myData.split(",")
+    for i in range(len(myData)):
+        myData[i] = myData[i].strip()
+    
+    ## remove the medalCode from the list
+    myData.remove(medalCode)
+    
+    ## remake myData into a string with elements separated by ", "
+    myData = ", ".join(myData)
+    
+    ## update the medals column of the same user_id row with the new myData string
+    sql.execute("UPDATE medals SET medals = %s WHERE user_id = %s", (myData, userID))
+    
+    conn.commit()
+    sql.close()
+    conn.close()
+    
     
 def pushAll():
     ## delete all rows in the leaderboard table

@@ -2045,3 +2045,5 @@ discord.errors.NotFound: 404 Not Found (error code: 10003): Unknown Channel
 [2023-03-07 21:45:09] [DEBUG   ] discord.gateway: For Shard ID None: WebSocket Event: {'t': None, 's': None, 'op': 11, 'd': None}
 [2023-03-07 21:45:50] [DEBUG   ] discord.gateway: Keeping shard ID None websocket alive with sequence 146.
 [2023-03-07 21:45:51] [DEBUG   ] discord.gateway: For Shard ID None: WebSocket Event: {'t': None, 's': None, 'op': 11, 'd': None}
+[2023-03-07 21:46:32] [DEBUG   ] discord.gateway: Keeping shard ID None websocket alive with sequence 146.
+[2023-03-07 21:46:32] [DEBUG   ] discord.gateway: For Shard ID None: WebSocket Event: {'t': None, 's': None, 'op': 11, 'd': None}

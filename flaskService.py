@@ -4,6 +4,11 @@ import pickle
 import os
 import database
 
+from pyngrok import ngrok
+ngrok.set_auth_token("2OF1TpRRG05rgU1Xi5k9UIj6bFE_5Nt5n7LmqYdSGvkUPX7tQ")
+http_tunnel = ngrok.connect(5000)
+print(http_tunnel)
+
 app = flask.Flask(__name__)
 CORS(app)
 
@@ -14,6 +19,10 @@ def writeTask(task):
     ## add the task to the file
     with open('./Cache/task.txt', 'a') as f:
         f.write(task + '\n')
+        
+@app.route('/', methods=['GET'])
+def test():
+    return flask.jsonify({"mes": "hello world"})
 
 @app.route('/invited', methods=['GET'])
 def invited():

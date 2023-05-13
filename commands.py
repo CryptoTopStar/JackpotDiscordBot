@@ -40,18 +40,18 @@ def refreshCommands(data):
                 scope=ids,
                 ## add 3 options, a mission ID (can either be "1", "2", "3"), a description (string), and a file attachment
                 options = [
-                    interactions.Option(name="mission_id", description="Mission ID", type=interactions.OptionType.STRING, required=True, choices=makeChoices(ids)),
+                    interactions.Option(name="quest_id", description="Quest ID", type=interactions.OptionType.STRING, required=True, choices=makeChoices(ids)),
                     interactions.Option(name="description", description="Description of the mission", type=interactions.OptionType.STRING, required=True),
                     interactions.Option(name="file", description="Add an image (optional)", type=interactions.OptionType.ATTACHMENT, required=False)
                 ]
             )
                             
-            async def verifyMission(ctx: interactions.CommandContext, mission_id: str, description: str, file: interactions.File = None):
+            async def verifyMission(ctx: interactions.CommandContext, quest_id: str, description: str, file: interactions.File = None):
                 stem = ""
                 if file != None:
                     stem = f"#|# {file.url}"
                 fullName = ctx.author.name + "#" + ctx.author.discriminator
-                await ctx.send(f"MISSION SUBMITTED #|# {fullName} #|# {mission_id} #|# {description} " + stem)
+                await ctx.send(f"MISSION SUBMITTED #|# {fullName} #|# {quest_id} #|# {description} " + stem)
             
         ####### MORE COMMANDS HERE #######
     @bot.command(

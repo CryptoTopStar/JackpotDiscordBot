@@ -12,7 +12,7 @@ async def on_ready():
     
 
 @bot.tree.command(name="complete", description="Submit verification of a completed mission to earn XP")
-@app_commands.choices(choices=[app_commands.Choice(name="mission_id", value="mission_id")])
+@app_commands.choices(choices=[app_commands.Choice(name="quest_id", value="quest_id")])
 @app_commands
 @app_commands.option(name="file", description="File of the mission", type=AppCommandOptionType.attachment, required=True)
 ## the complete command takes in a mission ID and a description of the mission, and upload file
